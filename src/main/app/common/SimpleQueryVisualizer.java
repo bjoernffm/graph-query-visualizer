@@ -1,4 +1,4 @@
-package Common;
+package main.app.common;
 
 import org.apache.jena.sparql.core.PathBlock;
 import org.apache.jena.sparql.core.TriplePath;

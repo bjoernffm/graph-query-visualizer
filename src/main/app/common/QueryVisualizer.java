@@ -1,11 +1,8 @@
-package Common;
-
-import java.util.List;
+package main.app.common;
 
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QueryParseException;
-import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.sparql.syntax.ElementGroup;
 
 public abstract class QueryVisualizer {	
