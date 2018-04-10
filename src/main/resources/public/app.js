@@ -1,4 +1,12 @@
 $(function() {
-    result = Viz("digraph { a -> b; }");
-    $('#queryViewer').html(result);
+
+
+    $('#querySubmit').click(function(e) {
+        $.post("/api/queries", "lala", function( data ) {
+            result = Viz(data);
+            $('#queryViewer').html(result);
+        });
+    });
+
+
 });

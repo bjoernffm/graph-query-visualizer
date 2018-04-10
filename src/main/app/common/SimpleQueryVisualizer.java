@@ -12,12 +12,16 @@ import org.apache.jena.sparql.syntax.ElementPathBlock;
 import org.apache.jena.sparql.syntax.ElementUnion;
 import org.apache.jena.sparql.syntax.ElementFilter;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 final public class SimpleQueryVisualizer extends QueryVisualizer implements QueryVisualizerInterface {
+	
 	public String visualize(String string)
 	{
-		
 		ElementGroup elGroup = this.getElementGroupByQuery(string);
 
 		List<Element> list = elGroup.getElements();
@@ -32,7 +36,7 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 			Element el = list.get(i);
 			
 			if (el instanceof org.apache.jena.sparql.syntax.ElementPathBlock) {
-				str = this.visualizeElementPathBlock((ElementPathBlock) el);
+				this.visualizeElementPathBlock((ElementPathBlock) el);
 			} else if (el instanceof org.apache.jena.sparql.syntax.ElementFilter) {
 				str = this.visualizeElementFilter((ElementFilter) el);
 			} else {
@@ -44,7 +48,25 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 			
 		}
 		
-		return "";
+		String dotString = "digraph {\n";
+		
+		// First prepare the objects and their ids
+		Iterator<String> iter = this.objectMap.keySet().iterator();
+		while (iter.hasNext()) {
+			String object = (String) iter.next();
+		    dotString += "\t"+this.getObjectId(object)+" [label=\""+object+"\"];\n";
+		}
+		dotString += "\n";
+		
+		// Now preparing the relations
+		for(int i = 0; i < this.statementList.size(); i++) {
+			dotString += "\t"+this.statementList.get(i)+";\n";
+		}
+		
+		dotString += "}";
+		
+		System.out.println(dotString);
+		return dotString;
 	}
 	
 	protected String visualizeElementUnion(ElementUnion element)
@@ -55,15 +77,17 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 		return returnString;
 	}
 	
-	protected String visualizeElementPathBlock(ElementPathBlock element)
+	protected void visualizeElementPathBlock(ElementPathBlock element)
 	{
 		String returnString = ""; 
 		PathBlock pathBlock = (PathBlock) element.getPattern();
 		for(int i = 0; i < pathBlock.size(); i++){
 			TriplePath el = pathBlock.get(i);
-			returnString += "["+el.getSubject()+"] --("+el.getPredicate()+")--> ["+el.getObject()+"]\n";
+			returnString = this.getObjectId(el.getSubject().toString())+" -> "+this.getObjectId(el.getObject().toString())+" [ label=\""+el.getPredicate()+"\" ]";
+			this.statementList.add(returnString);
 		}
-		return returnString;
+
+		
 	}
 	
 	protected String visualizeElementFilter(ElementFilter el)

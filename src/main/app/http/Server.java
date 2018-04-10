@@ -15,12 +15,15 @@ public class Server {
     	
     	get("/", (request, response) -> {
     		Map<String, String> map = new HashMap<>();
-            map.put("message", "Hello World!");
+            //map.put("message", "Hello World!");
 
-            // The hello.jade template file is in the resources/templates directory
-            String tpl = this.render(map, "index");
-            return tpl;
-            // return "works!";
+            return this.render(map, "index");
+    	});
+    	
+    	path("/api", () -> {
+    		post("/queries", (request, response) -> {
+    		    return "digraph { 1 [label=\"http://example.org/book/book1\"]; 2 [label=\"?title\"]; 1 -> 2 [ label=\"http://purl.org/dc/elements/1.1/title\" ]; }";
+    		});
     	});
     }
     

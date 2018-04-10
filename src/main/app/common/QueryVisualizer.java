@@ -1,11 +1,33 @@
 package main.app.common;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QueryParseException;
 import org.apache.jena.sparql.syntax.ElementGroup;
 
 public abstract class QueryVisualizer {	
+	
+	protected Map<String, Integer> objectMap = new HashMap<>();
+	protected Integer currentObjectId = 0;
+	protected List<String> statementList = new ArrayList<>();
+	
+	protected Integer getObjectId(String object)
+	{
+		if (this.objectMap.containsKey(object)) {
+			return this.objectMap.get(object);
+		} else {
+			this.objectMap.put(object, this.currentObjectId);
+			this.currentObjectId++;
+			
+			return this.objectMap.get(object); 
+		}
+	}
+	
 	public ElementGroup getElementGroupByQuery(String string)
 	{
 		try {
