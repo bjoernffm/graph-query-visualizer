@@ -28,6 +28,11 @@ public abstract class QueryVisualizer {
 		}
 	}
 	
+	protected String escape(String string)
+	{
+		return string.replaceAll("\"", "");
+	}
+	
 	public ElementGroup getElementGroupByQuery(String string)
 	{
 		try {
@@ -53,10 +58,7 @@ public abstract class QueryVisualizer {
 				System.out.println(exp.toString());
 			}*/
 		} catch(QueryParseException e) {
-			System.out.println(e.getMessage());
-			System.out.println(e.getColumn());
+			throw e;
 		}
-		
-		return null;
 	}
 }

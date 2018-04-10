@@ -43,9 +43,6 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 				System.out.println(el);
 				System.out.println(el.getClass());
 			}
-			
-			System.out.print(str);
-			
 		}
 		
 		String dotString = "digraph {\n";
@@ -54,8 +51,9 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 		Iterator<String> iter = this.objectMap.keySet().iterator();
 		while (iter.hasNext()) {
 			String object = (String) iter.next();
-		    dotString += "\t"+this.getObjectId(object)+" [label=\""+object+"\"];\n";
+		    dotString += "\t"+this.getObjectId(object)+" [label=\""+this.escape(object)+"\"];\n";
 		}
+		
 		dotString += "\n";
 		
 		// Now preparing the relations
@@ -65,7 +63,6 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 		
 		dotString += "}";
 		
-		System.out.println(dotString);
 		return dotString;
 	}
 	
@@ -83,7 +80,7 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 		PathBlock pathBlock = (PathBlock) element.getPattern();
 		for(int i = 0; i < pathBlock.size(); i++){
 			TriplePath el = pathBlock.get(i);
-			returnString = this.getObjectId(el.getSubject().toString())+" -> "+this.getObjectId(el.getObject().toString())+" [ label=\""+el.getPredicate()+"\" ]";
+			returnString = this.getObjectId(el.getSubject().toString())+" -> "+this.getObjectId(el.getObject().toString())+" [ label=\""+this.escape(el.getPredicate().toString())+"\" ]";
 			this.statementList.add(returnString);
 		}
 
