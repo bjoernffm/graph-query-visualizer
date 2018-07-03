@@ -12,10 +12,38 @@ import org.apache.jena.sparql.syntax.ElementGroup;
 
 public abstract class QueryVisualizer {	
 	
+	protected Query query;
+	
+	/**
+	 * objectMap holds the objects and the related ids, vice versa
+	 */
 	protected Map<String, Integer> objectMap = new HashMap<>();
+	
+	/**
+	 * currentObjectId is about the latest id, needed for increment
+	 */
 	protected Integer currentObjectId = 0;
+	
+	/**
+	 * The statement list contains the actual dot statements
+	 */
 	protected List<String> statementList = new ArrayList<>();
 	
+	public QueryVisualizer(String query)
+	{
+		try {
+			this.query = QueryFactory.create(query);
+		} catch(QueryParseException e) {
+			throw e;
+		}
+	}
+	
+	/**
+	 * Returns an id based on the given object string
+	 * 
+	 * @param object
+	 * @return The id
+	 */
 	protected Integer getObjectId(String object)
 	{
 		if (this.objectMap.containsKey(object)) {
@@ -42,21 +70,6 @@ public abstract class QueryVisualizer {
 			ElementGroup elGroup = (ElementGroup) query.getQueryPattern();
 			
 			return elGroup;
-			
-			/*List<Element> list = elGroup.getElements();
-			
-			for(int i = 0; i < list.size(); i++) {
-				Element el = list.get(i);
-				System.out.println(el);
-				System.out.println(el.getClass());
-			}
-
-			/*List<ExprAggregator> list = query.getAggregators();
-			System.out.println(list.size());
-			for(int i = 0; i < list.size(); i++) {
-				ExprAggregator exp = list.get(i);
-				System.out.println(exp.toString());
-			}*/
 		} catch(QueryParseException e) {
 			throw e;
 		}

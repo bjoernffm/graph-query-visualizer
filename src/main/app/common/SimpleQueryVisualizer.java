@@ -10,42 +10,52 @@ import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 import org.apache.jena.sparql.syntax.ElementUnion;
+
+import main.app.dot.Edge;
+import main.app.dot.Node;
+
 import org.apache.jena.sparql.syntax.ElementFilter;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 final public class SimpleQueryVisualizer extends QueryVisualizer implements QueryVisualizerInterface {
-	
-	public String visualize(String string)
-	{
-		ElementGroup elGroup = this.getElementGroupByQuery(string);
 
-		List<Element> list = elGroup.getElements();
-		
-		return iterate(list);
+	public SimpleQueryVisualizer(String query) {
+		super(query);
 	}
-	
+
+	public String visualize()
+	{
+		//ElementGroup elGroup = this.getElementGroupByQuery(string);
+
+		//List<Element> list = elGroup.getElements();
+		
+		
+		//return iterate(list);
+		return "";
+	}
+
 	protected String iterate(List<Element> list)
 	{
 		for(int i = 0; i < list.size(); i++) {
-			String str = "";
 			Element el = list.get(i);
-			
+			System.out.println(el.getClass());
+			System.out.println(el+"\n");
+
 			if (el instanceof org.apache.jena.sparql.syntax.ElementPathBlock) {
-				this.visualizeElementPathBlock((ElementPathBlock) el);
+				//this.visualizeElementPathBlock((ElementPathBlock) el);
 			} else if (el instanceof org.apache.jena.sparql.syntax.ElementFilter) {
-				str = this.visualizeElementFilter((ElementFilter) el);
+				//this.visualizeElementFilter((ElementFilter) el);
 			} else {
-				System.out.println(el);
-				System.out.println(el.getClass());
+				//System.out.println(el.getClass());
+				//System.out.println(el+"\n");
 			}
 		}
 		
-		String dotString = "digraph {\n";
+		return "";
+		
+		/*String dotString = "digraph {\n";
 		
 		// First prepare the objects and their ids
 		Iterator<String> iter = this.objectMap.keySet().iterator();
@@ -63,8 +73,8 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 		
 		dotString += "}";
 		
-		return dotString;
-	}
+		return dotString;*/
+	} 
 	
 	protected String visualizeElementUnion(ElementUnion element)
 	{
@@ -78,19 +88,29 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 	{
 		String returnString = ""; 
 		PathBlock pathBlock = (PathBlock) element.getPattern();
-		for(int i = 0; i < pathBlock.size(); i++){
-			TriplePath el = pathBlock.get(i);
-			returnString = this.getObjectId(el.getSubject().toString())+" -> "+this.getObjectId(el.getObject().toString())+" [ label=\""+this.escape(el.getPredicate().toString())+"\" ]";
-			this.statementList.add(returnString);
-		}
-
 		
+		for(int i = 0; i < pathBlock.size(); i++) {
+			TriplePath el = pathBlock.get(i);
+
+			Node fromNode = new Node();
+			fromNode.setLabel(el.getSubject().toString());
+			
+			Node toNode = new Node();
+			toNode.setLabel(el.getObject().toString());
+			
+			Edge edge = new Edge();
+			edge.setFrom(fromNode);
+			edge.setTo(toNode);
+			edge.setLabel(el.getPredicate().toString());
+		}
 	}
 	
 	protected String visualizeElementFilter(ElementFilter el)
 	{
+		System.out.println(el);
 		String returnString = "";
 		Expr expression = el.getExpr();
+		ExprFunction exFunction = expression.getFunction();
 		
 		String gvn = expression.getVarName();
 		NodeValue gc = expression.getConstant();

@@ -29,10 +29,10 @@ public class Server {
     		post("/queries", (request, response) -> {
     			response.type("application/json");
     			
-    			SimpleQueryVisualizer sqv = new SimpleQueryVisualizer();
+    			SimpleQueryVisualizer sqv = new SimpleQueryVisualizer(request.body());
 
     			try {
-    				Response res = new Response(sqv.visualize(request.body()));
+    				Response res = new Response(sqv.visualize());
     				
         			Gson gson = new Gson();
         			String json = gson.toJson(res); 
