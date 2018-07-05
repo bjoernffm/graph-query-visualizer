@@ -1,27 +1,32 @@
 package main.app.dot;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 public class Node {
-	protected Integer id;
+	protected String id;
 	protected String label;
 	protected String shape;
 	protected String fillcolor;
 	protected String style;
 	
-	public Node()
+	public Node(String id) throws UnsupportedEncodingException
 	{
-		Random rand = new Random();
-		this.id = rand.nextInt(10000); 
+		this.setId(id);
+		this.setLabel(id);
 	}
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
-		this.id = id;
+	public void setId(String id) throws UnsupportedEncodingException {
+		byte[] bytes = id.getBytes("UTF-8");
+		UUID uuid = UUID.nameUUIDFromBytes(bytes);
+		
+		this.id = uuid.toString();
 	}
 	
 	public String getLabel() {
@@ -64,19 +69,20 @@ public class Node {
 			argumentList.add("label=\""+this.label+"\"");
 		}
 		if (this.shape != null && !this.shape.equals("")) {
-			argumentList.add("shape="+this.shape);
+			argumentList.add("shape=\""+this.shape+"\"");
 		}
 		if (this.fillcolor != null && !this.fillcolor.equals("")) {
-			argumentList.add("fillcolor="+this.fillcolor);
+			argumentList.add("fillcolor=\""+this.fillcolor+"\"");
 		}
 		if (this.style != null && !this.style.equals("")) {
-			argumentList.add("style="+this.style);
+			argumentList.add("style=\""+this.style+"\"");
 		}
-		
-		if (argumentList.isEmpty()) {
-			return this.id.toString();
-		} else {
-			return this.id+" ["+String.join(", ", argumentList)+"]";
-		}
+
+		return "\""+this.id+"\""+" ["+String.join(", ", argumentList)+"]";
+	}
+	
+	public String toString()
+	{
+		return this.toDot();
 	}
 }

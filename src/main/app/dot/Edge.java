@@ -6,6 +6,7 @@ public class Edge {
 	protected Node from;
 	protected Node to;
 	protected String label;
+	protected String arrowhead;
 	
 	public Node getFrom() {
 		return from;
@@ -31,6 +32,14 @@ public class Edge {
 		this.label = label;
 	}
 	
+	public String getArrowhead() {
+		return label;
+	}
+	
+	public void setArrowhead(String arrowhead) {
+		this.arrowhead = arrowhead;
+	}
+	
 	public String toDot()
 	{
 		ArrayList<String> argumentList = new ArrayList<>();
@@ -38,7 +47,15 @@ public class Edge {
 		if (this.label != null && !this.label.equals("")) {
 			argumentList.add("label=\""+this.label+"\"");
 		}
+		if (this.arrowhead != null && !this.arrowhead.equals("")) {
+			argumentList.add("arrowhead=\""+this.arrowhead+"\"");
+		}
 		
-		return this.getFrom().getId()+" -> "+this.getTo().getId()+" ["+String.join(", ", argumentList)+"]";
+		return "\""+this.getFrom().getId()+"\" -> \""+this.getTo().getId()+"\" ["+String.join(", ", argumentList)+"]";
+	}
+	
+	public String toString()
+	{
+		return this.toDot();
 	}
 }

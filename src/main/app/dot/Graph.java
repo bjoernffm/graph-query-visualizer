@@ -4,19 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class Graph {
-	protected Map<Integer, Node> nodeMap = new HashMap<>();
-	protected Integer nodeCounter = 0;
+	protected Map<String, Node> nodeMap = new HashMap<>();
 	
 	protected ArrayList<Edge> edgeList = new ArrayList<>();
 	protected String type = "digraph";
 	
 	public void addNode(Node node)
 	{
-		node.setId(this.nodeCounter);
-		this.nodeMap.put(this.nodeCounter, node);
-		this.nodeCounter++;
+		this.nodeMap.put(node.getId(), node);
 	}
 	
 	public void addEdge(Edge edge)
@@ -29,9 +27,8 @@ public class Graph {
 		String ret = this.type+" {\n";
 
 		// Adding nodes
-		for(int i = 0; i < this.nodeMap.size(); i++) {
-			Node node = this.nodeMap.get(i);
-			ret += "\t"+node.toDot()+"\n";
+		for (Entry<String, Node> entry: this.nodeMap.entrySet()) {
+			ret += "\t"+entry.getValue().toDot()+"\n";
 		}
 		
 		// Adding edges
@@ -43,5 +40,10 @@ public class Graph {
 		ret += "}";
 
 		return ret;
+	}
+	
+	public String toString()
+	{
+		return this.toDot();
 	}
 }
