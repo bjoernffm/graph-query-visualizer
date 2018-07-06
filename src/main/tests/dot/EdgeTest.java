@@ -21,12 +21,13 @@ public class EdgeTest {
 		edge.setTo(node2);
 		edge.setArrowhead("dot");
 		edge.setLabel("Label");
+		edge.setStyle("dotted");
 
 		assertEquals(edge.getFrom(), node1);
 		assertEquals(edge.getTo(), node2);
 		assertTrue(edge.getLabel().equals("Label"));
 		assertTrue(edge.getLabel().equals("Label"));
-		assertTrue(edge.toDot().equals("\"c4ca4238-a0b9-3382-8dcc-509a6f75849b\" -> \"c81e728d-9d4c-3f63-af06-7f89cc14862c\" [label=\"Label\", arrowhead=\"dot\"]"));
+		assertTrue(edge.toDot().equals("\"c4ca4238-a0b9-3382-8dcc-509a6f75849b\" -> \"c81e728d-9d4c-3f63-af06-7f89cc14862c\" [label=\"Label\", style=\"dotted\", arrowhead=\"dot\"]"));
 	}
 
 }

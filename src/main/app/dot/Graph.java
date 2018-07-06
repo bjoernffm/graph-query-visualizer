@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class Graph {
+public class Graph extends Object {
 	protected Map<String, Node> nodeMap = new HashMap<>();
 	
 	protected ArrayList<Edge> edgeList = new ArrayList<>();

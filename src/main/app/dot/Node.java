@@ -2,10 +2,9 @@ package main.app.dot;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.UUID;
 
-public class Node {
+public class Node extends Object {
 	protected String id;
 	protected String label;
 	protected String shape;
@@ -34,6 +33,7 @@ public class Node {
 	}
 	
 	public void setLabel(String label) {
+		label = this.escape(label);
 		this.label = label.trim();
 	}
 

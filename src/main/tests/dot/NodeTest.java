@@ -31,5 +31,11 @@ public class NodeTest {
 		Node node = new Node("22");
 		assertTrue(node.toDot().equals("\""+node.getId()+"\" [label=\"22\"]"));
 	}
+	
+	@Test
+	public void test3() throws UnsupportedEncodingException {
+		Node node = new Node("\"data\"");
+		assertTrue(node.toDot().equals("\""+node.getId()+"\" [label=\"\\\"data\\\"\"]"));
+	}
 
 }
