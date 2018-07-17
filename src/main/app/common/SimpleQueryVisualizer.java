@@ -1,5 +1,6 @@
 package main.app.common;
 
+import org.apache.jena.graph.NodeVisitor;
 import org.apache.jena.query.Query;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
@@ -13,9 +14,12 @@ import org.apache.jena.sparql.engine.binding.BindingHashMap;
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprAggregator;
 import org.apache.jena.sparql.expr.ExprFunction;
+import org.apache.jena.sparql.expr.ExprList;
 import org.apache.jena.sparql.expr.ExprVar;
 import org.apache.jena.sparql.expr.NodeValue;
+import org.apache.jena.sparql.expr.aggregate.Aggregator;
 import org.apache.jena.sparql.syntax.Element;
+import org.apache.jena.sparql.syntax.ElementBind;
 import org.apache.jena.sparql.syntax.ElementData;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
@@ -35,6 +39,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 final public class SimpleQueryVisualizer extends QueryVisualizer implements QueryVisualizerInterface {
@@ -59,6 +64,7 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 		//PrefixMappingImpl ret2 = (PrefixMappingImpl) this.query.getPrefixMapping();
 
 		ElementGroup queryPattern = (ElementGroup) this.query.getQueryPattern();
+
 		for(int i = 0; i < queryPattern.size(); i++) {
 			Element el = queryPattern.get(i);
 			if (el instanceof org.apache.jena.sparql.syntax.ElementPathBlock) {
@@ -67,20 +73,46 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 				this.visualizeElementFilter((ElementFilter) el);
 			} else if (el instanceof org.apache.jena.sparql.syntax.ElementData) {
 				this.visualizeElementData((ElementData) el);
+			}  else if (el instanceof org.apache.jena.sparql.syntax.ElementBind) {
+				this.visualizeElementBind((ElementBind) el);
 			} else {
-				/*System.out.println(el.getClass());
-				System.out.println(el+"\n");*/
+				System.out.println(el.getClass());
+				System.out.println(el+"\n");
 			}
 		}
 		
-		List<Var> ret = this.query.getProjectVars();
-		for ( Iterator<Var> iterator = ret.iterator(); iterator.hasNext(); ) {
-			Var var = iterator.next();
+		VarExprList project = this.query.getProject();
+		
+		List<Var> projectVars = project.getVars();
+		Map<Var, Expr> projectExpressions = project.getExprs();
+		
+		for(int i = 0; i < projectVars.size(); i++) {
+			Var var = projectVars.get(i);
 
 			try {
-				Node node = new EntityNode("?"+var.getName());
-				node.setShape("doublecircle");
-				this.graph.addNode(node);
+				Node entityNode = new EntityNode("?"+var.getName());
+				entityNode.setShape("doublecircle");
+				this.graph.addNode(entityNode);
+				
+				if (projectExpressions.containsKey(var)) {
+					ExprAggregator projectExpression = (ExprAggregator) projectExpressions.get(var);
+
+					Aggregator aggregator = projectExpression.getAggregator();
+					ExprList expressionList = aggregator.getExprList();
+					//System.out.println(aggregator);
+					
+					Set<Var> mentionedVars = expressionList.getVarsMentioned();
+					for(Var mentionedVar: mentionedVars) {
+						Node varNode = new EntityNode(mentionedVar.toString());
+						this.graph.addNode(varNode);
+						
+						Edge edge = new Edge();
+						edge.setLabel(aggregator.toString());
+						edge.setFrom(varNode);
+						edge.setTo(entityNode);
+						this.graph.addEdge(edge);
+					}
+				}
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -91,13 +123,41 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 		return "";
 	}
 	
+	protected void visualizeElementBind(ElementBind el) {
+		// TODO Auto-generated method stub
+		//System.out.println(el);
+		Expr expression = el.getExpr();
+		Var var = el.getVar();
+		//System.out.println(expression.getVarsMentioned());
+		
+		try {
+			Node entityNode = new EntityNode("?"+var.getVarName());
+			this.graph.addNode(entityNode);
+			
+			Set<Var> mentionedVars = expression.getVarsMentioned();
+			for(Var mentionedVar: mentionedVars) {
+				Node varNode = new EntityNode(mentionedVar.toString());
+				this.graph.addNode(varNode);
+				
+				Edge edge = new Edge();
+				edge.setLabel(el.toString());
+				edge.setFrom(varNode);
+				edge.setTo(entityNode);
+				this.graph.addEdge(edge);
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	protected void visualizeElementData(ElementData el) {
 		List<Binding> rows = el.getRows();
 		BindingHashMap ele = (BindingHashMap) rows.get(0);
 		
 		for ( Iterator<Var> iterator = ele.vars(); iterator.hasNext(); ) {
 			Var var = iterator.next();
-			System.out.println(var.getName());
+			//System.out.println(var.getName());
 			//System.out.println(ele.get(var).);
 			//System.out.println(ele.get(var).getLocalName());
 
