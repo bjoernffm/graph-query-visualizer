@@ -1,11 +1,6 @@
 package main.app.common;
 
-import org.apache.jena.graph.NodeVisitor;
-import org.apache.jena.query.Query;
-import org.apache.jena.shared.PrefixMapping;
-import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.apache.jena.sparql.core.PathBlock;
-import org.apache.jena.sparql.core.Prologue;
 import org.apache.jena.sparql.core.TriplePath;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.core.VarExprList;
@@ -15,16 +10,12 @@ import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprAggregator;
 import org.apache.jena.sparql.expr.ExprFunction;
 import org.apache.jena.sparql.expr.ExprList;
-import org.apache.jena.sparql.expr.ExprVar;
-import org.apache.jena.sparql.expr.NodeValue;
 import org.apache.jena.sparql.expr.aggregate.Aggregator;
 import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.sparql.syntax.ElementBind;
 import org.apache.jena.sparql.syntax.ElementData;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
-import org.apache.jena.sparql.syntax.ElementUnion;
-import org.apache.jena.sparql.syntax.Template;
 
 import main.app.dot.Edge;
 import main.app.dot.Graph;
@@ -36,7 +27,6 @@ import main.app.dot.objects.FilterNode;
 import org.apache.jena.sparql.syntax.ElementFilter;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -187,14 +177,32 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 		for(int i = 0; i < pathBlock.size(); i++) {
 			TriplePath el = pathBlock.get(i);
 
-
 			Node fromNode;
 			Node toNode;
 			try {
-				fromNode = new EntityNode(el.getSubject().toString());
-				toNode = new EntityNode(el.getObject().toString());
-				
+				org.apache.jena.graph.Node subject = el.getSubject();
 				org.apache.jena.graph.Node predicate = el.getPredicate();
+				org.apache.jena.graph.Node object = el.getObject();
+				
+				if (subject.isVariable()) {
+					fromNode = new EntityNode("?"+subject.getName());
+				} else if (subject.isConcrete()) {
+					fromNode = new EntityNode(subject.getLiteralLexicalForm());
+					fromNode.setShape("box");
+				} else {
+					fromNode = new EntityNode(subject.toString());
+					fromNode.setShape("box");
+				}
+				
+				if (object.isVariable()) {
+					toNode = new EntityNode("?"+object.getName());
+				} else if (object.isConcrete()) {
+					toNode = new EntityNode(object.getLiteralLexicalForm());
+					toNode.setShape("box");
+				} else {
+					toNode = new EntityNode(object.toString());
+					toNode.setShape("box");
+				}
 				
 				Edge edge = new Edge();
 				edge.setFrom(fromNode);
