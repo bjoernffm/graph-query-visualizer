@@ -9,7 +9,7 @@ import org.apache.jena.query.QueryParseException;
 
 import com.google.gson.Gson;
 
-import main.app.common.SimpleQueryVisualizer;
+import main.app.common.DotVisualizer;
 import spark.ModelAndView;
 import spark.template.jade.JadeTemplateEngine;
 
@@ -29,7 +29,7 @@ public class Server {
     		post("/queries", (request, response) -> {
     			response.type("application/json");
     			
-    			SimpleQueryVisualizer sqv = new SimpleQueryVisualizer(request.body());
+    			DotVisualizer sqv = new DotVisualizer(request.body());
 
     			try {
     				Response res = new Response(sqv.visualize());
