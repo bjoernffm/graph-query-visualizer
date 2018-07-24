@@ -20,6 +20,7 @@ import org.apache.jena.sparql.syntax.ElementPathBlock;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
+import main.app.dot.Subgraph;
 import main.app.dot.objects.DataNode;
 import main.app.dot.objects.EntityNode;
 import main.app.dot.objects.FilterNode;
@@ -35,6 +36,7 @@ import java.util.Set;
 final public class SimpleQueryVisualizer extends QueryVisualizer implements QueryVisualizerInterface {
 	
 	Graph graph = new Graph();
+	Subgraph subgraph = new Subgraph("cluster_1");
 
 	public SimpleQueryVisualizer(String query) {
 		super(query);
@@ -82,7 +84,7 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 			try {
 				Node entityNode = new EntityNode("?"+var.getName());
 				entityNode.setShape("doublecircle");
-				this.graph.addNode(entityNode);
+				this.subgraph.addNode(entityNode);
 				
 				if (projectExpressions.containsKey(var)) {
 					ExprAggregator projectExpression = (ExprAggregator) projectExpressions.get(var);
@@ -94,13 +96,13 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 					Set<Var> mentionedVars = expressionList.getVarsMentioned();
 					for(Var mentionedVar: mentionedVars) {
 						Node varNode = new EntityNode(mentionedVar.toString());
-						this.graph.addNode(varNode);
+						this.subgraph.addNode(varNode);
 						
 						Edge edge = new Edge();
 						edge.setLabel(aggregator.toString());
 						edge.setFrom(varNode);
 						edge.setTo(entityNode);
-						this.graph.addEdge(edge);
+						this.subgraph.addEdge(edge);
 					}
 				}
 			} catch (UnsupportedEncodingException e) {
@@ -109,6 +111,7 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 			}
 		}
 
+		this.graph.addSubgraph(this.subgraph);
 		System.out.println(this.graph);
 		return "";
 	}
@@ -122,18 +125,18 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 		
 		try {
 			Node entityNode = new EntityNode("?"+var.getVarName());
-			this.graph.addNode(entityNode);
+			this.subgraph.addNode(entityNode);
 			
 			Set<Var> mentionedVars = expression.getVarsMentioned();
 			for(Var mentionedVar: mentionedVars) {
 				Node varNode = new EntityNode(mentionedVar.toString());
-				this.graph.addNode(varNode);
+				this.subgraph.addNode(varNode);
 				
 				Edge edge = new Edge();
 				edge.setLabel(el.toString());
 				edge.setFrom(varNode);
 				edge.setTo(entityNode);
-				this.graph.addEdge(edge);
+				this.subgraph.addEdge(edge);
 			}
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
@@ -160,9 +163,9 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 				edge.setLabel("value");
 				edge.setStyle("dotted");
 				
-				this.graph.addNode(dataNode);
-				this.graph.addNode(entityNode);
-				this.graph.addEdge(edge);
+				this.subgraph.addNode(dataNode);
+				this.subgraph.addNode(entityNode);
+				this.subgraph.addEdge(edge);
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -209,9 +212,9 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 				edge.setTo(toNode);
 				edge.setLabel(predicate.getLocalName());
 				
-				this.graph.addNode(fromNode);
-				this.graph.addNode(toNode);
-				this.graph.addEdge(edge);
+				this.subgraph.addNode(fromNode);
+				this.subgraph.addNode(toNode);
+				this.subgraph.addEdge(edge);
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -229,17 +232,17 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 			try {
 				Node filter = new FilterNode(exFunction.toString());
 				filter.setLabel(el.toString());
-				this.graph.addNode(filter);
+				this.subgraph.addNode(filter);
 				
 				Set<Var> mentionedVars = exFunction.getVarsMentioned();
 				for(Var mentionedVar: mentionedVars) {
 					Node filter2 = new EntityNode(mentionedVar.toString());
-					this.graph.addNode(filter2);
+					this.subgraph.addNode(filter2);
 					Edge edge = new Edge();
 					edge.setArrowhead("dot");
 					edge.setFrom(filter);
 					edge.setTo(filter2);
-					this.graph.addEdge(edge);
+					this.subgraph.addEdge(edge);
 				}
 				
 			} catch (UnsupportedEncodingException e) {
