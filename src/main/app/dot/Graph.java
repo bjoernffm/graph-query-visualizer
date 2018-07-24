@@ -53,7 +53,10 @@ public class Graph extends Object {
 
 		// Adding subgraphs
 		for (Entry<String, Subgraph> entry: this.subgraphMap.entrySet()) {
-			ret += "\t"+entry.getValue().toDot()+"\n";
+			String subgraph = entry.getValue().toDot();
+			subgraph = subgraph.replaceAll("\t", "\t\t");
+			subgraph = subgraph.replaceAll("}", "\t}");
+			ret += "\t"+subgraph+"\n\n";
 		}
 
 		// Adding nodes
@@ -68,6 +71,8 @@ public class Graph extends Object {
 		}
 		
 		ret += "}";
+		
+		ret = ret.replaceAll("\n\n", "\n");
 
 		return ret;
 	}
