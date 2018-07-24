@@ -18,7 +18,7 @@ public class Node extends Object {
 	}
 	
 	public String getId() {
-		return id;
+		return this.id;
 	}
 	
 	public void setId(String id) throws UnsupportedEncodingException {
@@ -29,7 +29,7 @@ public class Node extends Object {
 	}
 	
 	public String getLabel() {
-		return label;
+		return this.label;
 	}
 	
 	public void setLabel(String label) {
@@ -38,7 +38,7 @@ public class Node extends Object {
 	}
 
 	public String getShape() {
-		return shape;
+		return this.shape;
 	}
 
 	public void setShape(String shape) {
@@ -46,7 +46,7 @@ public class Node extends Object {
 	}
 
 	public String getFillcolor() {
-		return fillcolor;
+		return this.fillcolor;
 	}
 
 	public void setFillcolor(String fillcolor) {
@@ -54,7 +54,7 @@ public class Node extends Object {
 	}
 
 	public String getStyle() {
-		return style;
+		return this.style;
 	}
 
 	public void setStyle(String style) {

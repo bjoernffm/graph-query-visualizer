@@ -8,9 +8,10 @@ public class Edge extends Object {
 	protected String label;
 	protected String style;
 	protected String arrowhead;
+	protected String lhead;
 	
 	public Node getFrom() {
-		return from;
+		return this.from;
 	}
 	
 	public void setFrom(Node from) {
@@ -18,7 +19,7 @@ public class Edge extends Object {
 	}
 	
 	public Node getTo() {
-		return to;
+		return this.to;
 	}
 	
 	public void setTo(Node to) {
@@ -26,7 +27,7 @@ public class Edge extends Object {
 	}
 	
 	public String getLabel() {
-		return label;
+		return this.label;
 	}
 	
 	public void setLabel(String label) {
@@ -34,7 +35,7 @@ public class Edge extends Object {
 	}
 	
 	public String getStyle() {
-		return style;
+		return this.style;
 	}
 	
 	public void setStyle(String style) {
@@ -42,11 +43,19 @@ public class Edge extends Object {
 	}
 	
 	public String getArrowhead() {
-		return label;
+		return this.label;
 	}
 	
 	public void setArrowhead(String arrowhead) {
 		this.arrowhead = arrowhead;
+	}
+	
+	public String getLhead() {
+		return this.lhead;
+	}
+	
+	public void setLhead(String lhead) {
+		this.lhead = lhead;
 	}
 	
 	public String toDot()
@@ -61,6 +70,9 @@ public class Edge extends Object {
 		}
 		if (this.arrowhead != null && !this.arrowhead.equals("")) {
 			argumentList.add("arrowhead=\""+this.arrowhead+"\"");
+		}
+		if (this.lhead != null && !this.lhead.equals("")) {
+			argumentList.add("lhead=\""+this.lhead+"\"");
 		}
 		
 		return "\""+this.getFrom().getId()+"\" -> \""+this.getTo().getId()+"\" ["+String.join(", ", argumentList)+"]";
