@@ -44,8 +44,7 @@ public class GraphTest {
 		graph.addEdge(edge2);
 		
 		String ret = graph.toDot();
-		System.out.println(ret);
-		assertEquals(ret.length(), 461);
+		assertEquals(ret.length(), 557);
 	}
 
 }

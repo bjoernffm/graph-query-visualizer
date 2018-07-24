@@ -1,5 +1,7 @@
 package main.app.common;
 
+import org.apache.jena.query.Query;
+import org.apache.jena.query.SortCondition;
 import org.apache.jena.sparql.core.PathBlock;
 import org.apache.jena.sparql.core.TriplePath;
 import org.apache.jena.sparql.core.Var;
@@ -21,6 +23,7 @@ import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.Subgraph;
+import main.app.dot.objects.AggregateNode;
 import main.app.dot.objects.DataNode;
 import main.app.dot.objects.EntityNode;
 import main.app.dot.objects.FilterNode;
@@ -28,6 +31,7 @@ import main.app.dot.objects.FilterNode;
 import org.apache.jena.sparql.syntax.ElementFilter;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +77,81 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 			}
 		}
 		
+		/**
+		 * adding nodes for "group by"
+		 */
+		VarExprList groupByVarExpressions = this.query.getGroupBy();
+		List<Var> groupByVars = groupByVarExpressions.getVars();
+
+		try {
+			Node groupByNode = new AggregateNode("GROUP BY");
+			String groupByString = "GROUP BY\\n";
+			
+			for(Var groupByVar: groupByVars) {
+				Node varNode = new EntityNode("?"+groupByVar.getName());
+				groupByString += "* ?"+groupByVar.getName()+"\\l";
+
+				Edge edge = new Edge();
+				edge.setArrowhead("dot");
+				edge.setFrom(groupByNode);
+				edge.setTo(varNode);
+				edge.setStyle("dotted");
+				this.graph.addEdge(edge);
+				
+				this.subgraph.addNode(varNode);
+			}
+			
+			groupByNode.setLabel(groupByString);
+
+			this.graph.addNode(groupByNode);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/**
+		 * adding nodes for "order by"
+		 */
+		List<SortCondition> sortConditions = this.query.getOrderBy();
+
+		try {
+			Node orderByNode = new AggregateNode("ORDER BY");
+			String orderByString = "ORDER BY\\n";
+			
+			for(SortCondition sortCondition: sortConditions) {
+				Expr expression = sortCondition.getExpression();
+				
+				orderByString += "* "+expression.toString();
+				if (sortCondition.getDirection() == Query.ORDER_ASCENDING) {
+					orderByString += " ASC\\l";
+				} else if (sortCondition.getDirection() == Query.ORDER_DESCENDING) {
+					orderByString += " DESC\\l";
+				}
+				
+				if (expression.isVariable()) {
+					Node varNode = new EntityNode("?"+expression.getVarName());
+	
+					Edge edge = new Edge();
+					edge.setArrowhead("dot");
+					edge.setFrom(orderByNode);
+					edge.setTo(varNode);
+					edge.setStyle("dotted");
+					this.graph.addEdge(edge);
+					this.subgraph.addNode(varNode);
+				}
+			}
+			
+			orderByNode.setLabel(orderByString);
+
+			this.graph.addNode(orderByNode);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		/**
+		 * aggregate project- and mentioned-vars
+		 */
 		VarExprList project = this.query.getProject();
 		
 		List<Var> projectVars = project.getVars();
@@ -112,7 +191,9 @@ final public class SimpleQueryVisualizer extends QueryVisualizer implements Quer
 		}
 
 		this.graph.addSubgraph(this.subgraph);
+		
 		System.out.println(this.graph);
+		
 		return "";
 	}
 	

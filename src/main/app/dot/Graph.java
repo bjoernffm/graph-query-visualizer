@@ -13,7 +13,10 @@ public class Graph extends Object {
 	protected ArrayList<Edge> edgeList = new ArrayList<>();
 	protected String type = "digraph";
 	
-	protected boolean compound = true;
+	protected String compoundProperty = "true";
+	protected String graphProperties = "fontsize=8 fontname=\"Arial\"";
+	protected String nodeProperties = "fontsize=8 fontname=\"Arial\"";
+	protected String edgeProperties = "fontsize=8 fontname=\"Arial\"";
 	
 	public void addNode(Node node)
 	{
@@ -33,8 +36,19 @@ public class Graph extends Object {
 	public String toDot()
 	{
 		String ret = this.type+" {\n\n";
-		
-		ret += "\tcompound="+this.compound+";\n";
+
+		if (!this.compoundProperty.isEmpty()) {
+			ret += "\tcompound="+this.compoundProperty+";\n";
+		}
+		if (!this.graphProperties.isEmpty()) {
+			ret += "\tgraph ["+this.graphProperties+"];\n";
+		}
+		if (!this.nodeProperties.isEmpty()) {
+			ret += "\tnode ["+this.nodeProperties+"];\n";
+		}
+		if (!this.edgeProperties.isEmpty()) {
+			ret += "\tedge ["+this.edgeProperties+"];\n";
+		}
 		ret += "\n";
 
 		// Adding subgraphs

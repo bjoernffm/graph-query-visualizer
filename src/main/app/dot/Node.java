@@ -7,6 +7,7 @@ import java.util.UUID;
 public class Node extends Object {
 	protected String id;
 	protected String label;
+	protected String labeljust;
 	protected String shape;
 	protected String fillcolor;
 	protected String style;
