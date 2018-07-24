@@ -13,6 +13,7 @@ import main.app.common.interpreters.ElementDataInterpreter;
 import main.app.common.interpreters.ElementFilterInterpreter;
 import main.app.common.interpreters.ElementPathBlockInterpreter;
 import main.app.common.interpreters.GroupByInterpreter;
+import main.app.common.interpreters.LimitInterpreter;
 import main.app.common.interpreters.OrderByInterpreter;
 import main.app.common.interpreters.ProjectVarInterpreter;
 import main.app.dot.Graph;
@@ -24,7 +25,7 @@ import java.util.List;
 
 final public class DotVisualizer extends QueryVisualizer implements QueryVisualizerInterface {
 	
-	Graph graph = new Graph();
+	Graph graph = new Graph("main");
 	Subgraph subgraph = new Subgraph("cluster_1");
 
 	public DotVisualizer(String query) {
@@ -33,17 +34,6 @@ final public class DotVisualizer extends QueryVisualizer implements QueryVisuali
 
 	public String visualize() throws Exception
 	{
-		//ArrayList<ExprAggregator> ret2 = (ArrayList) this.query.getAggregators();
-		//System.out.println(ret2.getClass());
-		
-		//String ret = this.query.getBaseURI();
-		//System.out.println(ret);
-		
-		//List<String> ret = this.query.getGraphURIs();
-		//System.out.println(ret);
-		
-		//PrefixMappingImpl ret2 = (PrefixMappingImpl) this.query.getPrefixMapping();
-
 		ElementGroup queryPattern = (ElementGroup) this.query.getQueryPattern();
 
 		for(int i = 0; i < queryPattern.size(); i++) {
@@ -73,6 +63,12 @@ final public class DotVisualizer extends QueryVisualizer implements QueryVisuali
 		 */
 		List<SortCondition> sortConditions = this.query.getOrderBy();
 		(new OrderByInterpreter()).interpret(sortConditions, this);
+		
+		/**
+		 * adding nodes for "limit"
+		 */
+		long limit = this.query.getLimit();
+		(new LimitInterpreter()).interpret(limit, this);
 		
 		/**
 		 * aggregate project- and mentioned-vars

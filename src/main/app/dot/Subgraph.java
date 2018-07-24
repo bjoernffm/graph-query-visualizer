@@ -6,21 +6,12 @@ public class Subgraph extends Graph {
 	
 	public Subgraph(String id)
 	{
+		super(id);
+		
 		this.compoundProperty = "";
 		this.graphProperties = "";
 		this.nodeProperties = "";
 		this.edgeProperties = "";
-		
-		this.setId(id);
-	}
-	
-	public String getId() {
-		return this.id;
-	}
-	
-	public void setId(String id) {
-		id = this.escape(id);
-		this.id = id.trim();
-		this.type = "subgraph "+this.getId();
+		this.type = "subgraph";
 	}
 }

@@ -25,7 +25,7 @@ public class OrderByInterpreter implements Interpreter {
 		List<SortCondition> sortConditions = (ArrayList<SortCondition>) obj;
 		
 		Node orderByNode = new AggregateNode("ORDER BY");
-		String orderByString = "ORDER BY\\n";
+		String orderByString = "ORDER BY\\n---------\\n";
 		
 		for(SortCondition sortCondition: sortConditions) {
 			Expr expression = sortCondition.getExpression();

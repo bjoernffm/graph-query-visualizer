@@ -38,13 +38,13 @@ public class GraphTest {
 		edge2.setLabel("Label 2");
 		edge2.setLhead("cluster_1");
 		
-		Graph graph = new Graph();
+		Graph graph = new Graph("main");
 		graph.addSubgraph(subgraph);
 		graph.addNode(node3);
 		graph.addEdge(edge2);
 		
 		String ret = graph.toDot();
-		assertEquals(ret.length(), 557);
+		assertEquals(ret.length(), 562);
 	}
 
 }

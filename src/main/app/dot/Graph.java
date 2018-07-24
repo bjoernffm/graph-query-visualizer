@@ -12,15 +12,26 @@ public class Graph extends Object {
 	
 	protected ArrayList<Edge> edgeList = new ArrayList<>();
 	protected String type = "digraph";
+	protected String id = "main";
 	
 	protected String compoundProperty = "true";
 	protected String graphProperties = "fontsize=8 fontname=\"Arial\"";
 	protected String nodeProperties = "fontsize=8 fontname=\"Arial\"";
 	protected String edgeProperties = "fontsize=8 fontname=\"Arial\"";
 	
+	public Graph(String id)
+	{
+		this.setId(id);
+	}
+	
 	public void addNode(Node node)
 	{
 		this.nodeMap.put(node.getId(), node);
+	}
+	
+	public Map<String, Node> getNodes()
+	{
+		return this.nodeMap;
 	}
 	
 	public void addSubgraph(Subgraph subgraph)
@@ -33,9 +44,18 @@ public class Graph extends Object {
 		this.edgeList.add(edge);
 	}
 	
+	public String getId() {
+		return this.id;
+	}
+	
+	public void setId(String id) {
+		id = this.escape(id);
+		this.id = id.trim();
+	}
+	
 	public String toDot()
 	{
-		String ret = this.type+" {\n\n";
+		String ret = this.type+" "+this.id+" {\n\n";
 
 		if (!this.compoundProperty.isEmpty()) {
 			ret += "\tcompound="+this.compoundProperty+";\n";

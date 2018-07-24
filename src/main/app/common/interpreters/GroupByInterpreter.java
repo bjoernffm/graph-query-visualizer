@@ -24,7 +24,7 @@ public class GroupByInterpreter implements Interpreter {
 		List<Var> groupByVars = groupByVarExpressions.getVars();
 
 		Node groupByNode = new AggregateNode("GROUP BY");
-		String groupByString = "GROUP BY\\n";
+		String groupByString = "GROUP BY\\n---------\\n";
 		
 		for(Var groupByVar: groupByVars) {
 			Node varNode = new EntityNode("?"+groupByVar.getName());
