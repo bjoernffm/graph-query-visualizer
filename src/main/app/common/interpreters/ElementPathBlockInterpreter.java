@@ -41,9 +41,9 @@ public class ElementPathBlockInterpreter implements Interpreter {
 			
 			if (object.isVariable()) {
 				toNode = new EntityNode("?"+object.getName());
-			} else if (object.isConcrete()) {
-				toNode = new EntityNode(object.getLiteralLexicalForm());
-				toNode.setShape("box");
+			//} else if (object.isConcrete()) {
+			//	toNode = new EntityNode(object.getLiteralLexicalForm());
+			//	toNode.setShape("box");
 			} else {
 				toNode = new EntityNode(object.toString());
 				toNode.setShape("box");

@@ -12,7 +12,7 @@ public class Graph extends Object {
 	
 	protected ArrayList<Edge> edgeList = new ArrayList<>();
 	protected String type = "digraph";
-	protected String id = "main";
+	protected String id;
 	
 	protected String compoundProperty = "true";
 	protected String graphProperties = "fontsize=8 fontname=\"Arial\"";
