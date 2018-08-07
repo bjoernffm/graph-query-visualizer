@@ -2,6 +2,7 @@ package main.app.common.interpreters;
 
 import org.apache.jena.sparql.core.PathBlock;
 import org.apache.jena.sparql.core.TriplePath;
+import org.apache.jena.sparql.path.Path;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 
 import main.app.common.DotVisualizer;
@@ -29,6 +30,25 @@ public class ElementPathBlockInterpreter implements Interpreter {
 			org.apache.jena.graph.Node predicate = el.getPredicate();
 			org.apache.jena.graph.Node object = el.getObject();
 			
+			//System.out.println(el.isTriple());
+			
+			/**
+			 * multiple paths
+			 
+			 org.apache.jena.sparql.path.P_Seq path = (org.apache.jena.sparql.path.P_Seq) el.getPath();
+			org.apache.jena.sparql.path.P_Link path2 = (org.apache.jena.sparql.path.P_Link) path.getRight();
+			org.apache.jena.graph.Node node = path2.getNode();
+			System.out.println(node.getLocalName());*/
+			
+			/**
+			 * one or more
+			 
+			 org.apache.jena.sparql.path.P_Seq path = (org.apache.jena.sparql.path.P_Seq) el.getPath();
+			org.apache.jena.sparql.path.P_OneOrMore1 path2 = (org.apache.jena.sparql.path.P_OneOrMore1) path.getLeft();
+			org.apache.jena.sparql.path.P_Link subpath = (org.apache.jena.sparql.path.P_Link) path2.getSubPath();
+			System.out.println(subpath);
+			*/
+			
 			if (subject.isVariable()) {
 				fromNode = new EntityNode("?"+subject.getName());
 			} else if (subject.isConcrete()) {
@@ -52,7 +72,12 @@ public class ElementPathBlockInterpreter implements Interpreter {
 			Edge edge = new Edge();
 			edge.setFrom(fromNode);
 			edge.setTo(toNode);
-			edge.setLabel(predicate.getLocalName());
+			if (el.isTriple()) {
+				edge.setLabel(predicate.getLocalName());
+			} else {
+				org.apache.jena.sparql.path.P_Seq path = (org.apache.jena.sparql.path.P_Seq) el.getPath();
+				edge.setLabel(path.toString());
+			}
 			
 			visualizer.getSubgraph().addNode(fromNode);
 			visualizer.getSubgraph().addNode(toNode);
