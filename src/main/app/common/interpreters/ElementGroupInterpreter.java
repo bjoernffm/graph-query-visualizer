@@ -7,8 +7,10 @@ import org.apache.jena.sparql.syntax.ElementFilter;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementOptional;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
+import org.apache.jena.sparql.syntax.ElementSubQuery;
 
 import main.app.dot.Graph;
+import main.app.dot.Subgraph;
 
 public class ElementGroupInterpreter implements Interpreter {
 
@@ -32,6 +34,10 @@ public class ElementGroupInterpreter implements Interpreter {
 				(new ElementBindInterpreter()).interpret((ElementBind) el, graph);
 			} else if (el instanceof org.apache.jena.sparql.syntax.ElementOptional) {
 				(new ElementOptionalInterpreter()).interpret((ElementOptional) el, graph);
+			} else if (el instanceof ElementSubQuery) {
+				Subgraph subgraph = new Subgraph("cluster_"+this.hashCode());
+				graph.addSubgraph(subgraph);
+				(new QueryInterpreter()).interpret(((ElementSubQuery) el).getQuery(), subgraph);
 			} else if (el instanceof org.apache.jena.sparql.syntax.ElementUnion) {
 				// ElementUnion test = (ElementUnion) el;
 				//System.out.println(test.getElements());
