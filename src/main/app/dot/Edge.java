@@ -1,6 +1,7 @@
 package main.app.dot;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Edge extends Object {
 	protected Node from;
@@ -9,6 +10,11 @@ public class Edge extends Object {
 	protected String style;
 	protected String arrowhead;
 	protected String lhead;
+	
+	public String getId()
+	{
+		return UUID.nameUUIDFromBytes(this.toDot().getBytes()).toString();
+	}
 	
 	public Node getFrom() {
 		return this.from;

@@ -29,6 +29,18 @@ public class Graph extends Object {
 		this.nodeMap.put(node.getId(), node);
 	}
 	
+	public void removeNode(Node node)
+	{
+		// remove in class
+		this.nodeMap.remove(node.getId());
+		
+		// remove in all subgraphs
+		for (Entry<String, Subgraph> entry: this.subgraphMap.entrySet()) {
+			Subgraph subgraph = (Subgraph) entry.getValue();
+			subgraph.removeNode(node);
+		}
+	}
+	
 	public Map<String, Node> getNodes()
 	{
 		return this.nodeMap;
@@ -41,7 +53,36 @@ public class Graph extends Object {
 	
 	public void addEdge(Edge edge)
 	{
+		for(int i = 0; i < this.edgeList.size(); i++) {
+			if (this.edgeList.get(i).getId().equals(edge.getId())) {
+				return;
+			}
+		}
+		
 		this.edgeList.add(edge);
+	}
+	
+	public ArrayList<Edge> getEdgesRecursive()
+	{
+		ArrayList<Edge> localEdgeList = this.edgeList;
+		
+		for (Entry<String, Subgraph> entry: this.subgraphMap.entrySet()) {
+			Subgraph subgraph = entry.getValue();
+			ArrayList<Edge> subgraphEdgeList = subgraph.getEdgesRecursive();
+			localEdgeList.addAll(subgraphEdgeList);
+		}
+		
+		return localEdgeList;
+	}
+	
+	public void removeEdges()
+	{
+		this.edgeList = new ArrayList<>();
+		
+		for (Entry<String, Subgraph> entry: this.subgraphMap.entrySet()) {
+			Subgraph subgraph = entry.getValue();
+			subgraph.removeEdges();
+		}
 	}
 	
 	public String getId() {
@@ -73,10 +114,26 @@ public class Graph extends Object {
 
 		// Adding subgraphs
 		for (Entry<String, Subgraph> entry: this.subgraphMap.entrySet()) {
-			String subgraph = entry.getValue().toDot();
-			subgraph = subgraph.replaceAll("\t", "\t\t");
-			subgraph = subgraph.replaceAll("}", "\t}");
-			ret += "\t"+subgraph+"\n\n";
+			Subgraph subgraph = entry.getValue();
+
+			// make sure that all nodes that are contained in multiple graphs will be up in hierarchy
+			for (Entry<String, Node> node: this.nodeMap.entrySet()) {
+				subgraph.removeNode(node.getValue());
+			}
+			
+			// add edges from subgraphs
+			
+			ArrayList<Edge> edges = subgraph.getEdgesRecursive();
+			for(int i = 0; i < edges.size(); i++) {
+				Edge edge = edges.get(i);
+				this.addEdge(edge);
+			}
+			subgraph.removeEdges();
+			
+			String subgraphStr = subgraph.toDot();
+			subgraphStr = subgraphStr.replaceAll("\t", "\t\t");
+			subgraphStr = subgraphStr.replaceAll("}", "\t}");
+			ret += "\t"+subgraphStr+"\n\n";
 		}
 
 		// Adding nodes

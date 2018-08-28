@@ -44,7 +44,99 @@ public class GraphTest {
 		graph.addEdge(edge2);
 		
 		String ret = graph.toDot();
-		assertEquals(ret.length(), 562);
+		assertEquals(ret.length(), 561);
 	}
-
+	
+	@Test
+	public void testEdgeDuplicates() throws UnsupportedEncodingException {		
+		Node node1 = new Node("1");
+		node1.setLabel("Node 1");
+		Node node2 = new Node("2");
+		node2.setLabel("Node 2");
+		
+		Edge edge1 = new Edge();
+		edge1.setFrom(node1);
+		edge1.setTo(node2);
+		edge1.setLabel("Label");
+		
+		Edge edge2 = new Edge();
+		edge2.setFrom(node1);
+		edge2.setTo(node2);
+		edge2.setLabel("Label");
+		
+		Graph graph = new Graph("main");
+		graph.addNode(node1);
+		graph.addNode(node2);
+		graph.addEdge(edge1);
+		graph.addEdge(edge2);
+		
+		String ret = graph.toDot();
+		assertEquals(ret.length(), 356);
+	}
+	
+	@Test
+	public void testMultipleNodes() throws UnsupportedEncodingException {
+		Node nodeOuter = new Node("nodeOuter");
+		Node nodeInner1 = new Node("nodeInner1");
+		Node nodeInner2 = new Node("nodeInner2");
+		
+		Edge edge1 = new Edge();
+		edge1.setFrom(nodeOuter);
+		edge1.setTo(nodeInner1);
+		
+		Edge edge2 = new Edge();
+		edge2.setFrom(nodeInner1);
+		edge2.setTo(nodeInner2);
+		
+		Subgraph subgraph2 = new Subgraph("cluster_2");
+		subgraph2.addNode(nodeInner1);
+		subgraph2.addNode(nodeInner2);
+		subgraph2.addNode(nodeOuter);
+		
+		Subgraph subgraph1 = new Subgraph("cluster_1");
+		subgraph1.addNode(nodeInner1);
+		subgraph1.addNode(nodeOuter);
+		subgraph1.addSubgraph(subgraph2);
+		
+		Graph graph = new Graph("main");
+		graph.addNode(nodeOuter);
+		graph.addEdge(edge1);
+		graph.addEdge(edge2);
+		graph.addSubgraph(subgraph1);
+		
+		String ret = graph.toDot();
+		assertEquals(ret.length(), 553);
+	}
+	
+	@Test
+	public void testMultipleEdges() throws UnsupportedEncodingException {
+		Node nodeOuter = new Node("nodeOuter");
+		Node nodeInner1 = new Node("nodeInner1");
+		Node nodeInner2 = new Node("nodeInner2");
+		
+		Edge edge1 = new Edge();
+		edge1.setFrom(nodeOuter);
+		edge1.setTo(nodeInner1);
+		
+		Edge edge2 = new Edge();
+		edge2.setFrom(nodeInner1);
+		edge2.setTo(nodeInner2);
+		
+		Subgraph subgraph2 = new Subgraph("cluster_2");
+		subgraph2.addNode(nodeInner2);
+		subgraph2.addEdge(edge2);
+		
+		Subgraph subgraph1 = new Subgraph("cluster_1");
+		subgraph1.addNode(nodeInner1);
+		subgraph1.addEdge(edge2);
+		subgraph1.addSubgraph(subgraph2);
+		
+		Graph graph = new Graph("main");
+		graph.addNode(nodeOuter);
+		graph.addEdge(edge1);
+		graph.addSubgraph(subgraph1);
+		
+		String ret = graph.toDot();
+		assertEquals(ret.length(), 553);
+	}
 }
