@@ -17,9 +17,9 @@ final public class DotVisualizer extends QueryVisualizer implements QueryVisuali
 
 	public String visualize() throws Exception
 	{
-		(new QueryInterpreter()).interpret((Query) this.query, this);
-		
 		this.graph.addSubgraph(this.subgraph);
+		
+		(new QueryInterpreter()).interpret((Query) this.query, this.subgraph);
 		
 		System.out.println(this.graph);
 		

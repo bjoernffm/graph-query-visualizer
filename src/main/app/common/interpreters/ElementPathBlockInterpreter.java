@@ -5,16 +5,15 @@ import org.apache.jena.sparql.core.TriplePath;
 import org.apache.jena.sparql.path.P_Link;
 import org.apache.jena.sparql.path.P_Seq;
 import org.apache.jena.sparql.path.P_ZeroOrMore1;
-import org.apache.jena.sparql.path.Path;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 
-import main.app.common.DotVisualizer;
 import main.app.dot.Edge;
+import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.EntityNode;
 
 public class ElementPathBlockInterpreter implements Interpreter {
-	public void interpret(Object obj, DotVisualizer visualizer) throws Exception
+	public void interpret(Object obj, Graph graph) throws Exception
 	{
 		if (obj.getClass() != ElementPathBlock.class) {
 			throw new Exception(ElementPathBlock.class+" needed as Object. Given: "+obj.getClass());
@@ -91,9 +90,9 @@ public class ElementPathBlockInterpreter implements Interpreter {
 				}
 			}
 			
-			visualizer.getSubgraph().addNode(fromNode);
-			visualizer.getSubgraph().addNode(toNode);
-			visualizer.getSubgraph().addEdge(edge);
+			graph.addNode(fromNode);
+			graph.addNode(toNode);
+			graph.addEdge(edge);
 		}
 	}
 }

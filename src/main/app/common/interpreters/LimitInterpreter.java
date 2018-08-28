@@ -3,15 +3,15 @@ package main.app.common.interpreters;
 import java.lang.Long;
 import java.util.Map;
 
-import main.app.common.DotVisualizer;
 import main.app.dot.Edge;
+import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.AggregateNode;
 
 public class LimitInterpreter implements Interpreter {
 
 	@Override
-	public void interpret(Object obj, DotVisualizer visualizer) throws Exception
+	public void interpret(Object obj, Graph graph) throws Exception
 	{
 		if (obj.getClass() != Long.class) {
 			throw new Exception(Long.class+" needed as Object. Given: "+obj.getClass());
@@ -20,7 +20,7 @@ public class LimitInterpreter implements Interpreter {
 		long limit = (long) obj;
 		Node limitNode = new AggregateNode("LIMIT "+limit);
 		
-		Map<String, Node> nodes = visualizer.getSubgraph().getNodes();
+		Map<String, Node> nodes = graph.getNodes();
 		Node targetNode = (Node) nodes.values().toArray()[0];
 		
 		Edge edge = new Edge();
@@ -28,9 +28,9 @@ public class LimitInterpreter implements Interpreter {
 		edge.setFrom(limitNode);
 		edge.setTo(targetNode);
 		edge.setLhead("cluster_1");
-		visualizer.getGraph().addEdge(edge);
+		graph.getParent().addEdge(edge);
 		
-		visualizer.getGraph().addNode(limitNode);
+		graph.getParent().addNode(limitNode);
 	}
 
 }

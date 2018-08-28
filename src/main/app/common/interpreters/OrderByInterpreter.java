@@ -9,6 +9,7 @@ import org.apache.jena.sparql.expr.Expr;
 
 import main.app.common.DotVisualizer;
 import main.app.dot.Edge;
+import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.AggregateNode;
 import main.app.dot.objects.EntityNode;
@@ -16,7 +17,7 @@ import main.app.dot.objects.EntityNode;
 public class OrderByInterpreter implements Interpreter {
 
 	@Override
-	public void interpret(Object obj, DotVisualizer visualizer) throws Exception
+	public void interpret(Object obj, Graph graph) throws Exception
 	{
 		if (obj.getClass() != ArrayList.class) {
 			throw new Exception(ArrayList.class+" needed as Object. Given: "+obj.getClass());
@@ -45,14 +46,14 @@ public class OrderByInterpreter implements Interpreter {
 				edge.setFrom(orderByNode);
 				edge.setTo(varNode);
 				edge.setStyle("dotted");
-				visualizer.getGraph().addEdge(edge);
-				visualizer.getSubgraph().addNode(varNode);
+				graph.getParent().addEdge(edge);
+				graph.addNode(varNode);
 			}
 		}
 		
 		orderByNode.setLabel(orderByString);
 
-		visualizer.getGraph().addNode(orderByNode);
+		graph.getParent().addNode(orderByNode);
 	}
 
 }

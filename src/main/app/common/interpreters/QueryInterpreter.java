@@ -7,12 +7,12 @@ import org.apache.jena.query.SortCondition;
 import org.apache.jena.sparql.core.VarExprList;
 import org.apache.jena.sparql.syntax.Element;
 
-import main.app.common.DotVisualizer;
+import main.app.dot.Graph;
 
 public class QueryInterpreter implements Interpreter {
 
 	@Override
-	public void interpret(Object obj, DotVisualizer visualizer) throws Exception
+	public void interpret(Object obj, Graph graph) throws Exception
 	{
 		if (obj.getClass() != Query.class) {
 			throw new Exception(Query.class+" needed as Object. Given: "+obj.getClass());
@@ -21,14 +21,14 @@ public class QueryInterpreter implements Interpreter {
 		Query query = (Query) obj;
 		
 		Element queryPattern = query.getQueryPattern();
-		(new QueryPatternInterpreter()).interpret(queryPattern, visualizer);
+		(new QueryPatternInterpreter()).interpret(queryPattern, graph);
 		
 		/**
 		 * adding nodes for "group by"
 		 */
 		VarExprList groupByVarExpressions = query.getGroupBy();
 		if (groupByVarExpressions != null && !groupByVarExpressions.isEmpty()) {
-			(new GroupByInterpreter()).interpret(groupByVarExpressions, visualizer);
+			(new GroupByInterpreter()).interpret(groupByVarExpressions, graph);
 		}
 		
 		/**
@@ -36,7 +36,7 @@ public class QueryInterpreter implements Interpreter {
 		 */
 		List<SortCondition> sortConditions = query.getOrderBy();
 		if (sortConditions != null && !sortConditions.isEmpty()) {
-			(new OrderByInterpreter()).interpret(sortConditions, visualizer);
+			(new OrderByInterpreter()).interpret(sortConditions, graph);
 		}
 		
 		/**
@@ -44,7 +44,7 @@ public class QueryInterpreter implements Interpreter {
 		 */
 		long limit = query.getLimit();
 		if (limit >= 0) {
-			(new LimitInterpreter()).interpret(limit, visualizer);
+			(new LimitInterpreter()).interpret(limit, graph);
 		}
 		
 		/**
@@ -52,7 +52,7 @@ public class QueryInterpreter implements Interpreter {
 		 */
 		VarExprList project = query.getProject();
 		if (project != null && !project.isEmpty()) {
-			(new ProjectVarInterpreter()).interpret(project, visualizer);
+			(new ProjectVarInterpreter()).interpret(project, graph);
 		}
 	}
 

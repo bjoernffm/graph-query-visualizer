@@ -5,21 +5,21 @@ import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementSubQuery;
 
-import main.app.common.DotVisualizer;
+import main.app.dot.Graph;
 
 public class QueryPatternInterpreter implements Interpreter {
 
 	@Override
-	public void interpret(Object obj, DotVisualizer visualizer) throws Exception
+	public void interpret(Object obj, Graph graph) throws Exception
 	{
 		Element queryPattern = (Element) obj;
 		
 		if (queryPattern instanceof org.apache.jena.sparql.syntax.ElementGroup) {
-			(new ElementGroupInterpreter()).interpret((ElementGroup) queryPattern, visualizer);
+			(new ElementGroupInterpreter()).interpret((ElementGroup) queryPattern, graph);
 		} else if (queryPattern instanceof org.apache.jena.sparql.syntax.ElementSubQuery) {
 			ElementSubQuery el = (ElementSubQuery) queryPattern;
 			Query el2 = el.getQuery();
-			(new QueryInterpreter()).interpret((Query) el2, visualizer);
+			(new QueryInterpreter()).interpret((Query) el2, graph);
 		} else {
 			System.out.println(queryPattern.getClass());
 			System.out.println(queryPattern+"\n");

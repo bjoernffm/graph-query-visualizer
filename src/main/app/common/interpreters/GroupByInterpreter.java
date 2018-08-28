@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.core.VarExprList;
 
-import main.app.common.DotVisualizer;
 import main.app.dot.Edge;
+import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.AggregateNode;
 import main.app.dot.objects.EntityNode;
@@ -14,7 +14,7 @@ import main.app.dot.objects.EntityNode;
 public class GroupByInterpreter implements Interpreter {
 
 	@Override
-	public void interpret(Object obj, DotVisualizer visualizer) throws Exception
+	public void interpret(Object obj, Graph graph) throws Exception
 	{
 		if (obj.getClass() != VarExprList.class) {
 			throw new Exception(VarExprList.class+" needed as Object. Given: "+obj.getClass());
@@ -35,14 +35,14 @@ public class GroupByInterpreter implements Interpreter {
 			edge.setFrom(groupByNode);
 			edge.setTo(varNode);
 			edge.setStyle("dotted");
-			visualizer.getGraph().addEdge(edge);
+			graph.getParent().addEdge(edge);
 			
-			visualizer.getSubgraph().addNode(varNode);
+			graph.addNode(varNode);
 		}
 		
 		groupByNode.setLabel(groupByString);
 
-		visualizer.getGraph().addNode(groupByNode);
+		graph.getParent().addNode(groupByNode);
 	}
 
 }

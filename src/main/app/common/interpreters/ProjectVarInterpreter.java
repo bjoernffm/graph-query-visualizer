@@ -12,15 +12,15 @@ import org.apache.jena.sparql.expr.ExprAggregator;
 import org.apache.jena.sparql.expr.ExprList;
 import org.apache.jena.sparql.expr.aggregate.Aggregator;
 
-import main.app.common.DotVisualizer;
 import main.app.dot.Edge;
+import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.EntityNode;
 
 public class ProjectVarInterpreter implements Interpreter {
 
 	@Override
-	public void interpret(Object obj, DotVisualizer visualizer) throws Exception
+	public void interpret(Object obj, Graph graph) throws Exception
 	{
 		if (obj.getClass() != VarExprList.class) {
 			throw new Exception(VarExprList.class+" needed as Object. Given: "+obj.getClass());
@@ -40,7 +40,7 @@ public class ProjectVarInterpreter implements Interpreter {
 
 			Node entityNode = new EntityNode("?"+var.getName());
 			entityNode.setShape("doublecircle");
-			visualizer.getSubgraph().addNode(entityNode);
+			graph.addNode(entityNode);
 			
 			// check for possible aggregation expression
 			if (projectExpressions.containsKey(var)) {
@@ -54,13 +54,13 @@ public class ProjectVarInterpreter implements Interpreter {
 					Set<Var> mentionedVars = expressionList.getVarsMentioned();
 					for(Var mentionedVar: mentionedVars) {
 						Node varNode = new EntityNode(mentionedVar.toString());
-						visualizer.getSubgraph().addNode(varNode);
+						graph.addNode(varNode);
 						
 						Edge edge = new Edge();
 						edge.setLabel(aggregator.toString());
 						edge.setFrom(varNode);
 						edge.setTo(entityNode);
-						visualizer.getSubgraph().addEdge(edge);
+						graph.addEdge(edge);
 					}
 				} else if (projectExpressions.get(var) instanceof E_Str) {
 					E_Str projectExpression = (E_Str) projectExpressions.get(var);
@@ -69,14 +69,14 @@ public class ProjectVarInterpreter implements Interpreter {
 					Set<Var> mentionedVars = projectExpression.getVarsMentioned();
 					for(Var mentionedVar: mentionedVars) {
 						Node varNode = new EntityNode(mentionedVar.toString());
-						visualizer.getSubgraph().addNode(varNode);
+						graph.addNode(varNode);
 						
 						Edge edge = new Edge();
 						// TODO check for better expression to show in the graph -> (str ?link) looks stupid
 						edge.setLabel(projectExpression.getFunction().toString());
 						edge.setFrom(varNode);
 						edge.setTo(entityNode);
-						visualizer.getSubgraph().addEdge(edge);
+						graph.addEdge(edge);
 					}
 				} else {
 					System.out.println(projectExpressions.get(var));

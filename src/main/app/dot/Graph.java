@@ -19,6 +19,8 @@ public class Graph extends Object {
 	protected String nodeProperties = "fontsize=8 fontname=\"Arial\"";
 	protected String edgeProperties = "fontsize=8 fontname=\"Arial\"";
 	
+	protected Graph parent = null;
+	
 	public Graph(String id)
 	{
 		this.setId(id);
@@ -48,6 +50,7 @@ public class Graph extends Object {
 	
 	public void addSubgraph(Subgraph subgraph)
 	{
+		subgraph.setParent(this);
 		this.subgraphMap.put(subgraph.getId(), subgraph);
 	}
 	
@@ -92,6 +95,14 @@ public class Graph extends Object {
 	public void setId(String id) {
 		id = this.escape(id);
 		this.id = id.trim();
+	}
+	
+	public Graph getParent() {
+		return this.parent;
+	}
+	
+	public void setParent(Graph graph) {
+		this.parent = graph;
 	}
 	
 	public String toDot()

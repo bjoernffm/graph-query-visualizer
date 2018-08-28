@@ -1,7 +1,7 @@
 package main.app.common.interpreters;
 
-import main.app.common.DotVisualizer;
+import main.app.dot.Graph;
 
 public interface Interpreter {
-	void interpret(Object obj, DotVisualizer visualizer) throws Exception;
+	void interpret(Object obj, Graph graph) throws Exception;
 }

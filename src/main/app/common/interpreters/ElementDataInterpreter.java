@@ -8,8 +8,8 @@ import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.binding.BindingHashMap;
 import org.apache.jena.sparql.syntax.ElementData;
 
-import main.app.common.DotVisualizer;
 import main.app.dot.Edge;
+import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.DataNode;
 import main.app.dot.objects.EntityNode;
@@ -17,7 +17,7 @@ import main.app.dot.objects.EntityNode;
 public class ElementDataInterpreter implements Interpreter {
 
 	@Override
-	public void interpret(Object obj, DotVisualizer visualizer) throws Exception
+	public void interpret(Object obj, Graph graph) throws Exception
 	{
 		if (obj.getClass() != ElementData.class) {
 			throw new Exception(ElementData.class+" needed as Object. Given: "+obj.getClass());
@@ -35,12 +35,12 @@ public class ElementDataInterpreter implements Interpreter {
 			Edge edge = new Edge();
 			edge.setFrom(dataNode);
 			edge.setTo(entityNode);
-			edge.setLabel("value");
+			edge.setLabel("set");
 			edge.setStyle("dotted");
 			
-			visualizer.getSubgraph().addNode(dataNode);
-			visualizer.getSubgraph().addNode(entityNode);
-			visualizer.getSubgraph().addEdge(edge);
+			graph.addNode(dataNode);
+			graph.addNode(entityNode);
+			graph.addEdge(edge);
 		}
 	}
 
