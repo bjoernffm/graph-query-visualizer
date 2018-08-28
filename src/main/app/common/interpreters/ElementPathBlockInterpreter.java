@@ -2,6 +2,10 @@ package main.app.common.interpreters;
 
 import org.apache.jena.sparql.core.PathBlock;
 import org.apache.jena.sparql.core.TriplePath;
+import org.apache.jena.sparql.path.P_Link;
+import org.apache.jena.sparql.path.P_Seq;
+import org.apache.jena.sparql.path.P_ZeroOrMore1;
+import org.apache.jena.sparql.path.Path;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 
 import main.app.common.DotVisualizer;
@@ -64,7 +68,8 @@ public class ElementPathBlockInterpreter implements Interpreter {
 			//	toNode = new EntityNode(object.getLiteralLexicalForm());
 			//	toNode.setShape("box");
 			} else {
-				toNode = new EntityNode(object.toString());
+				
+				toNode = new EntityNode(object.getLocalName());
 				toNode.setShape("box");
 			}
 			
@@ -74,8 +79,16 @@ public class ElementPathBlockInterpreter implements Interpreter {
 			if (el.isTriple()) {
 				edge.setLabel(predicate.getLocalName());
 			} else {
-				org.apache.jena.sparql.path.P_Seq path = (org.apache.jena.sparql.path.P_Seq) el.getPath();
-				edge.setLabel(path.toString());
+				if (el.getPath() instanceof P_Seq) {
+					P_Seq path = (P_Seq) el.getPath();
+					edge.setLabel(path.toString());
+				} else if (el.getPath() instanceof P_ZeroOrMore1) {
+					P_ZeroOrMore1 path = (P_ZeroOrMore1) el.getPath();
+					P_Link subpath = (P_Link) path.getSubPath();
+					edge.setLabel(subpath.getNode().getLocalName()+"*");
+				} else {
+					throw new Exception("Stop, unknown type "+el.getPath().getClass());
+				}
 			}
 			
 			visualizer.getSubgraph().addNode(fromNode);
