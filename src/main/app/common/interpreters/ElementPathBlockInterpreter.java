@@ -2,7 +2,6 @@ package main.app.common.interpreters;
 
 import org.apache.jena.sparql.core.PathBlock;
 import org.apache.jena.sparql.core.TriplePath;
-import org.apache.jena.sparql.path.Path;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 
 import main.app.common.DotVisualizer;
