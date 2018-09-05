@@ -54,7 +54,7 @@ public class ElementPathBlockInterpreter implements Interpreter {
 			if (subject.isVariable()) {
 				fromNode = new EntityNode("?"+subject.getName());
 			} else if (subject.isConcrete()) {
-				fromNode = new EntityNode(subject.getLiteralLexicalForm());
+				fromNode = new EntityNode(subject.getLocalName());
 				fromNode.setShape("box");
 			} else {
 				fromNode = new EntityNode(subject.toString());
@@ -77,6 +77,7 @@ public class ElementPathBlockInterpreter implements Interpreter {
 			edge.setTo(toNode);
 			if (el.isTriple()) {
 				edge.setLabel(predicate.getLocalName());
+				edge.setLabeltooltip(predicate.toString());
 			} else {
 				if (el.getPath() instanceof P_Seq) {
 					P_Seq path = (P_Seq) el.getPath();

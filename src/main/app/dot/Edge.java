@@ -7,6 +7,7 @@ public class Edge extends Object {
 	protected Node from;
 	protected Node to;
 	protected String label;
+	protected String labeltooltip;
 	protected String style;
 	protected String arrowhead;
 	protected String lhead;
@@ -40,6 +41,14 @@ public class Edge extends Object {
 		this.label = label;
 	}
 	
+	public String getLabeltooltip() {
+		return this.labeltooltip;
+	}
+	
+	public void setLabeltooltip(String labeltooltip) {
+		this.labeltooltip = labeltooltip;
+	}
+	
 	public String getStyle() {
 		return this.style;
 	}
@@ -70,6 +79,9 @@ public class Edge extends Object {
 
 		if (this.label != null && !this.label.equals("")) {
 			argumentList.add("label=\""+this.label+"\"");
+		}
+		if (this.labeltooltip != null && !this.labeltooltip.equals("")) {
+			argumentList.add("labeltooltip=\""+this.labeltooltip+"\"");
 		}
 		if (this.style != null && !this.style.equals("")) {
 			argumentList.add("style=\""+this.style+"\"");

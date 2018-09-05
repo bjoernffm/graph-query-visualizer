@@ -45,6 +45,16 @@ public class Server {
         			Gson gson = new Gson();
         			String json = gson.toJson(res); 
         		    return json;
+    			} catch(Exception e) {
+    				response.status(400);
+        			
+    				ErrorResponse res = (ErrorResponse) new ErrorResponse("Exception", e.getMessage());
+    				
+    				e.printStackTrace();
+    				
+        			Gson gson = new Gson();
+        			String json = gson.toJson(res); 
+        		    return json;
     			}
     		});
     	});

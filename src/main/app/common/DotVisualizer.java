@@ -21,9 +21,9 @@ final public class DotVisualizer extends QueryVisualizer implements QueryVisuali
 		
 		(new QueryInterpreter()).interpret((Query) this.query, this.subgraph);
 		
-		System.out.println(this.graph);
+		//System.out.println(this.graph);
 		
-		return "";
+		return this.graph.toString();
 	}
 	
 	public Graph getGraph()

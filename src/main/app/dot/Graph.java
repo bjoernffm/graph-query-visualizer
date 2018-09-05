@@ -12,6 +12,7 @@ public class Graph extends Object {
 	
 	protected ArrayList<Edge> edgeList = new ArrayList<>();
 	protected String type = "digraph";
+	protected String label = "";
 	protected String id;
 	
 	protected String compoundProperty = "true";
@@ -97,6 +98,15 @@ public class Graph extends Object {
 		this.id = id.trim();
 	}
 	
+	public String getLabel() {
+		return this.label;
+	}
+	
+	public void setLabel(String label) {
+		label = this.escape(label);
+		this.label = label.trim();
+	}
+	
 	public Graph getParent() {
 		return this.parent;
 	}
@@ -114,6 +124,9 @@ public class Graph extends Object {
 		}
 		if (!this.graphProperties.isEmpty()) {
 			ret += "\tgraph ["+this.graphProperties+"];\n";
+		}
+		if (!this.label.isEmpty()) {
+			ret += "\tlabel=\""+this.label+"\";\n";
 		}
 		if (!this.nodeProperties.isEmpty()) {
 			ret += "\tnode ["+this.nodeProperties+"];\n";
