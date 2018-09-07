@@ -36,7 +36,15 @@ public class ElementGroupInterpreter implements Interpreter {
 			} else if (el instanceof ElementBind) {
 				(new ElementBindInterpreter()).interpret((ElementBind) el, graph);
 			} else if (el instanceof ElementOptional) {
-				(new ElementOptionalInterpreter()).interpret((ElementOptional) el, graph);
+				ElementOptional tmp = (ElementOptional) el;
+
+				Subgraph subgraph = new Subgraph("cluster_"+this.hashCode());
+				subgraph.setLabel("OPTIONAL");
+				graph.addSubgraph(subgraph);
+				
+				(new ElementGroupInterpreter()).interpret((ElementGroup) tmp.getOptionalElement(), subgraph);
+				
+				//(new ElementOptionalInterpreter()).interpret((ElementOptional) el, graph);
 			} else if (el instanceof ElementSubQuery) {
 				Subgraph subgraph = new Subgraph("cluster_"+this.hashCode());
 				graph.addSubgraph(subgraph);
