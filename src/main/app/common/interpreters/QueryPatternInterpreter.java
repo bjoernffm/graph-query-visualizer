@@ -7,7 +7,7 @@ import org.apache.jena.sparql.syntax.ElementSubQuery;
 
 import main.app.dot.Graph;
 
-public class QueryPatternInterpreter implements Interpreter {
+public class QueryPatternInterpreter extends AbstractInterpreter implements Interpreter {
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception

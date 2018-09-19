@@ -7,6 +7,7 @@ public class Edge extends Object {
 	protected Node from;
 	protected Node to;
 	protected String label;
+	protected String htmlLabel;
 	protected String labeltooltip;
 	protected String style;
 	protected String arrowhead;
@@ -39,6 +40,16 @@ public class Edge extends Object {
 	
 	public void setLabel(String label) {
 		this.label = label;
+		this.htmlLabel = "";
+	}
+	
+	public String getHtmlLabel() {
+		return this.htmlLabel;
+	}
+	
+	public void setHtmlLabel(String label) {
+		this.htmlLabel = label;
+		this.label = "";
 	}
 	
 	public String getLabeltooltip() {
@@ -78,10 +89,13 @@ public class Edge extends Object {
 		ArrayList<String> argumentList = new ArrayList<>();
 
 		if (this.label != null && !this.label.equals("")) {
-			argumentList.add("label=\""+this.label+"\"");
+			argumentList.add("label=\""+this.escape(this.label)+"\"");
+		}
+		if (this.htmlLabel != null && !this.htmlLabel.equals("")) {
+			argumentList.add("label=<"+this.htmlLabel+">");
 		}
 		if (this.labeltooltip != null && !this.labeltooltip.equals("")) {
-			argumentList.add("labeltooltip=\""+this.labeltooltip+"\"");
+			argumentList.add("labeltooltip=\""+this.escape(this.labeltooltip)+"\"");
 		}
 		if (this.style != null && !this.style.equals("")) {
 			argumentList.add("style=\""+this.style+"\"");

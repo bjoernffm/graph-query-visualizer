@@ -29,6 +29,11 @@ public class Graph extends Object {
 	
 	public void addNode(Node node)
 	{
+		// to keep the optional attribute
+		if (this.nodeMap.containsKey(node.getId())) {
+			Node before = this.nodeMap.get(node.getId());
+			node.setOptional(before.getOptional());
+		}
 		this.nodeMap.put(node.getId(), node);
 	}
 	
@@ -115,8 +120,29 @@ public class Graph extends Object {
 		this.parent = graph;
 	}
 	
-	public String toDot()
+	public void inheritOptional()
 	{
+		Map<String, Node> optionalMap = new HashMap<>();
+		
+		for ( Iterator<Edge> iterator = this.edgeList.iterator(); iterator.hasNext(); ) {
+			Edge edge = iterator.next(); 
+			
+			Node fromNode = edge.getFrom();
+			Node toNode = edge.getTo();
+			
+			if (fromNode.getOptional() == true || optionalMap.containsKey(fromNode.getId())) {
+				optionalMap.put(fromNode.getId(), fromNode);
+				optionalMap.put(toNode.getId(), fromNode);
+				
+				toNode.setOptional(true);
+				edge.setTo(toNode);
+				this.addNode(toNode);
+			}
+		}
+	}
+	
+	public String toDot()
+	{		
 		String ret = this.type+" "+this.id+" {\n\n";
 
 		if (!this.compoundProperty.isEmpty()) {
@@ -146,7 +172,6 @@ public class Graph extends Object {
 			}
 			
 			// add edges from subgraphs
-			
 			ArrayList<Edge> edges = subgraph.getEdgesRecursive();
 			for(int i = 0; i < edges.size(); i++) {
 				Edge edge = edges.get(i);
@@ -159,6 +184,8 @@ public class Graph extends Object {
 			subgraphStr = subgraphStr.replaceAll("}", "\t}");
 			ret += "\t"+subgraphStr+"\n\n";
 		}
+
+		this.inheritOptional();
 
 		// Adding nodes
 		for (Entry<String, Node> entry: this.nodeMap.entrySet()) {

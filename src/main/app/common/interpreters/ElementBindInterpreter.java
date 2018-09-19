@@ -11,7 +11,7 @@ import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.EntityNode;
 
-public class ElementBindInterpreter implements Interpreter {
+public class ElementBindInterpreter extends AbstractInterpreter implements Interpreter {
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
@@ -33,7 +33,8 @@ public class ElementBindInterpreter implements Interpreter {
 			graph.addNode(varNode);
 			
 			Edge edge = new Edge();
-			edge.setLabel(element.toString());
+			edge.setHtmlLabel("<i>BIND</i>");
+			edge.setLabeltooltip(element.toString());
 			edge.setFrom(varNode);
 			edge.setTo(entityNode);
 			graph.addEdge(edge);

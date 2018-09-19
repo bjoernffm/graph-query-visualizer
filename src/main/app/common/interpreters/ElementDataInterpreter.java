@@ -14,7 +14,7 @@ import main.app.dot.Node;
 import main.app.dot.objects.DataNode;
 import main.app.dot.objects.EntityNode;
 
-public class ElementDataInterpreter implements Interpreter {
+public class ElementDataInterpreter extends AbstractInterpreter implements Interpreter {
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception

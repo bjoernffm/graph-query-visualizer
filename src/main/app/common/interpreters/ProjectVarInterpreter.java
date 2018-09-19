@@ -17,7 +17,7 @@ import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.EntityNode;
 
-public class ProjectVarInterpreter implements Interpreter {
+public class ProjectVarInterpreter extends AbstractInterpreter implements Interpreter {
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception

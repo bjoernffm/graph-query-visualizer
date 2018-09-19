@@ -14,7 +14,7 @@ import main.app.dot.Node;
 import main.app.dot.objects.AggregateNode;
 import main.app.dot.objects.EntityNode;
 
-public class OrderByInterpreter implements Interpreter {
+public class OrderByInterpreter extends AbstractInterpreter implements Interpreter {
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception

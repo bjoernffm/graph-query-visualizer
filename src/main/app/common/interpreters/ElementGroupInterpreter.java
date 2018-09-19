@@ -15,7 +15,7 @@ import org.apache.jena.sparql.syntax.ElementUnion;
 import main.app.dot.Graph;
 import main.app.dot.Subgraph;
 
-public class ElementGroupInterpreter implements Interpreter {
+public class ElementGroupInterpreter extends AbstractInterpreter implements Interpreter {
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception {
@@ -28,23 +28,15 @@ public class ElementGroupInterpreter implements Interpreter {
 		for(int i = 0; i < queryPattern.size(); i++) {
 			Element el = queryPattern.get(i);
 			if (el instanceof ElementPathBlock) {
-				(new ElementPathBlockInterpreter()).interpret((ElementPathBlock) el, graph);
+				(new ElementPathBlockInterpreter()).setOptional(this.getOptional()).interpret((ElementPathBlock) el, graph);
 			} else if (el instanceof ElementFilter) {
-				(new ElementFilterInterpreter()).interpret((ElementFilter) el, graph);
+				(new ElementFilterInterpreter()).setOptional(this.getOptional()).interpret((ElementFilter) el, graph);
 			} else if (el instanceof ElementData) {
-				(new ElementDataInterpreter()).interpret((ElementData) el, graph);
+				(new ElementDataInterpreter()).setOptional(this.getOptional()).interpret((ElementData) el, graph);
 			} else if (el instanceof ElementBind) {
-				(new ElementBindInterpreter()).interpret((ElementBind) el, graph);
+				(new ElementBindInterpreter()).setOptional(this.getOptional()).interpret((ElementBind) el, graph);
 			} else if (el instanceof ElementOptional) {
-				ElementOptional tmp = (ElementOptional) el;
-
-				Subgraph subgraph = new Subgraph("cluster_"+this.hashCode());
-				subgraph.setLabel("OPTIONAL");
-				graph.addSubgraph(subgraph);
-				
-				(new ElementGroupInterpreter()).interpret((ElementGroup) tmp.getOptionalElement(), subgraph);
-				
-				//(new ElementOptionalInterpreter()).interpret((ElementOptional) el, graph);
+				(new ElementOptionalInterpreter()).interpret((ElementOptional) el, graph);
 			} else if (el instanceof ElementSubQuery) {
 				Subgraph subgraph = new Subgraph("cluster_"+this.hashCode());
 				graph.addSubgraph(subgraph);
@@ -68,5 +60,4 @@ public class ElementGroupInterpreter implements Interpreter {
 			}
 		}
 	}
-
 }

@@ -6,7 +6,7 @@ import org.apache.jena.sparql.syntax.ElementOptional;
 
 import main.app.dot.Graph;
 
-public class ElementOptionalInterpreter implements Interpreter {
+public class ElementOptionalInterpreter extends AbstractInterpreter implements Interpreter {
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
@@ -19,7 +19,7 @@ public class ElementOptionalInterpreter implements Interpreter {
 		Element optionalElement = element.getOptionalElement();
 
 		if (optionalElement instanceof org.apache.jena.sparql.syntax.ElementGroup) {
-			(new ElementGroupInterpreter()).interpret((ElementGroup) optionalElement, graph);	
+			(new ElementGroupInterpreter()).setOptional().interpret((ElementGroup) optionalElement, graph);	
 		} else {
 			System.out.println(optionalElement.getClass());
 			System.out.println(optionalElement+"\n");

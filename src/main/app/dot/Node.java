@@ -11,6 +11,7 @@ public class Node extends Object {
 	protected String shape;
 	protected String fillcolor;
 	protected String style;
+	protected boolean optional;
 	
 	public Node(String id) throws UnsupportedEncodingException
 	{
@@ -62,12 +63,27 @@ public class Node extends Object {
 		this.style = style.trim();
 	}
 	
+	public void setOptional(boolean optional)
+	{
+		this.optional = optional;
+	}
+	
+	public boolean getOptional()
+	{
+		return this.optional;
+	}
+	
 	public String toDot()
 	{
+		if (this.getOptional() == true) {
+			this.fillcolor = "antiquewhite";
+			this.style = "filled,dashed";
+		}
+		
 		ArrayList<String> argumentList = new ArrayList<>();
 
 		if (this.label != null && !this.label.equals("")) {
-			argumentList.add("label=\""+this.label+"\"");
+			argumentList.add("label=\""+this.escape(this.label)+"\"");
 		}
 		if (this.shape != null && !this.shape.equals("")) {
 			argumentList.add("shape=\""+this.shape+"\"");

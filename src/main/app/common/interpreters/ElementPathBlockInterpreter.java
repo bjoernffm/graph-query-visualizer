@@ -12,7 +12,7 @@ import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.EntityNode;
 
-public class ElementPathBlockInterpreter implements Interpreter {
+public class ElementPathBlockInterpreter extends AbstractInterpreter implements Interpreter {
 	public void interpret(Object obj, Graph graph) throws Exception
 	{
 		if (obj.getClass() != ElementPathBlock.class) {
@@ -67,10 +67,11 @@ public class ElementPathBlockInterpreter implements Interpreter {
 			//	toNode = new EntityNode(object.getLiteralLexicalForm());
 			//	toNode.setShape("box");
 			} else {
-				
 				toNode = new EntityNode(object.getLocalName());
 				toNode.setShape("box");
 			}
+			
+			toNode.setOptional(this.getOptional());
 			
 			Edge edge = new Edge();
 			edge.setFrom(fromNode);
