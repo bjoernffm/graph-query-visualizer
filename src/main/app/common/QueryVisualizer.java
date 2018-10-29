@@ -7,12 +7,16 @@ import java.util.Map;
 
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.query.QueryParseException;
 import org.apache.jena.sparql.syntax.ElementGroup;
 
 public abstract class QueryVisualizer {	
-	
+
 	protected Query query;
+	protected UpdateRequest update;
+	protected String queryType;
 	
 	/**
 	 * objectMap holds the objects and the related ids, vice versa
@@ -33,8 +37,19 @@ public abstract class QueryVisualizer {
 	{
 		try {
 			this.query = QueryFactory.create(query);
-		} catch(QueryParseException e) {
-			throw e;
+			this.queryType = "select";
+		} catch(QueryParseException queryException) {
+			// check if possibly an update request has been entered
+			if (queryException.getMessage().toLowerCase().contains("delete") || queryException.getMessage().toLowerCase().contains("update")) {
+				try {
+					this.update = UpdateFactory.create(query);
+					this.queryType = "update";
+				} catch(QueryParseException updateException) {
+					throw updateException;
+				}
+			} else {
+				throw queryException;
+			}
 		}
 	}
 	
