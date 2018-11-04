@@ -27,6 +27,7 @@ public class ElementGroupInterpreter extends AbstractInterpreter implements Inte
 
 		for(int i = 0; i < queryPattern.size(); i++) {
 			Element el = queryPattern.get(i);
+
 			if (el instanceof ElementPathBlock) {
 				(new ElementPathBlockInterpreter()).setOptional(this.getOptional()).interpret((ElementPathBlock) el, graph);
 			} else if (el instanceof ElementFilter) {
@@ -41,7 +42,7 @@ public class ElementGroupInterpreter extends AbstractInterpreter implements Inte
 				Subgraph subgraph = new Subgraph("cluster_"+this.hashCode());
 				graph.addSubgraph(subgraph);
 				(new QueryInterpreter()).interpret(((ElementSubQuery) el).getQuery(), subgraph);
-			} else if (el instanceof org.apache.jena.sparql.syntax.ElementUnion) {
+			} else if (el instanceof ElementUnion) {
 				ElementUnion test = (ElementUnion) el;
 				List<Element> elements = test.getElements();
 				
@@ -49,7 +50,10 @@ public class ElementGroupInterpreter extends AbstractInterpreter implements Inte
 				subgraph.setLabel("UNION");
 				graph.addSubgraph(subgraph);
 				for(int j = 0; j < elements.size(); j++) {
-					(new QueryPatternInterpreter()).interpret((Element) elements.get(j), subgraph);
+					Subgraph unionSubgraph = new Subgraph("cluster_"+this.hashCode()+"_"+j);
+					unionSubgraph.setStyle("dashed");
+					subgraph.addSubgraph(unionSubgraph);
+					(new QueryPatternInterpreter()).interpret((Element) elements.get(j), unionSubgraph);
 					//System.out.println(elements.get(i));
 				}
 				//throw new Exception("Stopping here");

@@ -7,10 +7,12 @@ import java.util.UUID;
 public class Node extends Object {
 	protected String id;
 	protected String label;
+	protected String tooltip;
 	protected String labeljust;
 	protected String shape;
 	protected String fillcolor;
 	protected String style;
+	protected Graph parentGraph;
 	protected boolean optional;
 	
 	public Node(String id) throws UnsupportedEncodingException
@@ -19,8 +21,18 @@ public class Node extends Object {
 		this.setLabel(id);
 	}
 	
+	public Node(Node node)
+	{
+		this.id = node.id;
+		this.label = node.label;
+	}
+	
 	public String getId() {
 		return this.id;
+	}
+	
+	public String getUniqueId() {
+		return this.id+"_"+this.parentGraph.getId();
 	}
 	
 	public void setId(String id) throws UnsupportedEncodingException {
@@ -35,8 +47,15 @@ public class Node extends Object {
 	}
 	
 	public void setLabel(String label) {
-		label = this.escape(label);
 		this.label = label.trim();
+	}
+	
+	public String getTooltip() {
+		return this.tooltip;
+	}
+	
+	public void setTooltip(String tooltip) {
+		this.tooltip = tooltip.trim();
 	}
 
 	public String getShape() {
@@ -62,6 +81,14 @@ public class Node extends Object {
 	public void setStyle(String style) {
 		this.style = style.trim();
 	}
+
+	public Graph getParentGraph() {
+		return parentGraph;
+	}
+
+	public void setParentGraph(Graph parentGraph) {
+		this.parentGraph = parentGraph;
+	}
 	
 	public void setOptional(boolean optional)
 	{
@@ -85,6 +112,9 @@ public class Node extends Object {
 		if (this.label != null && !this.label.equals("")) {
 			argumentList.add("label=\""+this.escape(this.label)+"\"");
 		}
+		if (this.tooltip != null && !this.tooltip.equals("")) {
+			argumentList.add("tooltip=\""+this.escape(this.tooltip)+"\"");
+		}
 		if (this.shape != null && !this.shape.equals("")) {
 			argumentList.add("shape=\""+this.shape+"\"");
 		}
@@ -95,7 +125,7 @@ public class Node extends Object {
 			argumentList.add("style=\""+this.style+"\"");
 		}
 
-		return "\""+this.id+"\""+" ["+String.join(", ", argumentList)+"]";
+		return "\""+this.getUniqueId()+"\""+" ["+String.join(", ", argumentList)+"]";
 	}
 	
 	public String toString()

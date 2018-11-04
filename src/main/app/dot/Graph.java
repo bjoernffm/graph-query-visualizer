@@ -6,13 +6,18 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.jena.sparql.syntax.ElementGroup;
+
+import main.app.misc.RecursiveNodeContainer;
+
 public class Graph extends Object {
 	protected Map<String, Node> nodeMap = new HashMap<>();
 	protected Map<String, Subgraph> subgraphMap = new HashMap<>();
-	
+
 	protected ArrayList<Edge> edgeList = new ArrayList<>();
 	protected String type = "digraph";
 	protected String label = "";
+	protected String style = "";
 	protected String id;
 	
 	protected String compoundProperty = "true";
@@ -29,6 +34,7 @@ public class Graph extends Object {
 	
 	public void addNode(Node node)
 	{
+		node.setParentGraph(this);
 		// to keep the optional attribute
 		if (this.nodeMap.containsKey(node.getId())) {
 			Node before = this.nodeMap.get(node.getId());
@@ -84,6 +90,63 @@ public class Graph extends Object {
 		return localEdgeList;
 	}
 	
+	public Map<String, ArrayList<RecursiveNodeContainer>> getNodesRecursive()
+	{
+		return getNodesRecursive(0);
+	}
+	
+	public Map<String, ArrayList<RecursiveNodeContainer>> getNodesRecursive(int level)
+	{
+		Map<String, ArrayList<RecursiveNodeContainer>> localNodeList = new HashMap<>();
+		
+		// First get the nodes contained in this graph
+		for (Entry<String, Node> entry: this.nodeMap.entrySet()) {
+			Node node = entry.getValue();
+
+			ArrayList<RecursiveNodeContainer> tmpNodeList;
+			
+			if (!localNodeList.containsKey(node.getId())) {
+				tmpNodeList = new ArrayList<>();
+			} else {
+				tmpNodeList = localNodeList.get(node.getId());
+			}
+			
+			RecursiveNodeContainer tmpContainer = new RecursiveNodeContainer(level, node);
+			
+			tmpNodeList.add(tmpContainer);
+			localNodeList.put(node.getId(), tmpNodeList);
+		}
+		
+		// Second check the subgraphs
+		for (Entry<String, Subgraph> subgraphMapEntry: this.subgraphMap.entrySet()) {
+			Subgraph subgraph = subgraphMapEntry.getValue();
+			Map<String, ArrayList<RecursiveNodeContainer>> subgraphNodeList = subgraph.getNodesRecursive((level+1));
+
+			// get all nodes from this subgraph
+			for (Entry<String, ArrayList<RecursiveNodeContainer>> nodeMapEntry: subgraphNodeList.entrySet()) {
+				String nodeId = nodeMapEntry.getKey();
+				
+				ArrayList<RecursiveNodeContainer> entryNodeList = nodeMapEntry.getValue();
+				
+				// add all node entries to the "big summary list"
+				for(int i = 0; i < entryNodeList.size(); i++) {
+					ArrayList<RecursiveNodeContainer> tmpNodeList;
+					
+					if (!localNodeList.containsKey(nodeId)) {
+						tmpNodeList = new ArrayList<>();
+					} else {
+						tmpNodeList = localNodeList.get(nodeId);
+					}
+
+					tmpNodeList.add(entryNodeList.get(i));
+					localNodeList.put(nodeId, tmpNodeList);	
+				}
+			}
+		}
+		
+		return localNodeList;
+	}
+	
 	public void removeEdges()
 	{
 		this.edgeList = new ArrayList<>();
@@ -110,6 +173,15 @@ public class Graph extends Object {
 	public void setLabel(String label) {
 		label = this.escape(label);
 		this.label = label.trim();
+	}
+	
+	public String getStyle() {
+		return this.style;
+	}
+	
+	public void setStyle(String style) {
+		style = this.escape(style);
+		this.style = style.trim();
 	}
 	
 	public Graph getParent() {
@@ -153,6 +225,11 @@ public class Graph extends Object {
 		}
 		if (!this.label.isEmpty()) {
 			ret += "\tlabel=\""+this.label+"\";\n";
+		} else {
+			ret += "\tlabel=\"\";\n";
+		}
+		if (!this.style.isEmpty()) {
+			ret += "\tstyle=\""+this.style+"\";\n";
 		}
 		if (!this.nodeProperties.isEmpty()) {
 			ret += "\tnode ["+this.nodeProperties+"];\n";
@@ -165,11 +242,6 @@ public class Graph extends Object {
 		// Adding subgraphs
 		for (Entry<String, Subgraph> entry: this.subgraphMap.entrySet()) {
 			Subgraph subgraph = entry.getValue();
-
-			// make sure that all nodes that are contained in multiple graphs will be up in hierarchy
-			for (Entry<String, Node> node: this.nodeMap.entrySet()) {
-				subgraph.removeNode(node.getValue());
-			}
 			
 			// add edges from subgraphs
 			ArrayList<Edge> edges = subgraph.getEdgesRecursive();
@@ -186,6 +258,46 @@ public class Graph extends Object {
 		}
 
 		this.inheritOptional();
+		
+		// not for subgraphs, only the top graph should draw the lines
+		if (this.getClass() == Graph.class) {
+			Map<String, ArrayList<RecursiveNodeContainer>> nodeMap = this.getNodesRecursive();
+			for (Entry<String, ArrayList<RecursiveNodeContainer>> entry: nodeMap.entrySet()) {
+				ArrayList<RecursiveNodeContainer> nodeList = entry.getValue();
+				//System.out.println(nodeList);
+				if (nodeList.size() == 2) {
+					Edge edge = new Edge();
+					edge.setFrom(nodeList.get(0).getNode());
+					edge.setTo(nodeList.get(1).getNode());
+					edge.setStyle("dotted");
+					edge.setArrowhead("none");
+					this.addEdge(edge);
+				} else if (nodeList.size() > 2) {
+					if (nodeList.get(0).getLevel() == 1) {
+						for(int i = 1; i < nodeList.size(); i++) {
+							Edge edge = new Edge();
+							edge.setFrom(nodeList.get(0).getNode());
+							edge.setTo(nodeList.get(i).getNode());
+							edge.setStyle("dotted");
+							edge.setArrowhead("none");
+							this.addEdge(edge);
+						}
+					} else {
+						Node masterNode = new Node(nodeList.get(0).getNode());
+						this.addNode(masterNode);
+						
+						for(int i = 0; i < nodeList.size(); i++) {
+							Edge edge = new Edge();
+							edge.setFrom(masterNode);
+							edge.setTo(nodeList.get(i).getNode());
+							edge.setStyle("dotted");
+							edge.setArrowhead("none");
+							this.addEdge(edge);
+						}
+					}
+				}
+			}
+		}
 
 		// Adding nodes
 		for (Entry<String, Node> entry: this.nodeMap.entrySet()) {

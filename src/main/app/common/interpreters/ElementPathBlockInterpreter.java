@@ -51,33 +51,47 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 			System.out.println(subpath);
 			*/
 			
+			// Interpret the subject
 			if (subject.isVariable()) {
 				fromNode = new EntityNode("?"+subject.getName());
-			} else if (subject.isConcrete()) {
+			} else if (subject.isURI()) {
 				fromNode = new EntityNode(subject.getLocalName());
+				fromNode.setShape("box");
+			} else if (subject.isLiteral()) {
+				fromNode = new EntityNode(subject.getLiteralLexicalForm());
 				fromNode.setShape("box");
 			} else {
 				fromNode = new EntityNode(subject.toString());
 				fromNode.setShape("box");
 			}
-			
+			fromNode.setTooltip(subject.toString());
+
+			// Interpret the object
 			if (object.isVariable()) {
 				toNode = new EntityNode("?"+object.getName());
-			//} else if (object.isConcrete()) {
-			//	toNode = new EntityNode(object.getLiteralLexicalForm());
-			//	toNode.setShape("box");
-			} else {
+			} else if (object.isURI()) {
 				toNode = new EntityNode(object.getLocalName());
 				toNode.setShape("box");
+			} else if (object.isLiteral()) {
+				toNode = new EntityNode(object.getLiteralLexicalForm());
+				toNode.setShape("box");
+			} else {
+				toNode = new EntityNode(object.toString());
 			}
 			
+			toNode.setTooltip(object.toString());
 			toNode.setOptional(this.getOptional());
 			
+			// Interpret the path
 			Edge edge = new Edge();
 			edge.setFrom(fromNode);
 			edge.setTo(toNode);
 			if (el.isTriple()) {
-				edge.setLabel(predicate.getLocalName());
+				if (predicate.isURI()) {
+					edge.setLabel(predicate.getLocalName());
+				} else if (predicate.isVariable()) {
+					edge.setLabel("?"+predicate.getName());
+				}
 				edge.setLabeltooltip(predicate.toString());
 			} else {
 				if (el.getPath() instanceof P_Seq) {

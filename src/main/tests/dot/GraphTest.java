@@ -3,6 +3,8 @@ package main.tests.dot;
 import static org.junit.Assert.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -10,6 +12,7 @@ import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.Subgraph;
+import main.app.misc.RecursiveNodeContainer;
 
 public class GraphTest {
 
@@ -44,7 +47,7 @@ public class GraphTest {
 		graph.addEdge(edge2);
 		
 		String ret = graph.toDot();
-		assertEquals(ret.length(), 561);
+		assertEquals(ret.hashCode(), 368889422);
 	}
 	
 	@Test
@@ -71,10 +74,10 @@ public class GraphTest {
 		graph.addEdge(edge2);
 		
 		String ret = graph.toDot();
-		assertEquals(ret.length(), 356);
+		assertEquals(ret.hashCode(), 1171864895);
 	}
 	
-	@Test
+	/*@Test
 	public void testMultipleNodes() throws UnsupportedEncodingException {
 		Node nodeOuter = new Node("nodeOuter");
 		Node nodeInner1 = new Node("nodeInner1");
@@ -106,7 +109,7 @@ public class GraphTest {
 		
 		String ret = graph.toDot();
 		assertEquals(ret.length(), 553);
-	}
+	}*/
 	
 	@Test
 	public void testMultipleEdges() throws UnsupportedEncodingException {
@@ -137,6 +140,62 @@ public class GraphTest {
 		graph.addSubgraph(subgraph1);
 		
 		String ret = graph.toDot();
-		assertEquals(ret.length(), 553);
+		assertEquals(ret.hashCode(), -98663907);
+	}
+	
+	@Test
+	public void testGetNodesRecursive1() throws UnsupportedEncodingException {
+		Node node1 = new Node("A");
+		Node node2 = new Node("B");
+		
+		Subgraph subgraph1 = new Subgraph("subgraph_1");
+		subgraph1.addNode(node1);
+		subgraph1.addNode(node2);
+		
+		Node node3 = new Node("B");
+		
+		Subgraph subgraph2 = new Subgraph("subgraph_2");
+		subgraph2.addNode(node3);
+		
+		Node node4 = new Node("C");
+		
+		Graph graph = new Graph("main");
+		graph.addSubgraph(subgraph1);
+		graph.addSubgraph(subgraph2);
+		graph.addNode(node4);
+		
+		Map<String, ArrayList<RecursiveNodeContainer>> ret = graph.getNodesRecursive();
+
+		assertEquals(ret.get("0d61f837-0cad-3d41-af80-b84d143e1257").size(), 1);
+		assertEquals(ret.get("9d5ed678-fe57-3cca-a101-40957afab571").size(), 2);
+		assertEquals(ret.get("7fc56270-e7a7-3fa8-9a59-35b72eacbe29").size(), 1);
+	}
+	
+	@Test
+	public void testGetNodesRecursive2() throws UnsupportedEncodingException {
+		Node node1 = new Node("A");
+		Node node2 = new Node("B");
+		
+		Subgraph subgraph1 = new Subgraph("subgraph_1");
+		subgraph1.addNode(node1);
+		subgraph1.addNode(node2);
+		
+		Node node3 = new Node("B");
+		
+		Subgraph subgraph2 = new Subgraph("subgraph_2");
+		subgraph2.addNode(node3);
+		
+		Node node4 = new Node("C");
+		
+		Graph graph = new Graph("main");
+		graph.addSubgraph(subgraph1);
+		graph.addSubgraph(subgraph2);
+		graph.addNode(node4);
+		
+		Map<String, ArrayList<RecursiveNodeContainer>> ret = graph.getNodesRecursive();
+
+		assertEquals(ret.get("0d61f837-0cad-3d41-af80-b84d143e1257").size(), 1);
+		assertEquals(ret.get("9d5ed678-fe57-3cca-a101-40957afab571").size(), 2);
+		assertEquals(ret.get("7fc56270-e7a7-3fa8-9a59-35b72eacbe29").size(), 1);
 	}
 }

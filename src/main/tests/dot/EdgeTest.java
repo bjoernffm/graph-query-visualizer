@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import org.junit.Test;
 
 import main.app.dot.Edge;
+import main.app.dot.Graph;
 import main.app.dot.Node;
 
 public class EdgeTest {
@@ -23,12 +24,17 @@ public class EdgeTest {
 		edge.setLabel("Label");
 		edge.setStyle("dotted");
 		edge.setLhead("cluster_1");
+		
+		Graph graph = new Graph("main");
+		graph.addNode(node1);
+		graph.addNode(node2);
+		graph.addEdge(edge);
 
 		assertEquals(edge.getFrom(), node1);
 		assertEquals(edge.getTo(), node2);
 		assertTrue(edge.getLabel().equals("Label"));
 		assertTrue(edge.getLabel().equals("Label"));
-		assertTrue(edge.toDot().equals("\"c4ca4238-a0b9-3382-8dcc-509a6f75849b\" -> \"c81e728d-9d4c-3f63-af06-7f89cc14862c\" [label=\"Label\", style=\"dotted\", arrowhead=\"dot\", lhead=\"cluster_1\"]"));
+		assertEquals(edge.toDot(), "\"c4ca4238-a0b9-3382-8dcc-509a6f75849b_main\" -> \"c81e728d-9d4c-3f63-af06-7f89cc14862c_main\" [label=\"Label\", style=\"dotted\", arrowhead=\"dot\", lhead=\"cluster_1\"]");
 	}
 
 }

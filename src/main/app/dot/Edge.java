@@ -107,7 +107,7 @@ public class Edge extends Object {
 			argumentList.add("lhead=\""+this.lhead+"\"");
 		}
 		
-		return "\""+this.getFrom().getId()+"\" -> \""+this.getTo().getId()+"\" ["+String.join(", ", argumentList)+"]";
+		return "\""+this.getFrom().getUniqueId()+"\" -> \""+this.getTo().getUniqueId()+"\" ["+String.join(", ", argumentList)+"]";
 	}
 	
 	public String toString()

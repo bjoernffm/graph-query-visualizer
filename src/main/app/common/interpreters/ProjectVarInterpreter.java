@@ -39,6 +39,7 @@ public class ProjectVarInterpreter extends AbstractInterpreter implements Interp
 			Var var = projectVars.get(i);
 
 			Node entityNode = new EntityNode("?"+var.getName());
+			entityNode.setTooltip(var.toString());
 			entityNode.setShape("doublecircle");
 			graph.addNode(entityNode);
 			
