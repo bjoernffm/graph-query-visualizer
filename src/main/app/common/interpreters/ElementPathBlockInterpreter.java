@@ -47,11 +47,17 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 			// Interpret the subject
 			fromNode = new EntityNode(this.resolveNodeName(subject));
 			fromNode.setTooltip(subject.toString());
+			if (!subject.isVariable()) {
+				fromNode.setShape("box");
+			}
 
 			// Interpret the object
 			toNode = new EntityNode(this.resolveNodeName(object));			
 			toNode.setTooltip(object.toString());
 			toNode.setOptional(this.getOptional());
+			if (!object.isVariable()) {
+				toNode.setShape("box");
+			}
 			
 			// Interpret the path
 			Edge edge = new Edge();
@@ -77,7 +83,7 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 		
 		if (path instanceof P_Seq) {
 			P_Seq tmpPath = (P_Seq) path;
-			retString = this.resolvePath(tmpPath.getLeft())+"/"+this.resolvePath(tmpPath.getRight());
+			retString = this.resolvePath(tmpPath.getLeft())+" / "+this.resolvePath(tmpPath.getRight());
 		} else if (path instanceof P_Inverse) {
 			P_Inverse tmpPath = (P_Inverse) path;
 			retString = "^"+this.resolvePath(tmpPath.getSubPath());

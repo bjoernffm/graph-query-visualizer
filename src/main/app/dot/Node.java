@@ -39,7 +39,7 @@ public class Node extends Object {
 		byte[] bytes = id.getBytes("UTF-8");
 		UUID uuid = UUID.nameUUIDFromBytes(bytes);
 		
-		this.id = uuid.toString();
+		this.id = uuid.toString().substring(0, 8);
 	}
 	
 	public String getLabel() {

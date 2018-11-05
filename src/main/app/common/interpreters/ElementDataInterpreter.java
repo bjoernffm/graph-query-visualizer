@@ -25,22 +25,29 @@ public class ElementDataInterpreter extends AbstractInterpreter implements Inter
 		
 		ElementData element = (ElementData) obj;
 		List<Binding> rows = element.getRows();
-		BindingHashMap ele = (BindingHashMap) rows.get(0);
-		
-		for ( Iterator<Var> iterator = ele.vars(); iterator.hasNext(); ) {
-			Var var = iterator.next();
-
-			Node dataNode = new DataNode(ele.get(var).toString());
-			Node entityNode = new EntityNode("?"+var.getName());
-			Edge edge = new Edge();
-			edge.setFrom(dataNode);
-			edge.setTo(entityNode);
-			edge.setLabel("set");
-			edge.setStyle("dotted");
+		for(int i = 0; i < rows.size(); i++) {
+			BindingHashMap ele = (BindingHashMap) rows.get(i);
 			
-			graph.addNode(dataNode);
-			graph.addNode(entityNode);
-			graph.addEdge(edge);
+			for ( Iterator<Var> iterator = ele.vars(); iterator.hasNext(); ) {
+				Var var = iterator.next();
+
+				Node dataNode = new DataNode(this.resolveNodeName(ele.get(var)));
+				dataNode.setTooltip(ele.get(var).toString());
+				
+				Node entityNode = new EntityNode(this.resolveNodeName(var));
+				entityNode.setTooltip(var.toString());
+				
+				Edge edge = new Edge();
+				edge.setFrom(dataNode);
+				edge.setTo(entityNode);
+				edge.setLabel("set");
+				edge.setLabeltooltip("set");
+				edge.setStyle("dotted");
+				
+				graph.addNode(dataNode);
+				graph.addNode(entityNode);
+				graph.addEdge(edge);
+			}
 		}
 	}
 

@@ -24,10 +24,14 @@ public class GroupByInterpreter extends AbstractInterpreter implements Interpret
 		List<Var> groupByVars = groupByVarExpressions.getVars();
 
 		Node groupByNode = new AggregateNode("GROUP BY");
+		graph.getParent().addNode(groupByNode);
+		
 		String groupByString = "GROUP BY\\n---------\\n";
 		
 		for(Var groupByVar: groupByVars) {
 			Node varNode = new EntityNode("?"+groupByVar.getName());
+			graph.addNode(varNode);
+			
 			groupByString += "* ?"+groupByVar.getName()+"\\l";
 
 			Edge edge = new Edge();
@@ -36,13 +40,9 @@ public class GroupByInterpreter extends AbstractInterpreter implements Interpret
 			edge.setTo(varNode);
 			edge.setStyle("dotted");
 			graph.getParent().addEdge(edge);
-			
-			graph.addNode(varNode);
 		}
 		
 		groupByNode.setLabel(groupByString);
-
-		graph.getParent().addNode(groupByNode);
 	}
 
 }

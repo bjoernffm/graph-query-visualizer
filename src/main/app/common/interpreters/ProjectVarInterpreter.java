@@ -56,16 +56,17 @@ public class ProjectVarInterpreter extends AbstractInterpreter implements Interp
 					for(Var mentionedVar: mentionedVars) {
 						Node varNode = new EntityNode(mentionedVar.toString());
 						graph.addNode(varNode);
-						
+
 						Edge edge = new Edge();
 						edge.setLabel(aggregator.toString());
+						edge.setLabeltooltip(aggregator.toString()+" AS ?"+var.getName());
 						edge.setFrom(varNode);
 						edge.setTo(entityNode);
 						graph.addEdge(edge);
 					}
 				} else if (projectExpressions.get(var) instanceof E_Str) {
 					E_Str projectExpression = (E_Str) projectExpressions.get(var);
-					//System.out.println(expression.ge);
+					//System.out.println(projectExpression);
 					
 					Set<Var> mentionedVars = projectExpression.getVarsMentioned();
 					for(Var mentionedVar: mentionedVars) {

@@ -1,12 +1,11 @@
 package main.app.common.interpreters;
 
-import java.util.List;
-
 import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.sparql.syntax.ElementBind;
 import org.apache.jena.sparql.syntax.ElementData;
 import org.apache.jena.sparql.syntax.ElementFilter;
 import org.apache.jena.sparql.syntax.ElementGroup;
+import org.apache.jena.sparql.syntax.ElementMinus;
 import org.apache.jena.sparql.syntax.ElementOptional;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 import org.apache.jena.sparql.syntax.ElementSubQuery;
@@ -43,20 +42,13 @@ public class ElementGroupInterpreter extends AbstractInterpreter implements Inte
 				graph.addSubgraph(subgraph);
 				(new QueryInterpreter()).interpret(((ElementSubQuery) el).getQuery(), subgraph);
 			} else if (el instanceof ElementUnion) {
-				ElementUnion test = (ElementUnion) el;
-				List<Element> elements = test.getElements();
-				
-				Subgraph subgraph = new Subgraph("cluster_"+this.hashCode());
-				subgraph.setLabel("UNION");
+				(new ElementUnionInterpreter()).interpret((ElementUnion) el, graph);
+			} else if (el instanceof ElementGroup) {
+				Subgraph subgraph = new Subgraph("cluster_"+this.getUUID()+"_"+this.getUUID(el.hashCode()));
 				graph.addSubgraph(subgraph);
-				for(int j = 0; j < elements.size(); j++) {
-					Subgraph unionSubgraph = new Subgraph("cluster_"+this.hashCode()+"_"+j);
-					unionSubgraph.setStyle("dashed");
-					subgraph.addSubgraph(unionSubgraph);
-					(new QueryPatternInterpreter()).interpret((Element) elements.get(j), unionSubgraph);
-					//System.out.println(elements.get(i));
-				}
-				//throw new Exception("Stopping here");
+				(new ElementGroupInterpreter()).interpret((ElementGroup) el, subgraph);
+			} else if (el instanceof ElementMinus) {
+				(new ElementMinusInterpreter()).interpret((ElementMinus) el, graph);
 			} else {
 				System.out.println(el.getClass());
 				System.out.println(el+"\n");

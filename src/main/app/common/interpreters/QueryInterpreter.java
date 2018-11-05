@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.SortCondition;
 import org.apache.jena.sparql.core.VarExprList;
+import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.syntax.Element;
 
 import main.app.dot.Graph;
@@ -37,6 +38,14 @@ public class QueryInterpreter extends AbstractInterpreter implements Interpreter
 		List<SortCondition> sortConditions = query.getOrderBy();
 		if (sortConditions != null && !sortConditions.isEmpty()) {
 			(new OrderByInterpreter()).interpret(sortConditions, graph);
+		}
+
+		/**
+		 * adding nodes for "having"
+		 */
+		List<Expr> havingExpressions = query.getHavingExprs();
+		if (havingExpressions != null && !havingExpressions.isEmpty()) {
+			(new HavingInterpreter()).interpret(havingExpressions, graph);
 		}
 		
 		/**
