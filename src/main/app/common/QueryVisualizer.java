@@ -10,6 +10,7 @@ import org.apache.jena.query.QueryFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.query.QueryParseException;
+import org.apache.jena.query.Syntax;
 import org.apache.jena.sparql.syntax.ElementGroup;
 
 public abstract class QueryVisualizer {	
@@ -36,7 +37,7 @@ public abstract class QueryVisualizer {
 	public QueryVisualizer(String query)
 	{
 		try {
-			this.query = QueryFactory.create(query);
+			this.query = QueryFactory.create(query, Syntax.syntaxARQ);
 			this.queryType = "select";
 		} catch(QueryParseException queryException) {
 			// check if possibly an update request has been entered

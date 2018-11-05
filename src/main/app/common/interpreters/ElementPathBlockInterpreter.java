@@ -1,10 +1,22 @@
 package main.app.common.interpreters;
 
+import java.util.List;
+
 import org.apache.jena.sparql.core.PathBlock;
 import org.apache.jena.sparql.core.TriplePath;
+import org.apache.jena.sparql.path.P_Alt;
+import org.apache.jena.sparql.path.P_FixedLength;
+import org.apache.jena.sparql.path.P_Inverse;
 import org.apache.jena.sparql.path.P_Link;
+import org.apache.jena.sparql.path.P_Mod;
+import org.apache.jena.sparql.path.P_NegPropSet;
+import org.apache.jena.sparql.path.P_OneOrMore1;
+import org.apache.jena.sparql.path.P_Path0;
+import org.apache.jena.sparql.path.P_ReverseLink;
 import org.apache.jena.sparql.path.P_Seq;
 import org.apache.jena.sparql.path.P_ZeroOrMore1;
+import org.apache.jena.sparql.path.P_ZeroOrOne;
+import org.apache.jena.sparql.path.Path;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 
 import main.app.dot.Edge;
@@ -32,53 +44,12 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 			org.apache.jena.graph.Node predicate = el.getPredicate();
 			org.apache.jena.graph.Node object = el.getObject();
 			
-			//System.out.println(el.isTriple());
-			
-			/**
-			 * multiple paths
-			 
-			 org.apache.jena.sparql.path.P_Seq path = (org.apache.jena.sparql.path.P_Seq) el.getPath();
-			org.apache.jena.sparql.path.P_Link path2 = (org.apache.jena.sparql.path.P_Link) path.getRight();
-			org.apache.jena.graph.Node node = path2.getNode();
-			System.out.println(node.getLocalName());*/
-			
-			/**
-			 * one or more
-			 
-			 org.apache.jena.sparql.path.P_Seq path = (org.apache.jena.sparql.path.P_Seq) el.getPath();
-			org.apache.jena.sparql.path.P_OneOrMore1 path2 = (org.apache.jena.sparql.path.P_OneOrMore1) path.getLeft();
-			org.apache.jena.sparql.path.P_Link subpath = (org.apache.jena.sparql.path.P_Link) path2.getSubPath();
-			System.out.println(subpath);
-			*/
-			
 			// Interpret the subject
-			if (subject.isVariable()) {
-				fromNode = new EntityNode("?"+subject.getName());
-			} else if (subject.isURI()) {
-				fromNode = new EntityNode(subject.getLocalName());
-				fromNode.setShape("box");
-			} else if (subject.isLiteral()) {
-				fromNode = new EntityNode(subject.getLiteralLexicalForm());
-				fromNode.setShape("box");
-			} else {
-				fromNode = new EntityNode(subject.toString());
-				fromNode.setShape("box");
-			}
+			fromNode = new EntityNode(this.resolveNodeName(subject));
 			fromNode.setTooltip(subject.toString());
 
 			// Interpret the object
-			if (object.isVariable()) {
-				toNode = new EntityNode("?"+object.getName());
-			} else if (object.isURI()) {
-				toNode = new EntityNode(object.getLocalName());
-				toNode.setShape("box");
-			} else if (object.isLiteral()) {
-				toNode = new EntityNode(object.getLiteralLexicalForm());
-				toNode.setShape("box");
-			} else {
-				toNode = new EntityNode(object.toString());
-			}
-			
+			toNode = new EntityNode(this.resolveNodeName(object));			
 			toNode.setTooltip(object.toString());
 			toNode.setOptional(this.getOptional());
 			
@@ -87,28 +58,81 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 			edge.setFrom(fromNode);
 			edge.setTo(toNode);
 			if (el.isTriple()) {
-				if (predicate.isURI()) {
-					edge.setLabel(predicate.getLocalName());
-				} else if (predicate.isVariable()) {
-					edge.setLabel("?"+predicate.getName());
-				}
+				edge.setLabel(this.resolveNodeName(predicate));
 				edge.setLabeltooltip(predicate.toString());
 			} else {
-				if (el.getPath() instanceof P_Seq) {
-					P_Seq path = (P_Seq) el.getPath();
-					edge.setLabel(path.toString());
-				} else if (el.getPath() instanceof P_ZeroOrMore1) {
-					P_ZeroOrMore1 path = (P_ZeroOrMore1) el.getPath();
-					P_Link subpath = (P_Link) path.getSubPath();
-					edge.setLabel(subpath.getNode().getLocalName()+"*");
-				} else {
-					throw new Exception("Stop, unknown type "+el.getPath().getClass());
-				}
+				edge.setLabel(this.resolvePath(el.getPath()));
+				edge.setLabeltooltip(el.getPath().toString());
 			}
 			
 			graph.addNode(fromNode);
 			graph.addNode(toNode);
 			graph.addEdge(edge);
 		}
+	}
+	
+	public String resolvePath(Path path) throws Exception
+	{
+		String retString = "";
+		
+		if (path instanceof P_Seq) {
+			P_Seq tmpPath = (P_Seq) path;
+			retString = this.resolvePath(tmpPath.getLeft())+"/"+this.resolvePath(tmpPath.getRight());
+		} else if (path instanceof P_Inverse) {
+			P_Inverse tmpPath = (P_Inverse) path;
+			retString = "^"+this.resolvePath(tmpPath.getSubPath());
+		} else if (path instanceof P_Alt) {
+			P_Alt tmpPath = (P_Alt) path;
+			retString = this.resolvePath(tmpPath.getLeft())+"|"+this.resolvePath(tmpPath.getRight());
+		} else if (path instanceof P_ZeroOrMore1) {
+			P_ZeroOrMore1 tmpPath = (P_ZeroOrMore1) path;
+			retString = this.resolvePath(tmpPath.getSubPath())+"*";
+		} else if (path instanceof P_OneOrMore1) {
+			P_OneOrMore1 tmpPath = (P_OneOrMore1) path;
+			retString = this.resolvePath(tmpPath.getSubPath())+"+";
+		} else if (path instanceof P_ZeroOrOne) {
+			P_ZeroOrOne tmpPath = (P_ZeroOrOne) path;
+			retString = this.resolvePath(tmpPath.getSubPath())+"?";
+		} else if (path instanceof P_NegPropSet) {
+			List<P_Path0> tmpList = ((P_NegPropSet) path).getNodes();
+
+			P_Path0 tmpPath = tmpList.get(0);
+			retString = "!("+this.resolvePath(tmpPath);
+			for(int i = 1; i < tmpList.size(); i++) {
+				tmpPath = tmpList.get(i);
+				retString += "|"+this.resolvePath(tmpPath);
+			}
+			retString += ")";
+		} else if (path instanceof P_Mod) {
+			P_Mod tmpPath = (P_Mod) path;
+			retString = this.resolvePath(tmpPath.getSubPath());
+			if (tmpPath.isFixedLength()) {
+				retString += "{"+tmpPath.getFixedLength()+"}";
+			} else {
+				retString += "{";
+				if (tmpPath.getMin() >= 0) {
+					retString += tmpPath.getMin();
+				}
+				retString += ",";
+				if (tmpPath.getMax() >= 0) {
+					retString += tmpPath.getMax();
+				}
+				retString += "}";
+			}
+		} else if (path instanceof P_FixedLength) {
+			P_FixedLength tmpPath = (P_FixedLength) path;
+			retString = this.resolvePath(tmpPath.getSubPath());
+			retString += "{"+tmpPath.getCount()+"}";
+		} else if (path instanceof P_Link) {
+			P_Link tmpPath = (P_Link) path;
+			retString = this.resolveNodeName(tmpPath.getNode());
+		} else if (path instanceof P_ReverseLink) {
+			P_ReverseLink tmpPath = (P_ReverseLink) path;
+			retString = "^"+this.resolveNodeName(tmpPath.getNode());
+		} else {
+			throw new Exception("Unknown type: "+path.getClass());
+		}
+		
+		return retString;
 	}
 }
