@@ -4,7 +4,6 @@ import org.apache.jena.query.Query;
 import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementSubQuery;
-import org.apache.jena.sparql.syntax.ElementUnion;
 
 import main.app.dot.Graph;
 

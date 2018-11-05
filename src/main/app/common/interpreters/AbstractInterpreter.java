@@ -1,7 +1,5 @@
 package main.app.common.interpreters;
 
-import main.app.dot.objects.EntityNode;
-
 public abstract class AbstractInterpreter implements Interpreter {
 	protected boolean optional = false;
 	

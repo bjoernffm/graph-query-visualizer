@@ -7,7 +7,6 @@ import org.apache.jena.query.Query;
 import org.apache.jena.query.SortCondition;
 import org.apache.jena.sparql.expr.Expr;
 
-import main.app.common.DotVisualizer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;

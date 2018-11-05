@@ -6,8 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.jena.sparql.syntax.ElementGroup;
-
+import main.app.dot.objects.ClarifyEdge;
 import main.app.misc.RecursiveNodeContainer;
 
 public class Graph extends Object {
@@ -266,20 +265,16 @@ public class Graph extends Object {
 				ArrayList<RecursiveNodeContainer> nodeList = entry.getValue();
 				//System.out.println(nodeList);
 				if (nodeList.size() == 2) {
-					Edge edge = new Edge();
+					Edge edge = new ClarifyEdge();
 					edge.setFrom(nodeList.get(0).getNode());
 					edge.setTo(nodeList.get(1).getNode());
-					edge.setStyle("dotted");
-					edge.setArrowhead("none");
 					this.addEdge(edge);
 				} else if (nodeList.size() > 2) {
 					if (nodeList.get(0).getLevel() == 1) {
 						for(int i = 1; i < nodeList.size(); i++) {
-							Edge edge = new Edge();
+							Edge edge = new ClarifyEdge();
 							edge.setFrom(nodeList.get(0).getNode());
 							edge.setTo(nodeList.get(i).getNode());
-							edge.setStyle("dotted");
-							edge.setArrowhead("none");
 							this.addEdge(edge);
 						}
 					} else {
@@ -287,11 +282,9 @@ public class Graph extends Object {
 						this.addNode(masterNode);
 						
 						for(int i = 0; i < nodeList.size(); i++) {
-							Edge edge = new Edge();
+							Edge edge = new ClarifyEdge();
 							edge.setFrom(masterNode);
 							edge.setTo(nodeList.get(i).getNode());
-							edge.setStyle("dotted");
-							edge.setArrowhead("none");
 							this.addEdge(edge);
 						}
 					}

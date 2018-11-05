@@ -6,7 +6,7 @@ import main.app.http.Server;
 public class Main {
     public static void main(String[] args) {
         Server svr = new Server();
-        //svr.start();
+        svr.start();
     	
     	DotVisualizer sqv = new DotVisualizer(
     		"PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT ?x WHERE { ?x foaf:type{5} ?name . ?x foaf:mbox <mailto:alice@example> . }"
@@ -20,7 +20,7 @@ public class Main {
         );
     	try {
 			String ret = sqv.visualize();
-			System.out.println(ret);
+			//System.out.println(ret);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

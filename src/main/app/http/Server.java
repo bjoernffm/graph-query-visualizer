@@ -20,7 +20,6 @@ public class Server {
     	
     	get("/", (request, response) -> {
     		Map<String, String> map = new HashMap<>();
-            //map.put("message", "Hello World!");
 
             return this.render(map, "index");
     	});

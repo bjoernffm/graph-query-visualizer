@@ -10,6 +10,10 @@ SELECT  $title
 WHERE   { :book1  dc:title  $title}`);
     editor.clearSelection();
 
+    var dotResultEditor = ace.edit("dotResultEditor");
+    dotResultEditor.setTheme("ace/theme/monokai");
+    dotResultEditor.session.setMode("ace/mode/sql");
+
     $('#querySubmit').click(function(e) {
         $('#querySubmit').attr("disabled", "disabled");
         $('#resultLoadingIndicator').show();
@@ -19,7 +23,7 @@ WHERE   { :book1  dc:title  $title}`);
         e.preventDefault();
 
         $.post("/api/queries", editor.getValue(), function( data ) {
-        console.log(data);
+            dotResultEditor.setValue(data.data);
             result = Viz(data.data);
             $('#queryViewer').html(result);
             $('#queryViewer').show();
@@ -39,6 +43,4 @@ WHERE   { :book1  dc:title  $title}`);
             $('#querySubmit').removeAttr("disabled");
         });
     });
-
-
 });

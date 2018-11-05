@@ -10,8 +10,10 @@ public class Edge extends Object {
 	protected String htmlLabel;
 	protected String labeltooltip;
 	protected String style;
+	protected String dir;
 	protected String arrowhead;
 	protected String lhead;
+	protected Boolean constraint = true;
 	
 	public String getId()
 	{
@@ -68,6 +70,14 @@ public class Edge extends Object {
 		this.style = style;
 	}
 	
+	public String getDirection() {
+		return this.dir;
+	}
+	
+	public void setDirection(String dir) {
+		this.dir = dir;
+	}
+	
 	public String getArrowhead() {
 		return this.label;
 	}
@@ -82,6 +92,10 @@ public class Edge extends Object {
 	
 	public void setLhead(String lhead) {
 		this.lhead = lhead;
+	}
+	
+	public void setNoConstraint() {
+		this.constraint = false;
 	}
 	
 	public String toDot()
@@ -100,11 +114,17 @@ public class Edge extends Object {
 		if (this.style != null && !this.style.equals("")) {
 			argumentList.add("style=\""+this.style+"\"");
 		}
+		if (this.dir != null && !this.dir.equals("")) {
+			argumentList.add("dir=\""+this.dir+"\"");
+		}
 		if (this.arrowhead != null && !this.arrowhead.equals("")) {
 			argumentList.add("arrowhead=\""+this.arrowhead+"\"");
 		}
 		if (this.lhead != null && !this.lhead.equals("")) {
 			argumentList.add("lhead=\""+this.lhead+"\"");
+		}
+		if (this.constraint == false) {
+			argumentList.add("constraint="+this.constraint.toString());
 		}
 		
 		return "\""+this.getFrom().getUniqueId()+"\" -> \""+this.getTo().getUniqueId()+"\" ["+String.join(", ", argumentList)+"]";
