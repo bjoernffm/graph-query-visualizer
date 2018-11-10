@@ -8,7 +8,7 @@ import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.AggregateNode;
 
-public class LimitInterpreter extends AbstractInterpreter implements Interpreter {
+public class OffsetInterpreter extends AbstractInterpreter implements Interpreter {
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
@@ -17,19 +17,19 @@ public class LimitInterpreter extends AbstractInterpreter implements Interpreter
 			throw new Exception(Long.class+" needed as Object. Given: "+obj.getClass());
 		}
 		
-		long limit = (long) obj;
-		Node limitNode = new AggregateNode("LIMIT "+limit);
+		long offset = (long) obj;
+		Node offsetNode = new AggregateNode("OFFSET "+offset);
 		
 		Map<String, Node> nodes = graph.getNodes();
 		Node targetNode = (Node) nodes.values().toArray()[0];
 		
 		Edge edge = new Edge();
 		edge.setArrowhead("none");
-		edge.setFrom(limitNode);
+		edge.setFrom(offsetNode);
 		edge.setTo(targetNode);
 		edge.setLhead("cluster_1");
 		
-		graph.getParent().addNode(limitNode);
+		graph.getParent().addNode(offsetNode);
 		graph.getParent().addEdge(edge);
 	}
 

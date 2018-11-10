@@ -57,6 +57,14 @@ public class QueryInterpreter extends AbstractInterpreter implements Interpreter
 		}
 		
 		/**
+		 * adding nodes for "offset"
+		 */
+		long offset = query.getOffset();
+		if (offset >= 0) {
+			(new OffsetInterpreter()).interpret(offset, graph);
+		}
+		
+		/**
 		 * aggregate project- and mentioned-vars
 		 */
 		VarExprList project = query.getProject();
