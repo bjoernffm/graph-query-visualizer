@@ -41,7 +41,7 @@ public abstract class QueryVisualizer {
 			this.queryType = "select";
 		} catch(QueryParseException queryException) {
 			// check if possibly an update request has been entered
-			if (queryException.getMessage().toLowerCase().contains("delete") || queryException.getMessage().toLowerCase().contains("update")) {
+			if (queryException.getMessage().toLowerCase().contains("delete") || queryException.getMessage().toLowerCase().contains("insert")) {
 				try {
 					this.update = UpdateFactory.create(query);
 					this.queryType = "update";

@@ -6,8 +6,8 @@ public class ClarifyEdge extends Edge {
 	public ClarifyEdge() {
 		super();
 
-		this.setStyle("dotted");
+		this.setColor("#0000FF22");
+		this.setPenwidth(5);
 		this.setDirection("none");
-		this.setNoConstraint();
 	}
 }

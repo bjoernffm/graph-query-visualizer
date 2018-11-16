@@ -22,12 +22,12 @@ public class NodeTest {
 		Graph graph = new Graph("main");
 		graph.addNode(node);
 		
-		assertTrue(node.getId().equals("d3d94468-02a4-3259-b55d-38e6d163e820"));
-		assertTrue(node.getLabel().equals("Label"));
-		assertTrue(node.getShape().equals("square"));
-		assertTrue(node.getFillcolor().equals("aliceblue"));
-		assertTrue(node.getStyle().equals("filled"));
-		assertTrue(node.toDot().equals("\"d3d94468-02a4-3259-b55d-38e6d163e820_main\" [label=\"Label\", shape=\"square\", fillcolor=\"aliceblue\", style=\"filled\"]"));
+		assertEquals(node.getId(), "d3d94468");
+		assertEquals(node.getLabel(), "Label");
+		assertEquals(node.getShape(), "square");
+		assertEquals(node.getFillcolor(), "aliceblue");
+		assertEquals(node.getStyle(), "filled");
+		assertEquals(node.toDot(), "\"d3d94468_main\" [label=\"Label\", shape=\"square\", fillcolor=\"aliceblue\", style=\"filled\"]");
 	}
 	
 	@Test

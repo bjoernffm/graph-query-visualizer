@@ -9,9 +9,9 @@ public class Edge extends Object {
 	protected String label;
 	protected String htmlLabel;
 	protected String labeltooltip;
-	protected String style;
 	protected String dir;
 	protected String arrowhead;
+	protected int penwidth = 1;
 	protected String lhead;
 	protected Boolean constraint = true;
 	
@@ -62,14 +62,6 @@ public class Edge extends Object {
 		this.labeltooltip = labeltooltip;
 	}
 	
-	public String getStyle() {
-		return this.style;
-	}
-	
-	public void setStyle(String style) {
-		this.style = style;
-	}
-	
 	public String getDirection() {
 		return this.dir;
 	}
@@ -84,6 +76,14 @@ public class Edge extends Object {
 	
 	public void setArrowhead(String arrowhead) {
 		this.arrowhead = arrowhead;
+	}
+	
+	public int getPenwidth() {
+		return this.penwidth;
+	}
+	
+	public void setPenwidth(int penwidth) {
+		this.penwidth = penwidth;
 	}
 	
 	public String getLhead() {
@@ -119,6 +119,12 @@ public class Edge extends Object {
 		}
 		if (this.arrowhead != null && !this.arrowhead.equals("")) {
 			argumentList.add("arrowhead=\""+this.arrowhead+"\"");
+		}
+		if (this.color != null && !this.color.equals("")) {
+			argumentList.add("color=\""+this.color+"\"");
+		}
+		if (this.penwidth != 1) {
+			argumentList.add("penwidth="+this.penwidth);
 		}
 		if (this.lhead != null && !this.lhead.equals("")) {
 			argumentList.add("lhead=\""+this.lhead+"\"");

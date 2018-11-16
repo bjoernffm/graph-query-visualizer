@@ -2,9 +2,13 @@ package main.app.common.interpreters;
 
 import java.util.List;
 
+import org.apache.jena.graph.Node;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.SortCondition;
+import org.apache.jena.sparql.core.Quad;
 import org.apache.jena.sparql.core.VarExprList;
+import org.apache.jena.sparql.modify.request.QuadAcc;
+import org.apache.jena.sparql.modify.request.UpdateModify;
 import org.apache.jena.sparql.syntax.Element;
 
 import main.app.dot.Graph;
@@ -14,46 +18,25 @@ public class UpdateInterpreter extends AbstractInterpreter implements Interprete
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
 	{
-		if (obj.getClass() != Query.class) {
-			throw new Exception(Query.class+" needed as Object. Given: "+obj.getClass());
+		if (obj.getClass() != UpdateModify.class) {
+			throw new Exception(UpdateModify.class+" needed as Object. Given: "+obj.getClass());
 		}
 		
-		Query query = (Query) obj;
+		UpdateModify query = (UpdateModify) obj;
 		
-		Element queryPattern = query.getQueryPattern();
-		(new QueryPatternInterpreter()).interpret(queryPattern, graph);
+		/*QuadAcc deleteAcc = query.getDeleteAcc();
+		Node deleteGraph = deleteAcc.getGraph();
+		List<Quad> deleteQuads = deleteAcc.getQuads();
+		Quad deleteQuad = deleteQuads.get(0);*/
 		
-		/**
-		 * adding nodes for "group by"
-		 */
-		VarExprList groupByVarExpressions = query.getGroupBy();
-		if (groupByVarExpressions != null && !groupByVarExpressions.isEmpty()) {
-			(new GroupByInterpreter()).interpret(groupByVarExpressions, graph);
-		}
+		QuadAcc deleteAcc = query.getInsertAcc();
+		Node deleteGraph = deleteAcc.getGraph();
+		List<Quad> deleteQuads = deleteAcc.getQuads();
+		//Quad deleteQuad = deleteQuads.get(0);
+		System.out.println(deleteQuads);
 		
-		/**
-		 * adding nodes for "order by"
-		 */
-		List<SortCondition> sortConditions = query.getOrderBy();
-		if (sortConditions != null && !sortConditions.isEmpty()) {
-			(new OrderByInterpreter()).interpret(sortConditions, graph);
-		}
-		
-		/**
-		 * adding nodes for "limit"
-		 */
-		long limit = query.getLimit();
-		if (limit >= 0) {
-			(new LimitInterpreter()).interpret(limit, graph);
-		}
-		
-		/**
-		 * aggregate project- and mentioned-vars
-		 */
-		VarExprList project = query.getProject();
-		if (project != null && !project.isEmpty()) {
-			(new ProjectVarInterpreter()).interpret(project, graph);
-		}
+		Element wherePattern = query.getWherePattern();
+		(new QueryPatternInterpreter()).interpret(wherePattern, graph);
 	}
 
 }

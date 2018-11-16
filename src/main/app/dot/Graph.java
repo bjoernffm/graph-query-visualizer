@@ -15,8 +15,6 @@ public class Graph extends Object {
 
 	protected ArrayList<Edge> edgeList = new ArrayList<>();
 	protected String type = "digraph";
-	protected String label = "";
-	protected String style = "";
 	protected String id;
 	
 	protected String compoundProperty = "true";
@@ -29,6 +27,7 @@ public class Graph extends Object {
 	public Graph(String id)
 	{
 		this.setId(id);
+		this.setStyle("solid");
 	}
 	
 	public void addNode(Node node)
@@ -174,15 +173,6 @@ public class Graph extends Object {
 		this.label = label.trim();
 	}
 	
-	public String getStyle() {
-		return this.style;
-	}
-	
-	public void setStyle(String style) {
-		style = this.escape(style);
-		this.style = style.trim();
-	}
-	
 	public Graph getParent() {
 		return this.parent;
 	}
@@ -222,13 +212,16 @@ public class Graph extends Object {
 		if (!this.graphProperties.isEmpty()) {
 			ret += "\tgraph ["+this.graphProperties+"];\n";
 		}
-		if (!this.label.isEmpty()) {
-			ret += "\tlabel=\""+this.label+"\";\n";
+		if (!this.getLabel().isEmpty()) {
+			ret += "\tlabel=\""+this.getLabel()+"\";\n";
 		} else {
 			ret += "\tlabel=\"\";\n";
 		}
-		if (!this.style.isEmpty()) {
-			ret += "\tstyle=\""+this.style+"\";\n";
+		if (!this.getStyle().isEmpty()) {
+			ret += "\tstyle=\""+this.getStyle()+"\";\n";
+		}
+		if (!this.getColor().isEmpty()) {
+			ret += "\tcolor=\""+this.getColor()+"\";\n";
 		}
 		if (!this.nodeProperties.isEmpty()) {
 			ret += "\tnode ["+this.nodeProperties+"];\n";
@@ -238,6 +231,43 @@ public class Graph extends Object {
 		}
 		ret += "\n";
 
+		this.inheritOptional();
+		
+		// not for subgraphs, only the top graph should draw the lines
+		if (this.getClass() == Graph.class) {
+			Map<String, ArrayList<RecursiveNodeContainer>> nodeMap = this.getNodesRecursive();
+			for (Entry<String, ArrayList<RecursiveNodeContainer>> entry: nodeMap.entrySet()) {
+				ArrayList<RecursiveNodeContainer> nodeList = entry.getValue();
+				//System.out.println(nodeList);
+				if (nodeList.size() == 2) {
+					Edge edge = new ClarifyEdge();
+					edge.setFrom(nodeList.get(0).getNode());
+					edge.setTo(nodeList.get(1).getNode());
+					edge.setNoConstraint();
+					this.addEdge(edge);
+				} else if (nodeList.size() > 2) {
+					if (nodeList.get(0).getLevel() == 1) {
+						for(int i = 1; i < nodeList.size(); i++) {
+							Edge edge = new ClarifyEdge();
+							edge.setFrom(nodeList.get(0).getNode());
+							edge.setTo(nodeList.get(i).getNode());
+							this.addEdge(edge);
+						}
+					} else {
+						Node masterNode = new Node(nodeList.get(0).getNode());
+						this.subgraphMap.get("cluster_1").addNode(masterNode);
+						
+						for(int i = 0; i < nodeList.size(); i++) {
+							Edge edge = new ClarifyEdge();
+							edge.setFrom(masterNode);
+							edge.setTo(nodeList.get(i).getNode());
+							this.addEdge(edge);
+						}
+					}
+				}
+			}
+		}
+		
 		// Adding subgraphs
 		for (Entry<String, Subgraph> entry: this.subgraphMap.entrySet()) {
 			Subgraph subgraph = entry.getValue();
@@ -254,42 +284,6 @@ public class Graph extends Object {
 			subgraphStr = subgraphStr.replaceAll("\t", "\t\t");
 			subgraphStr = subgraphStr.replaceAll("}", "\t}");
 			ret += "\t"+subgraphStr+"\n\n";
-		}
-
-		this.inheritOptional();
-		
-		// not for subgraphs, only the top graph should draw the lines
-		if (this.getClass() == Graph.class) {
-			Map<String, ArrayList<RecursiveNodeContainer>> nodeMap = this.getNodesRecursive();
-			for (Entry<String, ArrayList<RecursiveNodeContainer>> entry: nodeMap.entrySet()) {
-				ArrayList<RecursiveNodeContainer> nodeList = entry.getValue();
-				//System.out.println(nodeList);
-				if (nodeList.size() == 2) {
-					Edge edge = new ClarifyEdge();
-					edge.setFrom(nodeList.get(0).getNode());
-					edge.setTo(nodeList.get(1).getNode());
-					this.addEdge(edge);
-				} else if (nodeList.size() > 2) {
-					if (nodeList.get(0).getLevel() == 1) {
-						for(int i = 1; i < nodeList.size(); i++) {
-							Edge edge = new ClarifyEdge();
-							edge.setFrom(nodeList.get(0).getNode());
-							edge.setTo(nodeList.get(i).getNode());
-							this.addEdge(edge);
-						}
-					} else {
-						Node masterNode = new Node(nodeList.get(0).getNode());
-						this.addNode(masterNode);
-						
-						for(int i = 0; i < nodeList.size(); i++) {
-							Edge edge = new ClarifyEdge();
-							edge.setFrom(masterNode);
-							edge.setTo(nodeList.get(i).getNode());
-							this.addEdge(edge);
-						}
-					}
-				}
-			}
 		}
 
 		// Adding nodes

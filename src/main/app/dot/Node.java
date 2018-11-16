@@ -11,7 +11,6 @@ public class Node extends Object {
 	protected String labeljust;
 	protected String shape;
 	protected String fillcolor;
-	protected String style;
 	protected Graph parentGraph;
 	protected boolean optional;
 	
@@ -25,6 +24,11 @@ public class Node extends Object {
 	{
 		this.id = node.id;
 		this.label = node.label;
+		this.tooltip = node.tooltip;
+		this.labeljust = node.labeljust;
+		this.shape = node.shape;
+		this.fillcolor = node.fillcolor;
+		this.style = node.style;
 	}
 	
 	public String getId() {
@@ -40,14 +44,6 @@ public class Node extends Object {
 		UUID uuid = UUID.nameUUIDFromBytes(bytes);
 		
 		this.id = uuid.toString().substring(0, 8);
-	}
-	
-	public String getLabel() {
-		return this.label;
-	}
-	
-	public void setLabel(String label) {
-		this.label = label.trim();
 	}
 	
 	public String getTooltip() {
@@ -72,14 +68,6 @@ public class Node extends Object {
 
 	public void setFillcolor(String fillcolor) {
 		this.fillcolor = fillcolor.trim();
-	}
-
-	public String getStyle() {
-		return this.style;
-	}
-
-	public void setStyle(String style) {
-		this.style = style.trim();
 	}
 
 	public Graph getParentGraph() {
@@ -109,8 +97,8 @@ public class Node extends Object {
 		
 		ArrayList<String> argumentList = new ArrayList<>();
 
-		if (this.label != null && !this.label.equals("")) {
-			argumentList.add("label=\""+this.escape(this.label)+"\"");
+		if (this.getLabel() != null) {
+			argumentList.add("label=\""+this.getLabel()+"\"");
 		}
 		if (this.tooltip != null && !this.tooltip.equals("")) {
 			argumentList.add("tooltip=\""+this.escape(this.tooltip)+"\"");
@@ -121,8 +109,8 @@ public class Node extends Object {
 		if (this.fillcolor != null && !this.fillcolor.equals("")) {
 			argumentList.add("fillcolor=\""+this.fillcolor+"\"");
 		}
-		if (this.style != null && !this.style.equals("")) {
-			argumentList.add("style=\""+this.style+"\"");
+		if (this.getStyle() != null && !this.getStyle().equals("")) {
+			argumentList.add("style=\""+this.getStyle()+"\"");
 		}
 
 		return "\""+this.getUniqueId()+"\""+" ["+String.join(", ", argumentList)+"]";

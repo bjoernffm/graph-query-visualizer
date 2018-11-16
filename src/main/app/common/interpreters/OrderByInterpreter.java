@@ -25,6 +25,7 @@ public class OrderByInterpreter extends AbstractInterpreter implements Interpret
 		List<SortCondition> sortConditions = (ArrayList<SortCondition>) obj;
 		
 		Node orderByNode = new AggregateNode("ORDER BY");
+		graph.getParent().addNode(orderByNode);
 		String orderByString = "ORDER BY\\n---------\\n";
 		
 		for(SortCondition sortCondition: sortConditions) {
@@ -45,14 +46,13 @@ public class OrderByInterpreter extends AbstractInterpreter implements Interpret
 				edge.setFrom(orderByNode);
 				edge.setTo(varNode);
 				edge.setStyle("dotted");
-				graph.getParent().addEdge(edge);
+				
 				graph.addNode(varNode);
+				graph.getParent().addEdge(edge);
 			}
 		}
 		
 		orderByNode.setLabel(orderByString);
-
-		graph.getParent().addNode(orderByNode);
 	}
 
 }

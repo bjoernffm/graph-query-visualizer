@@ -32,7 +32,7 @@ final public class DotVisualizer extends QueryVisualizer implements QueryVisuali
 			{
 				Update o = i.next();
 				UpdateModify u = (UpdateModify) o;
-				//System.out.println(u.);
+				(new UpdateInterpreter()).interpret((UpdateModify) u, this.subgraph);
 			}
 		}
 		

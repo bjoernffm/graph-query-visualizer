@@ -25,6 +25,7 @@ public class ElementUnionInterpreter extends AbstractInterpreter implements Inte
 		graph.addSubgraph(subgraph);
 		for(int j = 0; j < elements.size(); j++) {
 			Subgraph unionSubgraph = new Subgraph("cluster_"+this.hashCode()+"_"+j);
+			unionSubgraph.setColor("#cccccc");
 			unionSubgraph.setStyle("dashed");
 			subgraph.addSubgraph(unionSubgraph);
 			(new QueryPatternInterpreter()).interpret((Element) elements.get(j), unionSubgraph);
