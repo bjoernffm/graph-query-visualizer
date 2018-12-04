@@ -33,7 +33,7 @@ public class ElementFilterInterpreter extends AbstractInterpreter implements Int
 			
 			Set<Var> mentionedVars = exFunction.getVarsMentioned();
 			for(Var mentionedVar: mentionedVars) {
-				Node filter2 = new EntityNode(mentionedVar.toString());
+				Node filter2 = new EntityNode(this.resolveNodeName(mentionedVar));
 				graph.addNode(filter2);
 				Edge edge = new Edge();
 				edge.setArrowhead("dot");

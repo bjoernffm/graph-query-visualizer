@@ -2,14 +2,15 @@ package main.app.common.interpreters;
 
 import java.util.List;
 
-import org.apache.jena.graph.Node;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.SortCondition;
 import org.apache.jena.sparql.core.Quad;
-import org.apache.jena.sparql.core.VarExprList;
 import org.apache.jena.sparql.modify.request.QuadAcc;
+import org.apache.jena.sparql.modify.request.UpdateDataDelete;
+import org.apache.jena.sparql.modify.request.UpdateDataInsert;
+import org.apache.jena.sparql.modify.request.UpdateDeleteInsert;
+import org.apache.jena.sparql.modify.request.UpdateDeleteWhere;
 import org.apache.jena.sparql.modify.request.UpdateModify;
 import org.apache.jena.sparql.syntax.Element;
+import org.apache.jena.update.Update;
 
 import main.app.dot.Graph;
 
@@ -18,25 +19,33 @@ public class UpdateInterpreter extends AbstractInterpreter implements Interprete
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
 	{
-		if (obj.getClass() != UpdateModify.class) {
+		if (!(obj instanceof Update)) {
 			throw new Exception(UpdateModify.class+" needed as Object. Given: "+obj.getClass());
 		}
 		
-		UpdateModify query = (UpdateModify) obj;
+		if (obj instanceof UpdateDeleteWhere) {
+			(new UpdateDeleteWhereInterpreter()).interpret((UpdateDeleteWhere) obj, graph);
+		} else if (obj instanceof UpdateDataInsert) {
+			(new UpdateDataInsertInterpreter()).interpret((UpdateDataInsert) obj, graph);
+		} else if (obj instanceof UpdateDataDelete) {
+			(new UpdateDataDeleteInterpreter()).interpret((UpdateDataDelete) obj, graph);
+		} else if (obj instanceof UpdateModify) {
+			(new UpdateModifyInterpreter()).interpret((UpdateModify) obj, graph);
+		} else {
+			System.out.println(obj.getClass());
+			throw new Exception("Unknown type!");
+		}
 		
-		/*QuadAcc deleteAcc = query.getDeleteAcc();
-		Node deleteGraph = deleteAcc.getGraph();
-		List<Quad> deleteQuads = deleteAcc.getQuads();
-		Quad deleteQuad = deleteQuads.get(0);*/
 		
-		QuadAcc deleteAcc = query.getInsertAcc();
-		Node deleteGraph = deleteAcc.getGraph();
-		List<Quad> deleteQuads = deleteAcc.getQuads();
-		//Quad deleteQuad = deleteQuads.get(0);
-		System.out.println(deleteQuads);
+
+		/*QuadAcc insertAcc = query.getInsertAcc();
+		(new InsertQuadAccInterpreter()).interpret(insertAcc, graph);
+
+		QuadAcc deleteAcc = query;
+		(new DeleteQuadAccInterpreter()).interpret(deleteAcc, graph);
 		
 		Element wherePattern = query.getWherePattern();
-		(new QueryPatternInterpreter()).interpret(wherePattern, graph);
+		(new QueryPatternInterpreter()).interpret(wherePattern, graph);*/
 	}
 
 }

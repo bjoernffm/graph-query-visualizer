@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import main.app.dot.objects.ClarifyEdge;
+import main.app.dot.objects.GraphNode;
 import main.app.misc.RecursiveNodeContainer;
 
 public class Graph extends Object {
@@ -220,6 +221,9 @@ public class Graph extends Object {
 		if (!this.getStyle().isEmpty()) {
 			ret += "\tstyle=\""+this.getStyle()+"\";\n";
 		}
+		if (this.getFillcolor() != null && !this.getFillcolor().equals("")) {
+			ret += "\tfillcolor=\""+this.getFillcolor()+"\";\n";
+		}
 		if (!this.getColor().isEmpty()) {
 			ret += "\tcolor=\""+this.getColor()+"\";\n";
 		}
@@ -238,13 +242,17 @@ public class Graph extends Object {
 			Map<String, ArrayList<RecursiveNodeContainer>> nodeMap = this.getNodesRecursive();
 			for (Entry<String, ArrayList<RecursiveNodeContainer>> entry: nodeMap.entrySet()) {
 				ArrayList<RecursiveNodeContainer> nodeList = entry.getValue();
-				//System.out.println(nodeList);
+
 				if (nodeList.size() == 2) {
 					Edge edge = new ClarifyEdge();
 					edge.setFrom(nodeList.get(0).getNode());
 					edge.setTo(nodeList.get(1).getNode());
 					edge.setNoConstraint();
 					this.addEdge(edge);
+					
+					if (nodeList.get(1).getNode() instanceof GraphNode) {
+						edge.setLhead(nodeList.get(1).getNode().getParentGraph().getId());
+					}
 				} else if (nodeList.size() > 2) {
 					if (nodeList.get(0).getLevel() == 1) {
 						for(int i = 1; i < nodeList.size(); i++) {
@@ -252,6 +260,10 @@ public class Graph extends Object {
 							edge.setFrom(nodeList.get(0).getNode());
 							edge.setTo(nodeList.get(i).getNode());
 							this.addEdge(edge);
+							
+							if (nodeList.get(i).getNode() instanceof GraphNode) {
+								edge.setLhead(nodeList.get(i).getNode().getParentGraph().getId());
+							}
 						}
 					} else {
 						Node masterNode = new Node(nodeList.get(0).getNode());
@@ -262,6 +274,10 @@ public class Graph extends Object {
 							edge.setFrom(masterNode);
 							edge.setTo(nodeList.get(i).getNode());
 							this.addEdge(edge);
+							
+							if (nodeList.get(i).getNode() instanceof GraphNode) {
+								edge.setLhead(nodeList.get(i).getNode().getParentGraph().getId());
+							}
 						}
 					}
 				}

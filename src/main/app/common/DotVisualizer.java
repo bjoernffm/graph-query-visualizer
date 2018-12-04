@@ -31,8 +31,7 @@ final public class DotVisualizer extends QueryVisualizer implements QueryVisuali
 			for ( Iterator<Update> i = this.update.iterator(); i.hasNext(); )
 			{
 				Update o = i.next();
-				UpdateModify u = (UpdateModify) o;
-				(new UpdateInterpreter()).interpret((UpdateModify) u, this.subgraph);
+				(new UpdateInterpreter()).interpret(o, this.subgraph);
 			}
 		}
 		

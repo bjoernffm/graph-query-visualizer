@@ -6,11 +6,9 @@ import java.util.UUID;
 
 public class Node extends Object {
 	protected String id;
-	protected String label;
 	protected String tooltip;
 	protected String labeljust;
 	protected String shape;
-	protected String fillcolor;
 	protected Graph parentGraph;
 	protected boolean optional;
 	
@@ -22,13 +20,13 @@ public class Node extends Object {
 	
 	public Node(Node node)
 	{
-		this.id = node.id;
-		this.label = node.label;
-		this.tooltip = node.tooltip;
-		this.labeljust = node.labeljust;
-		this.shape = node.shape;
-		this.fillcolor = node.fillcolor;
-		this.style = node.style;
+		this.id = node.getId();
+		this.label = node.getLabel();
+		this.tooltip = node.getTooltip();
+		this.labeljust = node.getLabeljust();
+		this.shape = node.getShape();
+		this.fillcolor = node.getFillcolor();
+		this.style = node.getStyle();
 	}
 	
 	public String getId() {
@@ -52,6 +50,14 @@ public class Node extends Object {
 	
 	public void setTooltip(String tooltip) {
 		this.tooltip = tooltip.trim();
+	}
+	
+	public String getLabeljust() {
+		return this.labeljust;
+	}
+	
+	public void setLabeljust(String labeljust) {
+		this.labeljust = labeljust.trim();
 	}
 
 	public String getShape() {
@@ -98,7 +104,7 @@ public class Node extends Object {
 		ArrayList<String> argumentList = new ArrayList<>();
 
 		if (this.getLabel() != null) {
-			argumentList.add("label=\""+this.getLabel()+"\"");
+			argumentList.add("label=\""+this.escape(this.getLabel())+"\"");
 		}
 		if (this.tooltip != null && !this.tooltip.equals("")) {
 			argumentList.add("tooltip=\""+this.escape(this.tooltip)+"\"");

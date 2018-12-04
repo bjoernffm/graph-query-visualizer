@@ -3,6 +3,7 @@ package main.app.dot;
 abstract public class Object {
 	protected String color = "black";
 	protected String style;
+	protected String fillcolor;
 	protected String label = "";
 
 	public String getColor() {
@@ -11,6 +12,15 @@ abstract public class Object {
 	
 	public void setColor(String color) {
 		this.color = color;
+	}
+	
+	public String getFillcolor() {
+		return this.fillcolor;
+	}
+	
+	public void setFillcolor(String fillcolor) {
+		fillcolor = this.escape(fillcolor);
+		this.fillcolor = fillcolor.trim();
 	}
 	
 	public String getStyle() {

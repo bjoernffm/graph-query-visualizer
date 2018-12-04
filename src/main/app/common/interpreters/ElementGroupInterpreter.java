@@ -1,11 +1,13 @@
 package main.app.common.interpreters;
 
+import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.sparql.syntax.ElementBind;
 import org.apache.jena.sparql.syntax.ElementData;
 import org.apache.jena.sparql.syntax.ElementFilter;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementMinus;
+import org.apache.jena.sparql.syntax.ElementNamedGraph;
 import org.apache.jena.sparql.syntax.ElementOptional;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 import org.apache.jena.sparql.syntax.ElementSubQuery;
@@ -49,6 +51,8 @@ public class ElementGroupInterpreter extends AbstractInterpreter implements Inte
 				(new ElementGroupInterpreter()).interpret((ElementGroup) el, subgraph);
 			} else if (el instanceof ElementMinus) {
 				(new ElementMinusInterpreter()).interpret((ElementMinus) el, graph);
+			} else if (el instanceof ElementNamedGraph) {
+				(new ElementNamedGraphInterpreter()).interpret((ElementNamedGraph) el, graph);
 			} else {
 				System.out.println(el.getClass());
 				System.out.println(el+"\n");
