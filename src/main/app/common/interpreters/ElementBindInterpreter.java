@@ -33,7 +33,7 @@ public class ElementBindInterpreter extends AbstractInterpreter implements Inter
 			graph.addNode(varNode);
 			
 			Edge edge = new Edge();
-			edge.setHtmlLabel("<i>BIND</i>");
+			edge.setLabel("BIND");
 			edge.setLabeltooltip(element.toString());
 			edge.setFrom(varNode);
 			edge.setTo(entityNode);
