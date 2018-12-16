@@ -7,6 +7,7 @@ import org.apache.jena.query.Query;
 import org.apache.jena.query.SortCondition;
 import org.apache.jena.sparql.expr.Expr;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
@@ -14,6 +15,10 @@ import main.app.dot.objects.AggregateNode;
 import main.app.dot.objects.EntityNode;
 
 public class OrderByInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public OrderByInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
@@ -24,8 +29,8 @@ public class OrderByInterpreter extends AbstractInterpreter implements Interpret
 		
 		List<SortCondition> sortConditions = (ArrayList<SortCondition>) obj;
 		
-		Node orderByNode = new AggregateNode("ORDER BY");
-		graph.getParent().addNode(orderByNode);
+		Node orderByNode = new AggregateNode("orderby_"+this.hashCode());
+		graph.addNode(orderByNode);
 		String orderByString = "ORDER BY\\n---------\\n";
 		
 		for(SortCondition sortCondition: sortConditions) {
@@ -48,7 +53,7 @@ public class OrderByInterpreter extends AbstractInterpreter implements Interpret
 				edge.setStyle("dotted");
 				
 				graph.addNode(varNode);
-				graph.getParent().addEdge(edge);
+				graph.addEdge(edge);
 			}
 		}
 		

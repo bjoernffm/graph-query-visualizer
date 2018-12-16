@@ -9,6 +9,7 @@ import org.apache.jena.sparql.core.Quad;
 import org.apache.jena.sparql.modify.request.UpdateDataDelete;
 import org.apache.jena.sparql.modify.request.UpdateDeleteWhere;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Subgraph;
@@ -16,6 +17,10 @@ import main.app.dot.objects.DeleteSubgraph;
 import main.app.dot.objects.EntityNode;
 
 public class UpdateDeleteWhereInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public UpdateDeleteWhereInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception

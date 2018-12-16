@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.core.VarExprList;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
@@ -12,6 +13,10 @@ import main.app.dot.objects.AggregateNode;
 import main.app.dot.objects.EntityNode;
 
 public class GroupByInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public GroupByInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
@@ -23,8 +28,8 @@ public class GroupByInterpreter extends AbstractInterpreter implements Interpret
 		VarExprList groupByVarExpressions = (VarExprList) obj;
 		List<Var> groupByVars = groupByVarExpressions.getVars();
 
-		Node groupByNode = new AggregateNode("GROUP BY");
-		graph.getParent().addNode(groupByNode);
+		Node groupByNode = new AggregateNode("groupby_"+this.hashCode());
+		graph.addNode(groupByNode);
 		
 		String groupByString = "GROUP BY\\n---------\\n";
 		
@@ -39,7 +44,7 @@ public class GroupByInterpreter extends AbstractInterpreter implements Interpret
 			edge.setFrom(groupByNode);
 			edge.setTo(varNode);
 			edge.setStyle("dotted");
-			graph.getParent().addEdge(edge);
+			graph.addEdge(edge);
 		}
 		
 		groupByNode.setLabel(groupByString);

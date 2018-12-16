@@ -1,8 +1,11 @@
 package main.app.common.interpreters;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.Map.Entry;
 
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprAggregator;
@@ -11,10 +14,27 @@ import org.apache.jena.sparql.expr.ExprList;
 import org.apache.jena.sparql.expr.NodeValue;
 import org.apache.jena.sparql.expr.aggregate.Aggregator;
 
+import main.app.common.misc.KnowledgeContainer;
+import main.app.dot.Edge;
+import main.app.dot.Graph;
+import main.app.dot.Subgraph;
 import main.app.misc.FunctionResolution;
 
 public abstract class AbstractInterpreter implements Interpreter {
 	protected boolean optional = false;
+	protected KnowledgeContainer knowledgeContainer;
+
+	public AbstractInterpreter(AbstractInterpreter interpreter)
+	{
+		if (interpreter != null) {
+			this.knowledgeContainer = interpreter.getKnowledgeContainer();
+		}
+	}
+	
+	public KnowledgeContainer getKnowledgeContainer()
+	{
+		return this.knowledgeContainer;
+	}
 	
 	public Interpreter setOptional(boolean optional)
 	{
@@ -37,7 +57,12 @@ public abstract class AbstractInterpreter implements Interpreter {
 		if (node.isVariable()) {
 			return "?"+node.getName();
 		} else if (node.isURI()) {
-			return node.getLocalName();
+			Object prefix = this.getKnowledgeContainer().getPrefixMap().getNsURIPrefix(node.getNameSpace());
+			if (prefix == null) {
+				return node.getLocalName();
+			} else {
+				return prefix+":"+node.getLocalName();
+			}
 		} else if (node.isLiteral()) {
 			return node.getLiteralLexicalForm();
 		} else {
@@ -45,50 +70,78 @@ public abstract class AbstractInterpreter implements Interpreter {
 		}
 	}
 	
-	public FunctionResolution resolveFunctionName(Expr expression) throws Exception
+	public String beautifyExpression(String input)
 	{
-		FunctionResolution fr = new FunctionResolution();
-		String retValue = "";
+		String result = "";
+		int pad = 0;
+		boolean inQuotes = false;
+		boolean inApostrophe = false;
+		boolean nested = true;
 		
-		if(expression.isFunction()) {
-			ExprFunction function = expression.getFunction();
-			
-			List<Expr> args = function.getArgs();
-			if (args.size() == 2) {
-				FunctionResolution resolution1 = this.resolveFunctionName(args.get(0));
-				FunctionResolution resolution2 = this.resolveFunctionName(args.get(1));
-				retValue += resolution1.getName()+" "+function.getOpName()+" "+resolution2.getName();
+		for(int i = 0; i < input.length(); i++) {
+			if(input.charAt(i) == '(' && inQuotes == false && inApostrophe == false) {
+				if (input.charAt(i-1) != ' ') {
+					result += ' ';	
+				}
 				
-				fr.synchronizeMentionedVars(resolution1);
-				fr.synchronizeMentionedVars(resolution2);
-			} else {
-				throw new Exception("more than two args!");
-			}
-		} else if (expression.isConstant()) {
-			NodeValue constant = expression.getConstant();
-			retValue = constant.toString();
-		} else if (expression.isVariable()) {
-			retValue = expression.getVarName();
-		} else {
-			if (expression instanceof ExprAggregator) {
-				ExprAggregator expressionAggregator = (ExprAggregator) expression;
-				Aggregator aggregator = expressionAggregator.getAggregator();
-				retValue = aggregator.toString();
-
-				ExprList expressionList = aggregator.getExprList();
-				for(int i = 0; i < expressionList.size(); i++) {
-					Expr expressionItem = expressionList.get(i);
-					if (expressionItem.isVariable()) {
-						fr.addMentionedVar(expressionItem.getExprVar());
+				for(int j = i+1; j < input.length(); j++) {
+					if (input.charAt(j) == ')') {
+						nested = false;
+						break;
+					} else if (input.charAt(j) == '(') {
+						nested = true;
+						break;
 					}
 				}
+				
+				if (nested == false) {
+					result += input.charAt(i);
+				} else {
+					pad += 3;
+					result += input.charAt(i)+"\\l";
+					if (pad > 0) {
+						result += String.format("%"+pad+"s", "");
+					}
+				}
+			} else if(input.charAt(i) == ')' && inQuotes == false && inApostrophe == false) {
+				if (nested == false) {
+					result += input.charAt(i);
+					nested = true;
+				} else {
+					pad -= 3;
+					result += "\\l";
+					if (pad > 0) {
+						result += String.format("%"+pad+"s", "");
+					}
+					result += input.charAt(i);
+				}
+			} else if(input.charAt(i) == '"' && inApostrophe == false) {
+				if (input.charAt(i-1) != '\\') {
+					inQuotes = !inQuotes;
+				}
+				result += input.charAt(i);
+			} else if(input.charAt(i) == '\'' && inQuotes == false) {
+				if (input.charAt(i-1) != '\\') {
+					inApostrophe = !inApostrophe;
+				}
+				result += input.charAt(i);
+			} else if(input.charAt(i) == ',' && input.charAt(i+1) != ' ' && inQuotes == false) {
+				result += input.charAt(i)+" ";
 			} else {
-				throw new Exception("Something else: "+expression.getClass());
+				result += input.charAt(i);
 			}
 		}
 		
-		fr.setName(retValue);
-		return fr;
+		Map<String, String> map = this.getKnowledgeContainer().getPrefixMap().getNsPrefixMap();
+		
+		for (Entry<String, String> entry: map.entrySet()) {
+			//System.out.println();
+			result = result.replace(entry.getValue(), entry.getKey()+":");
+		}
+				
+		
+		//System.out.println(result);
+		return result+"\\l";
 	}
 
 	public String getUUID()

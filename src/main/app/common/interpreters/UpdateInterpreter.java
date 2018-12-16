@@ -12,9 +12,21 @@ import org.apache.jena.sparql.modify.request.UpdateModify;
 import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.update.Update;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Graph;
 
 public class UpdateInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public UpdateInterpreter(AbstractInterpreter interpreter)
+	{
+		super(interpreter);
+	}
+	
+	public UpdateInterpreter(KnowledgeContainer knowledgeContainer)
+	{
+		super(null);
+		this.knowledgeContainer = knowledgeContainer;
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
@@ -24,13 +36,13 @@ public class UpdateInterpreter extends AbstractInterpreter implements Interprete
 		}
 		
 		if (obj instanceof UpdateDeleteWhere) {
-			(new UpdateDeleteWhereInterpreter()).interpret((UpdateDeleteWhere) obj, graph);
+			(new UpdateDeleteWhereInterpreter(this)).interpret((UpdateDeleteWhere) obj, graph);
 		} else if (obj instanceof UpdateDataInsert) {
-			(new UpdateDataInsertInterpreter()).interpret((UpdateDataInsert) obj, graph);
+			(new UpdateDataInsertInterpreter(this)).interpret((UpdateDataInsert) obj, graph);
 		} else if (obj instanceof UpdateDataDelete) {
-			(new UpdateDataDeleteInterpreter()).interpret((UpdateDataDelete) obj, graph);
+			(new UpdateDataDeleteInterpreter(this)).interpret((UpdateDataDelete) obj, graph);
 		} else if (obj instanceof UpdateModify) {
-			(new UpdateModifyInterpreter()).interpret((UpdateModify) obj, graph);
+			(new UpdateModifyInterpreter(this)).interpret((UpdateModify) obj, graph);
 		} else {
 			System.out.println(obj.getClass());
 			throw new Exception("Unknown type!");

@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import org.apache.jena.sparql.core.Quad;
 import org.apache.jena.sparql.modify.request.UpdateDataDelete;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Subgraph;
@@ -15,6 +16,10 @@ import main.app.dot.objects.DeleteSubgraph;
 import main.app.dot.objects.EntityNode;
 
 public class UpdateDataDeleteInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public UpdateDataDeleteInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception

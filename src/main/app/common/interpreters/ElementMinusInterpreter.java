@@ -4,10 +4,15 @@ import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementMinus;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Graph;
 import main.app.dot.Subgraph;
 
 public class ElementMinusInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public ElementMinusInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
@@ -23,7 +28,7 @@ public class ElementMinusInterpreter extends AbstractInterpreter implements Inte
 			Subgraph subgraph = new Subgraph("cluster_"+this.getUUID()+"_"+this.getUUID(minusElement.hashCode()));
 			subgraph.setLabel("MINUS");
 			graph.addSubgraph(subgraph);
-			(new ElementGroupInterpreter()).interpret((ElementGroup) minusElement, subgraph);
+			(new ElementGroupInterpreter(this)).interpret((ElementGroup) minusElement, subgraph);
 		} else {
 			System.out.println(minusElement.getClass());
 			System.out.println(minusElement+"\n");

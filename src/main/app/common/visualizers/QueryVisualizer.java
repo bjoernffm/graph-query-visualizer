@@ -1,4 +1,4 @@
-package main.app.common;
+package main.app.common.visualizers;
 
 import java.util.ArrayList;
 import java.util.HashMap;

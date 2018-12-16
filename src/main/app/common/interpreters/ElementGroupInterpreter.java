@@ -13,10 +13,15 @@ import org.apache.jena.sparql.syntax.ElementPathBlock;
 import org.apache.jena.sparql.syntax.ElementSubQuery;
 import org.apache.jena.sparql.syntax.ElementUnion;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Graph;
 import main.app.dot.Subgraph;
 
 public class ElementGroupInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public ElementGroupInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception {
@@ -30,29 +35,30 @@ public class ElementGroupInterpreter extends AbstractInterpreter implements Inte
 			Element el = queryPattern.get(i);
 
 			if (el instanceof ElementPathBlock) {
-				(new ElementPathBlockInterpreter()).setOptional(this.getOptional()).interpret((ElementPathBlock) el, graph);
+				(new ElementPathBlockInterpreter(this)).setOptional(this.getOptional()).interpret((ElementPathBlock) el, graph);
 			} else if (el instanceof ElementFilter) {
-				(new ElementFilterInterpreter()).setOptional(this.getOptional()).interpret((ElementFilter) el, graph);
+				(new ElementFilterInterpreter(this)).setOptional(this.getOptional()).interpret((ElementFilter) el, graph);
 			} else if (el instanceof ElementData) {
-				(new ElementDataInterpreter()).setOptional(this.getOptional()).interpret((ElementData) el, graph);
+				(new ElementDataInterpreter(this)).setOptional(this.getOptional()).interpret((ElementData) el, graph);
 			} else if (el instanceof ElementBind) {
-				(new ElementBindInterpreter()).setOptional(this.getOptional()).interpret((ElementBind) el, graph);
+				(new ElementBindInterpreter(this)).setOptional(this.getOptional()).interpret((ElementBind) el, graph);
 			} else if (el instanceof ElementOptional) {
-				(new ElementOptionalInterpreter()).interpret((ElementOptional) el, graph);
+				(new ElementOptionalInterpreter(this)).interpret((ElementOptional) el, graph);
 			} else if (el instanceof ElementSubQuery) {
 				Subgraph subgraph = new Subgraph("cluster_"+this.hashCode());
+				subgraph.setLabel("SUBSELECT");
 				graph.addSubgraph(subgraph);
-				(new QueryInterpreter()).interpret(((ElementSubQuery) el).getQuery(), subgraph);
+				(new QueryInterpreter(this)).interpret(((ElementSubQuery) el).getQuery(), subgraph);
 			} else if (el instanceof ElementUnion) {
-				(new ElementUnionInterpreter()).interpret((ElementUnion) el, graph);
+				(new ElementUnionInterpreter(this)).interpret((ElementUnion) el, graph);
 			} else if (el instanceof ElementGroup) {
 				Subgraph subgraph = new Subgraph("cluster_"+this.getUUID()+"_"+this.getUUID(el.hashCode()));
 				graph.addSubgraph(subgraph);
-				(new ElementGroupInterpreter()).interpret((ElementGroup) el, subgraph);
+				(new ElementGroupInterpreter(this)).interpret((ElementGroup) el, subgraph);
 			} else if (el instanceof ElementMinus) {
-				(new ElementMinusInterpreter()).interpret((ElementMinus) el, graph);
+				(new ElementMinusInterpreter(this)).interpret((ElementMinus) el, graph);
 			} else if (el instanceof ElementNamedGraph) {
-				(new ElementNamedGraphInterpreter()).interpret((ElementNamedGraph) el, graph);
+				(new ElementNamedGraphInterpreter(this)).interpret((ElementNamedGraph) el, graph);
 			} else {
 				System.out.println(el.getClass());
 				System.out.println(el+"\n");

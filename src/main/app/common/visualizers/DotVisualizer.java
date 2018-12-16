@@ -1,4 +1,4 @@
-package main.app.common;
+package main.app.common.visualizers;
 
 import java.util.Iterator;
 
@@ -8,6 +8,7 @@ import org.apache.jena.update.Update;
 
 import main.app.common.interpreters.QueryInterpreter;
 import main.app.common.interpreters.UpdateInterpreter;
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Graph;
 import main.app.dot.Subgraph;
 
@@ -23,15 +24,20 @@ final public class DotVisualizer extends QueryVisualizer implements QueryVisuali
 	public String visualize() throws Exception
 	{
 		this.graph.addSubgraph(this.subgraph);
+		KnowledgeContainer kc = new KnowledgeContainer();
 		
 		if (this.queryType.equals("select")) {
-			(new QueryInterpreter()).interpret((Query) this.query, this.subgraph);
+			kc.setPrefixMap(this.query.getPrefixMapping());
+			
+			(new QueryInterpreter(kc)).interpret((Query) this.query, this.subgraph);
 		} else {
-			System.out.println();
+			kc.setPrefixMap(this.update.getPrefixMapping());
+			
 			for ( Iterator<Update> i = this.update.iterator(); i.hasNext(); )
-			{
+			{				
 				Update o = i.next();
-				(new UpdateInterpreter()).interpret(o, this.subgraph);
+				
+				(new UpdateInterpreter(kc)).interpret(o, this.subgraph);
 			}
 		}
 		

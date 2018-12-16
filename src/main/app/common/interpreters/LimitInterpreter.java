@@ -3,12 +3,17 @@ package main.app.common.interpreters;
 import java.lang.Long;
 import java.util.Map;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.AggregateNode;
 
 public class LimitInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public LimitInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
@@ -18,7 +23,9 @@ public class LimitInterpreter extends AbstractInterpreter implements Interpreter
 		}
 		
 		long limit = (long) obj;
-		Node limitNode = new AggregateNode("LIMIT "+limit);
+		
+		Node limitNode = new AggregateNode("limit_"+this.hashCode());
+		limitNode.setLabel("LIMIT "+limit);
 		
 		Map<String, Node> nodes = graph.getNodes();
 		Node targetNode = (Node) nodes.values().toArray()[0];
@@ -29,8 +36,8 @@ public class LimitInterpreter extends AbstractInterpreter implements Interpreter
 		edge.setTo(targetNode);
 		edge.setLhead("cluster_1");
 		
-		graph.getParent().addNode(limitNode);
-		graph.getParent().addEdge(edge);
+		graph.addNode(limitNode);
+		graph.addEdge(edge);
 	}
 
 }

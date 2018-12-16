@@ -12,12 +12,18 @@ import org.apache.jena.sparql.expr.ExprAggregator;
 import org.apache.jena.sparql.expr.ExprList;
 import org.apache.jena.sparql.expr.aggregate.Aggregator;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.EntityNode;
 
 public class ProjectVarInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public ProjectVarInterpreter(AbstractInterpreter interpreter)
+	{
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception

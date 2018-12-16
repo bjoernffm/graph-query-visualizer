@@ -3,6 +3,7 @@ package main.app.common.interpreters;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementNamedGraph;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.Subgraph;
@@ -11,6 +12,10 @@ import main.app.dot.objects.GraphNode;
 
 public class ElementNamedGraphInterpreter extends AbstractInterpreter implements Interpreter {
 	
+	public ElementNamedGraphInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
+
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
 	{
@@ -27,6 +32,6 @@ public class ElementNamedGraphInterpreter extends AbstractInterpreter implements
 		Node node = new GraphNode(this.resolveNodeName(element.getGraphNameNode()));
 		subgraph.addNode(node);
 		
-		(new ElementGroupInterpreter()).interpret((ElementGroup) element.getElement(), subgraph);
+		(new ElementGroupInterpreter(this)).interpret((ElementGroup) element.getElement(), subgraph);
 	}
 }

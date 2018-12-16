@@ -3,12 +3,17 @@ package main.app.common.interpreters;
 import java.lang.Long;
 import java.util.Map;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.AggregateNode;
 
 public class OffsetInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public OffsetInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
@@ -18,7 +23,9 @@ public class OffsetInterpreter extends AbstractInterpreter implements Interprete
 		}
 		
 		long offset = (long) obj;
-		Node offsetNode = new AggregateNode("OFFSET "+offset);
+		
+		Node offsetNode = new AggregateNode("offset_"+this.hashCode());
+		offsetNode.setLabel("OFFSET "+offset);
 		
 		Map<String, Node> nodes = graph.getNodes();
 		Node targetNode = (Node) nodes.values().toArray()[0];
@@ -29,8 +36,8 @@ public class OffsetInterpreter extends AbstractInterpreter implements Interprete
 		edge.setTo(targetNode);
 		edge.setLhead("cluster_1");
 		
-		graph.getParent().addNode(offsetNode);
-		graph.getParent().addEdge(edge);
+		graph.addNode(offsetNode);
+		graph.addEdge(edge);
 	}
 
 }

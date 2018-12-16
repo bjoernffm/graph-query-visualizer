@@ -8,6 +8,7 @@ import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.binding.BindingHashMap;
 import org.apache.jena.sparql.syntax.ElementData;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
@@ -15,6 +16,10 @@ import main.app.dot.objects.DataNode;
 import main.app.dot.objects.EntityNode;
 
 public class ElementDataInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public ElementDataInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception

@@ -5,11 +5,16 @@ import java.util.List;
 import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.sparql.syntax.ElementUnion;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Graph;
 import main.app.dot.Subgraph;
 
 public class ElementUnionInterpreter extends AbstractInterpreter implements Interpreter {
 	
+	public ElementUnionInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
+
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
 	{
@@ -28,7 +33,7 @@ public class ElementUnionInterpreter extends AbstractInterpreter implements Inte
 			unionSubgraph.setColor("#cccccc");
 			unionSubgraph.setStyle("dashed");
 			subgraph.addSubgraph(unionSubgraph);
-			(new QueryPatternInterpreter()).interpret((Element) elements.get(j), unionSubgraph);
+			(new QueryPatternInterpreter(this)).interpret((Element) elements.get(j), unionSubgraph);
 		}
 	}
 }

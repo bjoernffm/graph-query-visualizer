@@ -6,12 +6,18 @@ import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.syntax.ElementBind;
 
+import main.app.common.misc.FunctionBeautifier;
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.EntityNode;
 
 public class ElementBindInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public ElementBindInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
@@ -33,7 +39,9 @@ public class ElementBindInterpreter extends AbstractInterpreter implements Inter
 			graph.addNode(varNode);
 			
 			Edge edge = new Edge();
-			edge.setLabel("BIND");
+			//edge.setLabel("BIND");
+			edge.setLabel(this.beautifyExpression(element.toString()));
+			//this.resolveFunctionName(expression);
 			edge.setLabeltooltip(element.toString());
 			edge.setFrom(varNode);
 			edge.setTo(entityNode);

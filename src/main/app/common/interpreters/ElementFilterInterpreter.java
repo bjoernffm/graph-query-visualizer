@@ -7,6 +7,7 @@ import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprFunction;
 import org.apache.jena.sparql.syntax.ElementFilter;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
@@ -14,6 +15,10 @@ import main.app.dot.objects.EntityNode;
 import main.app.dot.objects.FilterNode;
 
 public class ElementFilterInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public ElementFilterInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception {

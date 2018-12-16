@@ -9,7 +9,7 @@ import org.apache.jena.query.QueryParseException;
 
 import com.google.gson.Gson;
 
-import main.app.common.DotVisualizer;
+import main.app.common.visualizers.DotVisualizer;
 import spark.ModelAndView;
 import spark.template.jade.JadeTemplateEngine;
 

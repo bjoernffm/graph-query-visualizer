@@ -19,12 +19,18 @@ import org.apache.jena.sparql.path.P_ZeroOrOne;
 import org.apache.jena.sparql.path.Path;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.EntityNode;
 
 public class ElementPathBlockInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public ElementPathBlockInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
+
 	public void interpret(Object obj, Graph graph) throws Exception
 	{
 		if (obj.getClass() != ElementPathBlock.class) {

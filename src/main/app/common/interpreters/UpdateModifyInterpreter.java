@@ -12,6 +12,7 @@ import org.apache.jena.sparql.modify.request.UpdateModify;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementOptional;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Subgraph;
@@ -20,6 +21,10 @@ import main.app.dot.objects.EntityNode;
 import main.app.dot.objects.InsertSubgraph;
 
 public class UpdateModifyInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public UpdateModifyInterpreter(AbstractInterpreter interpreter) {
+		super(interpreter);
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
@@ -30,7 +35,6 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 		
 		UpdateModify update = (UpdateModify) obj;
 		Map<String, Subgraph> subgraphMap = new HashMap<>();
-		//System.out.println(update.getWithIRI());
 		
 		if (update.getWithIRI() != null) {
 			graph.setLabel("WITH\\n"+this.resolveNodeName(update.getWithIRI()));
@@ -92,10 +96,10 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 		}
 		
 		// First get all possible graphs
-		List<Quad> deleteQuads = update.getInsertQuads();
+		List<Quad> deleteQuads = update.getDeleteQuads();
 		
 		for(int i = 0; i < deleteQuads.size(); i++) {
-			Quad quad = insertQuads.get(i);
+			Quad quad = deleteQuads.get(i);
 			String graphKey = quad.getGraph().toString()+"_delete";
 				
 			if (!subgraphMap.containsKey(graphKey)) {
@@ -166,11 +170,11 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 		}
 
 		if (finalUsingList.isEmpty()) {
-			(new ElementGroupInterpreter()).interpret((ElementGroup) update.getWherePattern(), graph);
+			(new ElementGroupInterpreter(this)).interpret((ElementGroup) update.getWherePattern(), graph);
 		} else {
 			Subgraph usingSubgraph = new Subgraph("cluster_"+this.hashCode()+"_using");
 			usingSubgraph.setLabel(String.join(", ", finalUsingList));
-			(new ElementGroupInterpreter()).interpret((ElementGroup) update.getWherePattern(), usingSubgraph);
+			(new ElementGroupInterpreter(this)).interpret((ElementGroup) update.getWherePattern(), usingSubgraph);
 			graph.addSubgraph(usingSubgraph);
 		}
 		

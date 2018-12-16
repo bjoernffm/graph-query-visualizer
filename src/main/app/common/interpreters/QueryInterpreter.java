@@ -4,13 +4,26 @@ import java.util.List;
 
 import org.apache.jena.query.Query;
 import org.apache.jena.query.SortCondition;
+import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.sparql.core.VarExprList;
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.syntax.Element;
 
+import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Graph;
 
 public class QueryInterpreter extends AbstractInterpreter implements Interpreter {
+
+	public QueryInterpreter(AbstractInterpreter interpreter)
+	{
+		super(interpreter);
+	}
+	
+	public QueryInterpreter(KnowledgeContainer knowledgeContainer)
+	{
+		super(null);
+		this.knowledgeContainer = knowledgeContainer;
+	}
 
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
@@ -22,14 +35,14 @@ public class QueryInterpreter extends AbstractInterpreter implements Interpreter
 		Query query = (Query) obj;
 		
 		Element queryPattern = query.getQueryPattern();
-		(new QueryPatternInterpreter()).interpret(queryPattern, graph);
+		(new QueryPatternInterpreter(this)).interpret(queryPattern, graph);
 		
 		/**
 		 * adding nodes for "group by"
 		 */
 		VarExprList groupByVarExpressions = query.getGroupBy();
 		if (groupByVarExpressions != null && !groupByVarExpressions.isEmpty()) {
-			(new GroupByInterpreter()).interpret(groupByVarExpressions, graph);
+			(new GroupByInterpreter(this)).interpret(groupByVarExpressions, graph);
 		}
 		
 		/**
@@ -37,7 +50,7 @@ public class QueryInterpreter extends AbstractInterpreter implements Interpreter
 		 */
 		List<SortCondition> sortConditions = query.getOrderBy();
 		if (sortConditions != null && !sortConditions.isEmpty()) {
-			(new OrderByInterpreter()).interpret(sortConditions, graph);
+			(new OrderByInterpreter(this)).interpret(sortConditions, graph);
 		}
 
 		/**
@@ -45,7 +58,7 @@ public class QueryInterpreter extends AbstractInterpreter implements Interpreter
 		 */
 		List<Expr> havingExpressions = query.getHavingExprs();
 		if (havingExpressions != null && !havingExpressions.isEmpty()) {
-			(new HavingInterpreter()).interpret(havingExpressions, graph);
+			(new HavingInterpreter(this)).interpret(havingExpressions, graph);
 		}
 		
 		/**
@@ -53,7 +66,7 @@ public class QueryInterpreter extends AbstractInterpreter implements Interpreter
 		 */
 		long limit = query.getLimit();
 		if (limit >= 0) {
-			(new LimitInterpreter()).interpret(limit, graph);
+			(new LimitInterpreter(this)).interpret(limit, graph);
 		}
 		
 		/**
@@ -61,7 +74,7 @@ public class QueryInterpreter extends AbstractInterpreter implements Interpreter
 		 */
 		long offset = query.getOffset();
 		if (offset >= 0) {
-			(new OffsetInterpreter()).interpret(offset, graph);
+			(new OffsetInterpreter(this)).interpret(offset, graph);
 		}
 		
 		/**
@@ -69,7 +82,7 @@ public class QueryInterpreter extends AbstractInterpreter implements Interpreter
 		 */
 		VarExprList project = query.getProject();
 		if (project != null && !project.isEmpty()) {
-			(new ProjectVarInterpreter()).interpret(project, graph);
+			(new ProjectVarInterpreter(this)).interpret(project, graph);
 		}
 	}
 
