@@ -23,8 +23,8 @@ WHERE   { :book1  dc:title  $title}`);
         e.preventDefault();
 
         $.post("/api/queries", editor.getValue(), function( data ) {
-            dotResultEditor.setValue(data.data);
-            result = Viz(data.data);
+            dotResultEditor.setValue(data[0]);
+            result = Viz(data[0]);
             $('#queryViewer').html(result);
             $('#queryViewer').show();
         }).fail(function(e) {

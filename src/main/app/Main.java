@@ -1,6 +1,7 @@
 package main.app;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import main.app.common.misc.FunctionBeautifier;
 import main.app.common.visualizers.DotVisualizer;
@@ -10,7 +11,7 @@ import main.app.http.Server;
 public class Main {
     public static void main(String[] args) {
         Server svr = new Server();
-        //svr.start();
+        svr.start();
     	
     	DotVisualizer sqv = new DotVisualizer(
     		//"PREFIX conll: <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#> SELECT ?a { ?a conll:ID ?id. ?a conll:FORM ?form }"
@@ -26,7 +27,7 @@ public class Main {
     	//FunctionBeautifier.beautify("BIND( IRI(REPLACE( STR(?predicate),\"prop/direct/\",\"entity/\" )) AS ?p)");
     	
     	try {
-			String ret = sqv.visualize();
+			List<String> ret = sqv.visualize();
 			System.out.println(ret);
 		} catch (Exception e) {
 			e.printStackTrace();

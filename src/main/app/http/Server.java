@@ -31,10 +31,10 @@ public class Server {
     			DotVisualizer sqv = new DotVisualizer(request.body());
 
     			try {
-    				Response res = new Response(sqv.visualize());
+    				//Response res = new Response(sqv.visualize());
     				
         			Gson gson = new Gson();
-        			String json = gson.toJson(res); 
+        			String json = gson.toJson(sqv.visualize()); 
         		    return json;
     			} catch(QueryParseException e) {
         			response.status(400);
