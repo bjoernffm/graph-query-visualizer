@@ -10,7 +10,6 @@ public class Node extends Object {
 	protected String labeljust;
 	protected String shape;
 	protected Graph parentGraph;
-	protected boolean optional;
 	
 	public Node(String id) throws UnsupportedEncodingException
 	{
@@ -34,7 +33,11 @@ public class Node extends Object {
 	}
 	
 	public String getUniqueId() {
-		return this.id+"_"+this.parentGraph.getId();
+		if (this.parentGraph != null) {
+			return this.id+"_"+this.parentGraph.getId();
+		} else {
+			return this.id;
+		}
 	}
 	
 	public void setId(String id) throws UnsupportedEncodingException {
@@ -84,23 +87,8 @@ public class Node extends Object {
 		this.parentGraph = parentGraph;
 	}
 	
-	public void setOptional(boolean optional)
-	{
-		this.optional = optional;
-	}
-	
-	public boolean getOptional()
-	{
-		return this.optional;
-	}
-	
 	public String toDot()
-	{
-		if (this.getOptional() == true) {
-			this.fillcolor = "antiquewhite";
-			this.style = "filled,dashed";
-		}
-		
+	{		
 		ArrayList<String> argumentList = new ArrayList<>();
 
 		if (this.getLabel() != null) {

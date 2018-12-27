@@ -6,6 +6,7 @@ import org.apache.jena.sparql.syntax.ElementOptional;
 
 import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Graph;
+import main.app.dot.Subgraph;
 
 public class ElementOptionalInterpreter extends AbstractInterpreter implements Interpreter {
 
@@ -24,7 +25,10 @@ public class ElementOptionalInterpreter extends AbstractInterpreter implements I
 		Element optionalElement = element.getOptionalElement();
 
 		if (optionalElement instanceof org.apache.jena.sparql.syntax.ElementGroup) {
-			(new ElementGroupInterpreter(this)).setOptional().interpret((ElementGroup) optionalElement, graph);	
+			Subgraph subgraph = new Subgraph("cluster_"+this.hashCode());
+			subgraph.setLabel("OPTIONAL");
+			graph.addSubgraph(subgraph);
+			(new ElementGroupInterpreter(this)).interpret((ElementGroup) optionalElement, subgraph);	
 		} else {
 			System.out.println(optionalElement.getClass());
 			System.out.println(optionalElement+"\n");

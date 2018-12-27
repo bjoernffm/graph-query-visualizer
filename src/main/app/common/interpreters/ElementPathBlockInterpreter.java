@@ -23,6 +23,7 @@ import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
+import main.app.dot.objects.ConllNode;
 import main.app.dot.objects.EntityNode;
 
 public class ElementPathBlockInterpreter extends AbstractInterpreter implements Interpreter {
@@ -50,36 +51,41 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 			org.apache.jena.graph.Node predicate = el.getPredicate();
 			org.apache.jena.graph.Node object = el.getObject();
 			
-			// Interpret the subject
-			fromNode = new EntityNode(this.resolveNodeName(subject));
-			fromNode.setTooltip(subject.toString());
-			if (!subject.isVariable()) {
-				fromNode.setShape("box");
-			}
-
-			// Interpret the object
-			toNode = new EntityNode(this.resolveNodeName(object));			
-			toNode.setTooltip(object.toString());
-			toNode.setOptional(this.getOptional());
-			if (!object.isVariable()) {
-				toNode.setShape("box");
-			}
-			
-			// Interpret the path
-			Edge edge = new Edge();
-			edge.setFrom(fromNode);
-			edge.setTo(toNode);
-			if (el.isTriple()) {
-				edge.setLabel(this.resolveNodeName(predicate));
-				edge.setLabeltooltip(predicate.toString());
+			if (predicate != null && predicate.toString().equals("http://ufal.mff.cuni.cz/conll2009-st/task-description.html#ID")) {
+				ConllNode node = new ConllNode(this.resolveNodeName(subject));
+				node.setConllId(object.toString());
+				graph.addNode(node);
 			} else {
-				edge.setLabel(this.resolvePath(el.getPath()));
-				edge.setLabeltooltip(el.getPath().toString());
+				// Interpret the subject
+				fromNode = new EntityNode(this.resolveNodeName(subject));
+				fromNode.setTooltip(subject.toString());
+				if (!subject.isVariable()) {
+					fromNode.setShape("box");
+				}
+	
+				// Interpret the object
+				toNode = new EntityNode(this.resolveNodeName(object));			
+				toNode.setTooltip(object.toString());
+				if (!object.isVariable()) {
+					toNode.setShape("box");
+				}
+				
+				// Interpret the path
+				Edge edge = new Edge();
+				edge.setFrom(fromNode);
+				edge.setTo(toNode);
+				if (el.isTriple()) {
+					edge.setLabel(this.resolveNodeName(predicate));
+					edge.setLabeltooltip(predicate.toString());
+				} else {
+					edge.setLabel(this.resolvePath(el.getPath()));
+					edge.setLabeltooltip(el.getPath().toString());
+				}
+				
+				graph.addNode(fromNode);
+				graph.addNode(toNode);
+				graph.addEdge(edge);
 			}
-			
-			graph.addNode(fromNode);
-			graph.addNode(toNode);
-			graph.addEdge(edge);
 		}
 	}
 	

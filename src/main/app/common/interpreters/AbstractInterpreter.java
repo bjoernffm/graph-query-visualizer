@@ -21,7 +21,6 @@ import main.app.dot.Subgraph;
 import main.app.misc.FunctionResolution;
 
 public abstract class AbstractInterpreter implements Interpreter {
-	protected boolean optional = false;
 	protected KnowledgeContainer knowledgeContainer;
 
 	public AbstractInterpreter(AbstractInterpreter interpreter)
@@ -34,22 +33,6 @@ public abstract class AbstractInterpreter implements Interpreter {
 	public KnowledgeContainer getKnowledgeContainer()
 	{
 		return this.knowledgeContainer;
-	}
-	
-	public Interpreter setOptional(boolean optional)
-	{
-		this.optional = optional;
-		return this;
-	}
-	
-	public Interpreter setOptional()
-	{
-		return this.setOptional(true);
-	}
-	
-	public boolean getOptional()
-	{
-		return this.optional;
 	}
 	
 	public String resolveNodeName(org.apache.jena.graph.Node node)

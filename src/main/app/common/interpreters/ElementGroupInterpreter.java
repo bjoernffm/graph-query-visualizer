@@ -35,13 +35,13 @@ public class ElementGroupInterpreter extends AbstractInterpreter implements Inte
 			Element el = queryPattern.get(i);
 
 			if (el instanceof ElementPathBlock) {
-				(new ElementPathBlockInterpreter(this)).setOptional(this.getOptional()).interpret((ElementPathBlock) el, graph);
+				(new ElementPathBlockInterpreter(this)).interpret((ElementPathBlock) el, graph);
 			} else if (el instanceof ElementFilter) {
-				(new ElementFilterInterpreter(this)).setOptional(this.getOptional()).interpret((ElementFilter) el, graph);
+				(new ElementFilterInterpreter(this)).interpret((ElementFilter) el, graph);
 			} else if (el instanceof ElementData) {
-				(new ElementDataInterpreter(this)).setOptional(this.getOptional()).interpret((ElementData) el, graph);
+				(new ElementDataInterpreter(this)).interpret((ElementData) el, graph);
 			} else if (el instanceof ElementBind) {
-				(new ElementBindInterpreter(this)).setOptional(this.getOptional()).interpret((ElementBind) el, graph);
+				(new ElementBindInterpreter(this)).interpret((ElementBind) el, graph);
 			} else if (el instanceof ElementOptional) {
 				(new ElementOptionalInterpreter(this)).interpret((ElementOptional) el, graph);
 			} else if (el instanceof ElementSubQuery) {

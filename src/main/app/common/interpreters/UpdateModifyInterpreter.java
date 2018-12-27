@@ -75,7 +75,6 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 			// Interpret the object
 			EntityNode toNode = new EntityNode(this.resolveNodeName(object));			
 			toNode.setTooltip(object.toString());
-			toNode.setOptional(this.getOptional());
 			if (!object.isVariable()) {
 				toNode.setShape("box");
 			}
@@ -130,7 +129,6 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 			// Interpret the object
 			EntityNode toNode = new EntityNode(this.resolveNodeName(object));			
 			toNode.setTooltip(object.toString());
-			toNode.setOptional(this.getOptional());
 			if (!object.isVariable()) {
 				toNode.setShape("box");
 			}

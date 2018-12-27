@@ -34,11 +34,6 @@ public class Graph extends Object {
 	public void addNode(Node node)
 	{
 		node.setParentGraph(this);
-		// to keep the optional attribute
-		if (this.nodeMap.containsKey(node.getId())) {
-			Node before = this.nodeMap.get(node.getId());
-			node.setOptional(before.getOptional());
-		}
 		this.nodeMap.put(node.getId(), node);
 	}
 	
@@ -182,27 +177,6 @@ public class Graph extends Object {
 		this.parent = graph;
 	}
 	
-	public void inheritOptional()
-	{
-		Map<String, Node> optionalMap = new HashMap<>();
-		
-		for ( Iterator<Edge> iterator = this.edgeList.iterator(); iterator.hasNext(); ) {
-			Edge edge = iterator.next(); 
-			
-			Node fromNode = edge.getFrom();
-			Node toNode = edge.getTo();
-			
-			if (fromNode.getOptional() == true || optionalMap.containsKey(fromNode.getId())) {
-				optionalMap.put(fromNode.getId(), fromNode);
-				optionalMap.put(toNode.getId(), fromNode);
-				
-				toNode.setOptional(true);
-				edge.setTo(toNode);
-				this.addNode(toNode);
-			}
-		}
-	}
-	
 	public String toDot()
 	{		
 		String ret = this.type+" "+this.id+" {\n\n";
@@ -234,8 +208,6 @@ public class Graph extends Object {
 			ret += "\tedge ["+this.edgeProperties+"];\n";
 		}
 		ret += "\n";
-
-		this.inheritOptional();
 		
 		// not for subgraphs, only the top graph should draw the lines
 		if (this.getClass() == Graph.class) {
