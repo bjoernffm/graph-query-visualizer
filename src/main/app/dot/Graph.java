@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import main.app.dot.objects.ClarifyEdge;
+import main.app.dot.objects.ConllNode;
 import main.app.dot.objects.GraphNode;
 import main.app.misc.RecursiveNodeContainer;
 
@@ -34,7 +35,17 @@ public class Graph extends Object {
 	public void addNode(Node node)
 	{
 		node.setParentGraph(this);
-		this.nodeMap.put(node.getId(), node);
+		if(node instanceof ConllNode && this.nodeMap.containsKey(node.getId()) && this.nodeMap.get(node.getId()) instanceof ConllNode) {
+			ConllNode originalNode = (ConllNode) this.nodeMap.get(node.getId());
+			ConllNode newNode = (ConllNode) node;
+			
+			newNode.migrate(originalNode);
+			this.nodeMap.put(newNode.getId(), newNode);
+		} else if(!(node instanceof ConllNode) && this.nodeMap.containsKey(node.getId()) && this.nodeMap.get(node.getId()) instanceof ConllNode) {
+			// do nothing
+		} else {
+			this.nodeMap.put(node.getId(), node);
+		}
 	}
 	
 	public void removeNode(Node node)

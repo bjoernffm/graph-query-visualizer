@@ -33,7 +33,7 @@ public class ElementFilterInterpreter extends AbstractInterpreter implements Int
 		
 		if (element.getExpr().isFunction()) {
 			Node filter = new FilterNode(exFunction.toString());
-			filter.setLabel(element.toString());
+			filter.setLabel(this.beautifyExpression(element.toString()));
 			graph.addNode(filter);
 			
 			Set<Var> mentionedVars = exFunction.getVarsMentioned();

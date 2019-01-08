@@ -51,9 +51,14 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 			org.apache.jena.graph.Node predicate = el.getPredicate();
 			org.apache.jena.graph.Node object = el.getObject();
 			
-			if (predicate != null && predicate.toString().equals("http://ufal.mff.cuni.cz/conll2009-st/task-description.html#ID")) {
+			if (
+				predicate != null &&
+				predicate.toString().startsWith("http://ufal.mff.cuni.cz/conll2009-st/task-description.html#") &&
+				!predicate.toString().equals("http://ufal.mff.cuni.cz/conll2009-st/task-description.html#HEAD") &&
+				object.isLiteral()
+			) {
 				ConllNode node = new ConllNode(this.resolveNodeName(subject));
-				node.setConllId(object.toString());
+				node.set(predicate.getLocalName(), object.toString());
 				graph.addNode(node);
 			} else {
 				// Interpret the subject

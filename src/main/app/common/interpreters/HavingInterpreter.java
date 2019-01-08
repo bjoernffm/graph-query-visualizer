@@ -36,6 +36,7 @@ public class HavingInterpreter extends AbstractInterpreter implements Interprete
 		List<Expr> list = (List<Expr>) obj;
 		for(int i = 0; i < list.size(); i++) {
 			Expr expression = list.get(i);
+			System.out.println(expression.getFunction());
 			
 			/*FunctionResolution fr = this.resolveFunctionName(expression);
 			ArrayList<ExprVar> mentionedVarList = fr.getMentionedVars();
