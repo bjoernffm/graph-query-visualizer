@@ -19,7 +19,7 @@ public class ConllNode extends Node {
 		
 		this.setFillcolor("aliceblue");
 		this.setStyle("filled");
-		this.setShape("box");
+		this.setShape("octagon");
 	}
 	
 	public String toDot()

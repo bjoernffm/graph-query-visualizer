@@ -10,6 +10,8 @@ public class Node extends Object {
 	protected String labeljust;
 	protected String shape;
 	protected Graph parentGraph;
+	protected boolean drawSeparate = false;
+	protected String idSuffix = "";
 	
 	public Node(String id) throws UnsupportedEncodingException
 	{
@@ -28,15 +30,35 @@ public class Node extends Object {
 		this.style = node.getStyle();
 	}
 	
-	public String getId() {
+	public void drawSeparate()
+	{		
+		this.idSuffix = String.valueOf(Math.random());
+		byte[] bytes;
+		try {
+			bytes = this.idSuffix.getBytes("UTF-8");
+			UUID uuid = UUID.nameUUIDFromBytes(bytes);
+			this.idSuffix = uuid.toString().substring(0, 8);
+		} catch (UnsupportedEncodingException e) {}
+
+		this.drawSeparate = true;
+	}
+	
+	public boolean isSeparate()
+	{
+		return this.drawSeparate;
+	}
+	
+	public String getId()
+	{
 		return this.id;
 	}
 	
-	public String getUniqueId() {
+	public String getUniqueId()
+	{		
 		if (this.parentGraph != null) {
-			return this.id+"_"+this.parentGraph.getId();
+			return this.id+"_"+this.parentGraph.getId()+this.idSuffix;
 		} else {
-			return this.id;
+			return this.id+this.idSuffix;
 		}
 	}
 	

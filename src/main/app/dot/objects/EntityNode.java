@@ -14,4 +14,12 @@ public class EntityNode extends Node {
 		this.setShape("circle");
 	}
 
+	public EntityNode(Node node) {
+		super(node);
+		
+		this.setFillcolor("aliceblue");
+		this.setStyle("filled");
+		this.setShape("circle");
+	}
+
 }

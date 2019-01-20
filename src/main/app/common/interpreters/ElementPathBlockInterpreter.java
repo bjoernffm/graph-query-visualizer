@@ -25,6 +25,7 @@ import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.ConllNode;
 import main.app.dot.objects.EntityNode;
+import main.app.dot.objects.FakeEdgeNode;
 
 public class ElementPathBlockInterpreter extends AbstractInterpreter implements Interpreter {
 
@@ -75,21 +76,38 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 					toNode.setShape("box");
 				}
 				
-				// Interpret the path
-				Edge edge = new Edge();
-				edge.setFrom(fromNode);
-				edge.setTo(toNode);
-				if (el.isTriple()) {
-					edge.setLabel(this.resolveNodeName(predicate));
-					edge.setLabeltooltip(predicate.toString());
-				} else {
-					edge.setLabel(this.resolvePath(el.getPath()));
-					edge.setLabeltooltip(el.getPath().toString());
-				}
-				
 				graph.addNode(fromNode);
 				graph.addNode(toNode);
-				graph.addEdge(edge);
+				
+				// Interpret the path
+				if (predicate.isVariable()) {
+					Node fakeNode = new FakeEdgeNode(this.resolveNodeName(predicate));
+					graph.addNode(fakeNode);
+					
+					Edge edge1 = new Edge();
+					edge1.setArrowhead("none");
+					edge1.setFrom(fromNode);
+					edge1.setTo(fakeNode);
+					
+					Edge edge2 = new Edge();
+					edge2.setFrom(fakeNode);
+					edge2.setTo(toNode);
+					
+					graph.addEdge(edge1);
+					graph.addEdge(edge2);
+				} else {
+					Edge edge = new Edge();
+					edge.setFrom(fromNode);
+					edge.setTo(toNode);
+					if (el.isTriple()) {
+						edge.setLabel(this.resolveNodeName(predicate));
+						edge.setLabeltooltip(predicate.toString());
+					} else {
+						edge.setLabel(this.resolvePath(el.getPath()));
+						edge.setLabeltooltip(el.getPath().toString());
+					}
+					graph.addEdge(edge);
+				}
 			}
 		}
 	}

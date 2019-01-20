@@ -8,7 +8,10 @@ import java.util.Map.Entry;
 
 import main.app.dot.objects.ClarifyEdge;
 import main.app.dot.objects.ConllNode;
+import main.app.dot.objects.EntityNode;
+import main.app.dot.objects.FakeEdgeNode;
 import main.app.dot.objects.GraphNode;
+import main.app.dot.objects.SelectNode;
 import main.app.misc.RecursiveNodeContainer;
 
 public class Graph extends Object {
@@ -35,16 +38,39 @@ public class Graph extends Object {
 	public void addNode(Node node)
 	{
 		node.setParentGraph(this);
-		if(node instanceof ConllNode && this.nodeMap.containsKey(node.getId()) && this.nodeMap.get(node.getId()) instanceof ConllNode) {
+		
+		if( node instanceof ConllNode &&
+			this.nodeMap.containsKey(node.getId()) &&
+			this.nodeMap.get(node.getId()) instanceof ConllNode) {
+			/**
+			 * if we add a ConllNode, but there is already a ConllNode, merge theme
+			 */
 			ConllNode originalNode = (ConllNode) this.nodeMap.get(node.getId());
 			ConllNode newNode = (ConllNode) node;
 			
 			newNode.migrate(originalNode);
 			this.nodeMap.put(newNode.getId(), newNode);
-		} else if(!(node instanceof ConllNode) && this.nodeMap.containsKey(node.getId()) && this.nodeMap.get(node.getId()) instanceof ConllNode) {
-			// do nothing
+		} else if(  node instanceof SelectNode &&
+					this.nodeMap.containsKey(node.getId()) &&
+					this.nodeMap.get(node.getId()) instanceof ConllNode) {
+			/**
+			 * If we add a SelectNode, but there is already a ConllNode, change ConllNode to "doubleoctagon"
+			 */
+			ConllNode originalNode = (ConllNode) this.nodeMap.get(node.getId());
+			originalNode.setShape("doubleoctagon");
+			this.nodeMap.put(originalNode.getId(), originalNode);
+		} else if(	!(node instanceof ConllNode) &&
+					this.nodeMap.containsKey(node.getId()) &&
+					this.nodeMap.get(node.getId()) instanceof ConllNode) {
+			/**
+			 * if we add a node which is no ConllNode and there is already a ConllNode, ignore it
+			 */
 		} else {
-			this.nodeMap.put(node.getId(), node);
+			String suffix = "";
+			if (node.isSeparate()) {
+				suffix = String.valueOf(Math.random());
+			}
+			this.nodeMap.put(node.getId()+suffix, node);
 		}
 	}
 	
@@ -97,7 +123,7 @@ public class Graph extends Object {
 	
 	public Map<String, ArrayList<RecursiveNodeContainer>> getNodesRecursive()
 	{
-		return getNodesRecursive(0);
+		return this.getNodesRecursive(0);
 	}
 	
 	public Map<String, ArrayList<RecursiveNodeContainer>> getNodesRecursive(int level)
@@ -249,7 +275,12 @@ public class Graph extends Object {
 							}
 						}
 					} else {
-						Node masterNode = new Node(nodeList.get(0).getNode());
+						Node masterNode;
+						if (nodeList.get(0).getNode().getShape().equals("plain")) {
+							masterNode = new EntityNode(nodeList.get(0).getNode());
+						} else {
+							masterNode = new Node(nodeList.get(0).getNode());
+						}
 						this.subgraphMap.get("cluster_1").addNode(masterNode);
 						
 						for(int i = 0; i < nodeList.size(); i++) {

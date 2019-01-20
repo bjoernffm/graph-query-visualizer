@@ -17,6 +17,7 @@ import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.EntityNode;
+import main.app.dot.objects.SelectNode;
 
 public class ProjectVarInterpreter extends AbstractInterpreter implements Interpreter {
 
@@ -44,10 +45,10 @@ public class ProjectVarInterpreter extends AbstractInterpreter implements Interp
 		for(int i = 0; i < projectVars.size(); i++) {
 			Var var = projectVars.get(i);
 
-			Node entityNode = new EntityNode("?"+var.getName());
-			entityNode.setTooltip(var.toString());
-			entityNode.setShape("doublecircle");
-			graph.addNode(entityNode);
+			Node selectNode = new SelectNode("?"+var.getName());
+			selectNode.setTooltip(var.toString());
+			selectNode.setShape("doublecircle");
+			graph.addNode(selectNode);
 			
 			// check for possible aggregation expression
 			if (projectExpressions.containsKey(var)) {
@@ -67,7 +68,7 @@ public class ProjectVarInterpreter extends AbstractInterpreter implements Interp
 						edge.setLabel(aggregator.toString());
 						edge.setLabeltooltip(aggregator.toString()+" AS ?"+var.getName());
 						edge.setFrom(varNode);
-						edge.setTo(entityNode);
+						edge.setTo(selectNode);
 						graph.addEdge(edge);
 					}
 				} else if (projectExpressions.get(var) instanceof E_Str) {
@@ -83,7 +84,7 @@ public class ProjectVarInterpreter extends AbstractInterpreter implements Interp
 						// TODO check for better expression to show in the graph -> (str ?link) looks stupid
 						edge.setLabel(projectExpression.getFunction().toString());
 						edge.setFrom(varNode);
-						edge.setTo(entityNode);
+						edge.setTo(selectNode);
 						graph.addEdge(edge);
 					}
 				} else {

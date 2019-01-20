@@ -18,6 +18,7 @@ import main.app.dot.Graph;
 import main.app.dot.Subgraph;
 import main.app.dot.objects.DeleteSubgraph;
 import main.app.dot.objects.EntityNode;
+import main.app.dot.objects.FakeEdgeNode;
 import main.app.dot.objects.InsertSubgraph;
 
 public class UpdateModifyInterpreter extends AbstractInterpreter implements Interpreter {
@@ -79,19 +80,37 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 				toNode.setShape("box");
 			}
 			
-			// Interpret the path
-			Edge edge = new Edge();
-			edge.setFrom(fromNode);
-			edge.setTo(toNode);
-			edge.setLabel(this.resolveNodeName(predicate));
-			edge.setLabeltooltip(predicate.toString());
-			
 			String graphKey = quad.getGraph().toString()+"_insert";
 			Subgraph namedSubgraph = subgraphMap.get(graphKey);
 			
 			namedSubgraph.addNode(fromNode);
 			namedSubgraph.addNode(toNode);
-			namedSubgraph.addEdge(edge);
+			
+			// Interpret the path
+			if (predicate.isVariable()) {
+				FakeEdgeNode fakeNode = new FakeEdgeNode(this.resolveNodeName(predicate));
+				namedSubgraph.addNode(fakeNode);
+				
+				Edge edge1 = new Edge();
+				edge1.setArrowhead("none");
+				edge1.setFrom(fromNode);
+				edge1.setTo(fakeNode);
+				
+				Edge edge2 = new Edge();
+				edge2.setFrom(fakeNode);
+				edge2.setTo(toNode);
+				
+				namedSubgraph.addEdge(edge1);
+				namedSubgraph.addEdge(edge2);
+			} else {
+				Edge edge = new Edge();
+				edge.setFrom(fromNode);
+				edge.setTo(toNode);
+				edge.setLabel(this.resolveNodeName(predicate));
+				edge.setLabeltooltip(predicate.toString());
+				
+				namedSubgraph.addEdge(edge);
+			}
 		}
 		
 		// First get all possible graphs
@@ -133,19 +152,37 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 				toNode.setShape("box");
 			}
 			
-			// Interpret the path
-			Edge edge = new Edge();
-			edge.setFrom(fromNode);
-			edge.setTo(toNode);
-			edge.setLabel(this.resolveNodeName(predicate));
-			edge.setLabeltooltip(predicate.toString());
-			
 			String graphKey = quad.getGraph().toString()+"_delete";
 			Subgraph namedSubgraph = subgraphMap.get(graphKey);
 			
 			namedSubgraph.addNode(fromNode);
 			namedSubgraph.addNode(toNode);
-			namedSubgraph.addEdge(edge);
+
+			// Interpret the path
+			if (predicate.isVariable()) {
+				FakeEdgeNode fakeNode = new FakeEdgeNode(this.resolveNodeName(predicate));
+				namedSubgraph.addNode(fakeNode);
+				
+				Edge edge1 = new Edge();
+				edge1.setArrowhead("none");
+				edge1.setFrom(fromNode);
+				edge1.setTo(fakeNode);
+				
+				Edge edge2 = new Edge();
+				edge2.setFrom(fakeNode);
+				edge2.setTo(toNode);
+				
+				namedSubgraph.addEdge(edge1);
+				namedSubgraph.addEdge(edge2);
+			} else {
+				Edge edge = new Edge();
+				edge.setFrom(fromNode);
+				edge.setTo(toNode);
+				edge.setLabel(this.resolveNodeName(predicate));
+				edge.setLabeltooltip(predicate.toString());
+				
+				namedSubgraph.addEdge(edge);
+			}
 		}
 		
 		for (Entry<String, Subgraph> entry: subgraphMap.entrySet()) {
