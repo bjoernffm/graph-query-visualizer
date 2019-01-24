@@ -112,6 +112,7 @@ public class Node extends Object {
 	public String toDot()
 	{		
 		ArrayList<String> argumentList = new ArrayList<>();
+		argumentList.add("dottype=\""+this.getClass().getSimpleName().toString()+"\"");
 
 		if (this.getLabel() != null) {
 			argumentList.add("label=\""+this.escape(this.getLabel())+"\"");

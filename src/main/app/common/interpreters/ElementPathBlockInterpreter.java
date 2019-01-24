@@ -19,7 +19,6 @@ import org.apache.jena.sparql.path.P_ZeroOrOne;
 import org.apache.jena.sparql.path.Path;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 
-import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
@@ -50,6 +49,7 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 
 			org.apache.jena.graph.Node subject = el.getSubject();
 			org.apache.jena.graph.Node predicate = el.getPredicate();
+			Path path = el.getPath();
 			org.apache.jena.graph.Node object = el.getObject();
 			
 			if (
@@ -78,9 +78,9 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 				
 				graph.addNode(fromNode);
 				graph.addNode(toNode);
-				
+
 				// Interpret the path
-				if (predicate.isVariable()) {
+				if (el.isTriple() && predicate.isVariable()) {
 					Node fakeNode = new FakeEdgeNode(this.resolveNodeName(predicate));
 					graph.addNode(fakeNode);
 					
