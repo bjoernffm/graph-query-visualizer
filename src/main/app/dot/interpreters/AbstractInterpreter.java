@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import main.app.dot.Node;
+import main.app.dot.utils.ObjectFactory;
+
 
 public abstract class AbstractInterpreter {
 
@@ -13,7 +16,7 @@ public abstract class AbstractInterpreter {
         while (scanner.hasNext()) {
         	if (scanner.hasNext("subgraph")) {
         		scanner.next();
-        		System.out.println("Subgraph: "+scanner.next());
+        		//System.out.println("Subgraph: "+scanner.next());
         	} else if (scanner.hasNext("\\\"[a-zA-z_0-9]+\\\"")) {
         		String arg1 = "unknown";
         		String arg2 = scanner.next();
@@ -34,9 +37,17 @@ public abstract class AbstractInterpreter {
         			}
         		}
 
-        		System.out.println(arg1);
-        		System.out.println(arg2);
-        		System.out.println(arg3);
+        		//System.out.println(arg1);
+        		if (arg1.equals("node")) {
+        			try {
+						Node node = ObjectFactory.getNode(arg2, arg3);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+        		}
+        		//System.out.println(arg2);
+        		//System.out.println(arg3);
         	} else {
         		//System.out.println(scanner.next());
         		scanner.next();

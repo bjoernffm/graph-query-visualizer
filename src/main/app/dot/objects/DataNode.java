@@ -1,11 +1,9 @@
 package main.app.dot.objects;
 
-import java.io.UnsupportedEncodingException;
-
 import main.app.dot.Node;
 
 public class DataNode extends Node {
-	public DataNode(String id) throws UnsupportedEncodingException {
+	public DataNode(String id) {
 		super(id);
 
 		this.setFillcolor("darkorchid1");

@@ -6,7 +6,7 @@ import main.app.dot.Node;
 
 public class EntityNode extends Node {
 
-	public EntityNode(String id) throws UnsupportedEncodingException {
+	public EntityNode(String id) {
 		super(id);
 		
 		this.setFillcolor("aliceblue");

@@ -1,20 +1,17 @@
 package main.app.dot.objects;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import main.app.dot.Node;
-import main.app.dot.Subgraph;
 
 public class ConllNode extends Node {
 	
 	protected Map<String, String> conllList = new HashMap<String, String>();
 
-	public ConllNode(String id) throws UnsupportedEncodingException {
+	public ConllNode(String id) {
 		super(id);
 		
 		this.setFillcolor("aliceblue");

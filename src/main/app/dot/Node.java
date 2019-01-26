@@ -13,7 +13,7 @@ public class Node extends Object {
 	protected boolean drawSeparate = false;
 	protected String idSuffix = "";
 	
-	public Node(String id) throws UnsupportedEncodingException
+	public Node(String id)
 	{
 		this.setId(id);
 		this.setLabel(id);
@@ -67,11 +67,15 @@ public class Node extends Object {
 		}
 	}
 	
-	public void setId(String id) throws UnsupportedEncodingException {
-		byte[] bytes = id.getBytes("UTF-8");
-		UUID uuid = UUID.nameUUIDFromBytes(bytes);
-		
-		this.id = uuid.toString().substring(0, 8);
+	public void setId(String id) {
+		byte[] bytes;
+		try {
+			bytes = id.getBytes("UTF-8");
+			UUID uuid = UUID.nameUUIDFromBytes(bytes);
+			this.id = uuid.toString().substring(0, 8);
+		} catch (UnsupportedEncodingException e) {
+			this.id = id.trim();
+		}
 	}
 	
 	public String getTooltip() {

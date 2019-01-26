@@ -1,12 +1,10 @@
 package main.app.dot.objects;
 
-import java.io.UnsupportedEncodingException;
-
 import main.app.dot.Node;
 
 public class SelectNode extends Node {
 
-	public SelectNode(String id) throws UnsupportedEncodingException {
+	public SelectNode(String id) {
 		super(id);
 		
 		this.setFillcolor("aliceblue");

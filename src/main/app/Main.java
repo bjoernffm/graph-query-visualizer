@@ -11,7 +11,7 @@ import main.app.http.Server;
 public class Main {
     public static void main(String[] args) {
         Server svr = new Server();
-        //svr.start();
+        svr.start();
     	
     	DotVisualizer sqv = new DotVisualizer(
     		//"INSERT { ?a ?b ?c } WHERE { { ?a ?b ?c FILTER(contains(str(?a),'http://purl.org/olia') && !contains(str(?a),'http://purl.org/olia/olia.owl')) } UNION { ?a ?b ?c FILTER(contains(str(?b),'http://purl.org/olia') && !contains(str(?b),'http://purl.org/olia/olia.owl')) } UNION { ?a ?b ?c FILTER(contains(str(?c),'http://purl.org/olia') && !contains(str(?c),'http://purl.org/olia/olia.owl')) } }"
