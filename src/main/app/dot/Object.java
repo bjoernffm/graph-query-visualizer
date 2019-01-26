@@ -5,6 +5,7 @@ abstract public class Object {
 	protected String style;
 	protected String fillcolor;
 	protected String label = "";
+	protected String nodeType;
 
 	public String getColor() {
 		return this.color;
@@ -41,6 +42,33 @@ abstract public class Object {
 	
 	public void setLabel(String label) {
 		this.label = label.trim();
+	}
+
+	public String getNodeType()
+	{
+		if (nodeType == null) {
+			return "unknown";
+		}
+		
+		return nodeType;
+	}
+
+	public void setNodeType(org.apache.jena.graph.Node node)
+	{
+		if (node.isLiteral()) {
+			this.nodeType = "literal";
+		} else if (node.isURI()) {
+			this.nodeType = "uri";
+		} else if (node.isVariable()) {
+			this.nodeType = "variable";
+		} else {
+			this.nodeType = "unknown";
+		}
+	}
+
+	public void setNodeType(String nodeType)
+	{
+		this.nodeType = nodeType;
 	}
 	
 	protected String escape(String string)

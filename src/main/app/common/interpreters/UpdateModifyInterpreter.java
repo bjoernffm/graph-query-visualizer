@@ -69,6 +69,7 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 			// Interpret the subject
 			EntityNode fromNode = new EntityNode(this.resolveNodeName(subject));
 			fromNode.setTooltip(subject.toString());
+			fromNode.setNodeType(subject);
 			if (!subject.isVariable()) {
 				fromNode.setShape("box");
 			}
@@ -76,6 +77,7 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 			// Interpret the object
 			EntityNode toNode = new EntityNode(this.resolveNodeName(object));			
 			toNode.setTooltip(object.toString());
+			toNode.setNodeType(object);
 			if (!object.isVariable()) {
 				toNode.setShape("box");
 			}
@@ -89,16 +91,19 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 			// Interpret the path
 			if (predicate.isVariable()) {
 				FakeEdgeNode fakeNode = new FakeEdgeNode(this.resolveNodeName(predicate));
+				fakeNode.setNodeType(predicate);
 				namedSubgraph.addNode(fakeNode);
 				
 				Edge edge1 = new Edge();
 				edge1.setArrowhead("none");
 				edge1.setFrom(fromNode);
 				edge1.setTo(fakeNode);
+				edge1.setNodeType(predicate);
 				
 				Edge edge2 = new Edge();
 				edge2.setFrom(fakeNode);
 				edge2.setTo(toNode);
+				edge1.setNodeType(predicate);
 				
 				namedSubgraph.addEdge(edge1);
 				namedSubgraph.addEdge(edge2);
@@ -107,6 +112,7 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 				edge.setFrom(fromNode);
 				edge.setTo(toNode);
 				edge.setLabel(this.resolveNodeName(predicate));
+				edge.setNodeType(predicate);
 				edge.setLabeltooltip(predicate.toString());
 				
 				namedSubgraph.addEdge(edge);
@@ -140,13 +146,15 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 			
 			// Interpret the subject
 			EntityNode fromNode = new EntityNode(this.resolveNodeName(subject));
+			fromNode.setNodeType(subject);
 			fromNode.setTooltip(subject.toString());
 			if (!subject.isVariable()) {
 				fromNode.setShape("box");
 			}
 
 			// Interpret the object
-			EntityNode toNode = new EntityNode(this.resolveNodeName(object));			
+			EntityNode toNode = new EntityNode(this.resolveNodeName(object));
+			toNode.setNodeType(object);			
 			toNode.setTooltip(object.toString());
 			if (!object.isVariable()) {
 				toNode.setShape("box");
@@ -161,14 +169,17 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 			// Interpret the path
 			if (predicate.isVariable()) {
 				FakeEdgeNode fakeNode = new FakeEdgeNode(this.resolveNodeName(predicate));
+				fakeNode.setNodeType(predicate);			
 				namedSubgraph.addNode(fakeNode);
 				
 				Edge edge1 = new Edge();
+				edge1.setNodeType(predicate);			
 				edge1.setArrowhead("none");
 				edge1.setFrom(fromNode);
 				edge1.setTo(fakeNode);
 				
 				Edge edge2 = new Edge();
+				edge2.setNodeType(predicate);			
 				edge2.setFrom(fakeNode);
 				edge2.setTo(toNode);
 				
@@ -178,6 +189,7 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 				Edge edge = new Edge();
 				edge.setFrom(fromNode);
 				edge.setTo(toNode);
+				edge.setNodeType(predicate);	
 				edge.setLabel(this.resolveNodeName(predicate));
 				edge.setLabeltooltip(predicate.toString());
 				

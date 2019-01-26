@@ -34,7 +34,7 @@ public class EdgeTest {
 		graph.addNode(node2);
 		graph.addEdge(edge);
 
-		assertEquals("da46feab-a251-33ae-93a4-f30bb13400b5", edge.getId());
+		assertEquals("48dda655-05c6-3be6-9902-37c3452a0fee", edge.getId());
 		assertEquals(node1, edge.getFrom());
 		assertEquals(node2, edge.getTo());
 		assertEquals("dot", edge.getArrowhead());
@@ -44,7 +44,7 @@ public class EdgeTest {
 		assertEquals("direction", edge.getDirection());
 		assertEquals(5, edge.getPenwidth());
 		assertEquals(edge.toString(), edge.toDot());
-		assertEquals("\"c4ca4238_main\" -> \"c81e728d_main\" [dottype=\"Edge\", label=\"Label\", labeltooltip=\"tooltip\", style=\"dotted\", dir=\"direction\", arrowhead=\"dot\", color=\"black\", penwidth=5, lhead=\"cluster_1\", constraint=false]", edge.toDot());
+		assertEquals("\"c4ca4238_main\" -> \"c81e728d_main\" [dottype=\"Edge\", nodetype=\"unknown\", label=\"Label\", labeltooltip=\"tooltip\", style=\"dotted\", dir=\"direction\", arrowhead=\"dot\", color=\"black\", penwidth=5, lhead=\"cluster_1\", constraint=false]", edge.toDot());
 	}
 
 	@Test
@@ -62,7 +62,7 @@ public class EdgeTest {
 		graph.addNode(node2);
 		graph.addEdge(edge);
 		
-		assertEquals("\"c4ca4238_main\" -> \"c81e728d_main\" [dottype=\"Edge\"]", edge.toDot());
+		assertEquals("\"c4ca4238_main\" -> \"c81e728d_main\" [dottype=\"Edge\", nodetype=\"unknown\"]", edge.toDot());
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class EdgeTest {
 		graph.addNode(node2);
 		graph.addEdge(edge);
 		
-		assertEquals("\"c4ca4238_main\" -> \"c81e728d_main\" [dottype=\"Edge\"]", edge.toDot());
+		assertEquals("\"c4ca4238_main\" -> \"c81e728d_main\" [dottype=\"Edge\", nodetype=\"unknown\"]", edge.toDot());
 	}
 
 }

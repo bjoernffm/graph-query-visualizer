@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.core.VarExprList;
 
-import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
@@ -35,6 +34,7 @@ public class GroupByInterpreter extends AbstractInterpreter implements Interpret
 		
 		for(Var groupByVar: groupByVars) {
 			Node varNode = new EntityNode("?"+groupByVar.getName());
+			varNode.setNodeType(groupByVar);
 			graph.addNode(varNode);
 			
 			groupByString += "* ?"+groupByVar.getName()+"\\l";

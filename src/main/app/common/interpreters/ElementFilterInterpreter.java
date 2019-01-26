@@ -7,7 +7,6 @@ import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprFunction;
 import org.apache.jena.sparql.syntax.ElementFilter;
 
-import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
@@ -39,6 +38,7 @@ public class ElementFilterInterpreter extends AbstractInterpreter implements Int
 			Set<Var> mentionedVars = exFunction.getVarsMentioned();
 			for(Var mentionedVar: mentionedVars) {
 				Node filter2 = new EntityNode(this.resolveNodeName(mentionedVar));
+				filter2.setNodeType(mentionedVar);
 				graph.addNode(filter2);
 				Edge edge = new Edge();
 				edge.setArrowhead("dot");

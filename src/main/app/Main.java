@@ -1,11 +1,8 @@
 package main.app;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import main.app.common.misc.FunctionBeautifier;
 import main.app.common.visualizers.DotVisualizer;
-import main.app.dot.objects.ConllNode;
 import main.app.http.Server;
 
 public class Main {

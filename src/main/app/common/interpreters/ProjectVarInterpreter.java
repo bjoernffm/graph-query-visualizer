@@ -12,7 +12,6 @@ import org.apache.jena.sparql.expr.ExprAggregator;
 import org.apache.jena.sparql.expr.ExprList;
 import org.apache.jena.sparql.expr.aggregate.Aggregator;
 
-import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
@@ -46,6 +45,7 @@ public class ProjectVarInterpreter extends AbstractInterpreter implements Interp
 			Var var = projectVars.get(i);
 
 			Node selectNode = new SelectNode("?"+var.getName());
+			selectNode.setNodeType(var);
 			selectNode.setTooltip(var.toString());
 			selectNode.setShape("doublecircle");
 			graph.addNode(selectNode);
@@ -62,6 +62,7 @@ public class ProjectVarInterpreter extends AbstractInterpreter implements Interp
 					Set<Var> mentionedVars = expressionList.getVarsMentioned();
 					for(Var mentionedVar: mentionedVars) {
 						Node varNode = new EntityNode(mentionedVar.toString());
+						varNode.setNodeType(mentionedVar);
 						graph.addNode(varNode);
 
 						Edge edge = new Edge();
@@ -78,6 +79,7 @@ public class ProjectVarInterpreter extends AbstractInterpreter implements Interp
 					Set<Var> mentionedVars = projectExpression.getVarsMentioned();
 					for(Var mentionedVar: mentionedVars) {
 						Node varNode = new EntityNode(mentionedVar.toString());
+						varNode.setNodeType(mentionedVar);
 						graph.addNode(varNode);
 						
 						Edge edge = new Edge();

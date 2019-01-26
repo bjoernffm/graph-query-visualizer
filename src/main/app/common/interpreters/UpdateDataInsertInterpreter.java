@@ -58,13 +58,15 @@ public class UpdateDataInsertInterpreter extends AbstractInterpreter implements 
 			
 			// Interpret the subject
 			EntityNode fromNode = new EntityNode(this.resolveNodeName(subject));
+			fromNode.setNodeType(subject);
 			fromNode.setTooltip(subject.toString());
 			if (!subject.isVariable()) {
 				fromNode.setShape("box");
 			}
 
 			// Interpret the object
-			EntityNode toNode = new EntityNode(this.resolveNodeName(object));			
+			EntityNode toNode = new EntityNode(this.resolveNodeName(object));
+			toNode.setNodeType(object);			
 			toNode.setTooltip(object.toString());
 			if (!object.isVariable()) {
 				toNode.setShape("box");
@@ -74,6 +76,7 @@ public class UpdateDataInsertInterpreter extends AbstractInterpreter implements 
 			Edge edge = new Edge();
 			edge.setFrom(fromNode);
 			edge.setTo(toNode);
+			edge.setNodeType(predicate);			
 			edge.setLabel(this.resolveNodeName(predicate));
 			edge.setLabeltooltip(predicate.toString());
 			

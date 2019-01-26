@@ -1,6 +1,5 @@
 package main.app.common.interpreters;
 
-import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Graph;
 
 public interface Interpreter {

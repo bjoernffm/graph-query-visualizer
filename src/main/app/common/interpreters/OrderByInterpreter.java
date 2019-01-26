@@ -7,7 +7,6 @@ import org.apache.jena.query.Query;
 import org.apache.jena.query.SortCondition;
 import org.apache.jena.sparql.expr.Expr;
 
-import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
@@ -45,6 +44,7 @@ public class OrderByInterpreter extends AbstractInterpreter implements Interpret
 			
 			if (expression.isVariable()) {
 				Node varNode = new EntityNode("?"+expression.getVarName());
+				varNode.setNodeType("variable");
 
 				Edge edge = new Edge();
 				edge.setArrowhead("dot");

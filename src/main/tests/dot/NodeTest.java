@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.UnsupportedEncodingException;
 
+import org.apache.jena.graph.NodeFactory;
 import org.junit.Test;
 
 import main.app.dot.Graph;
@@ -40,7 +41,7 @@ public class NodeTest {
 		assertEquals(false, node.isSeparate());
 		assertTrue(node.getIdSuffix().equals(""));
 		assertEquals(graph, node.getParentGraph());
-		assertEquals("\"d3d94468_main\" [dottype=\"Node\", label=\"Label\", tooltip=\"tooltip\", shape=\"square\", fillcolor=\"aliceblue\", style=\"filled\"]", node.toDot());
+		assertEquals("\"d3d94468_main\" [dottype=\"Node\", nodetype=\"unknown\", label=\"Label\", tooltip=\"tooltip\", shape=\"square\", fillcolor=\"aliceblue\", style=\"filled\"]", node.toDot());
 		assertEquals(node.toString(), node.toDot());
 		
 		assertEquals(node.getId(), nodeClone.getId());
@@ -55,8 +56,10 @@ public class NodeTest {
 	@Test
 	public void test2() throws UnsupportedEncodingException {
 		Node node = new Node("\"data\"");
+		node.setColor(null);
 		
-		assertEquals("\"755af0e7\" [dottype=\"Node\", label=\"\\\"data\\\"\"]", node.toDot());
+		assertEquals("\"755af0e7\" [dottype=\"Node\", nodetype=\"unknown\", label=\"\\\"data\\\"\"]", node.toDot());
+		assertEquals(null, node.getColor());
 	}
 	
 	@Test
@@ -77,7 +80,33 @@ public class NodeTest {
 		node.setTooltip("");
 		node.setLabeljust("");
 		
-		assertEquals("\"d3d94468\" [dottype=\"Node\", label=\"10\"]", node.toDot());	
+		assertEquals("\"d3d94468\" [dottype=\"Node\", nodetype=\"unknown\", label=\"10\"]", node.toDot());	
+	}
+
+	@Test
+	public void testNodeType() throws UnsupportedEncodingException {
+		Node node = new Node("test");
+		assertEquals("\"098f6bcd\" [dottype=\"Node\", nodetype=\"unknown\", label=\"test\"]", node.toDot());
+		
+		org.apache.jena.graph.Node nodeUri = NodeFactory.createURI("http://www.bjoern.de/index.html#lala");
+		node.setNodeType(nodeUri);
+		assertEquals(node.getNodeType(), "uri");
+		assertEquals("\"098f6bcd\" [dottype=\"Node\", nodetype=\"uri\", label=\"test\"]", node.toDot());
+		
+		org.apache.jena.graph.Node nodeLiteral = NodeFactory.createLiteral("Literal");
+		node.setNodeType(nodeLiteral);
+		assertEquals(node.getNodeType(), "literal");
+		
+		org.apache.jena.graph.Node nodeVariable = NodeFactory.createVariable("Variable");
+		node.setNodeType(nodeVariable);
+		assertEquals(node.getNodeType(), "variable");
+		
+		org.apache.jena.graph.Node nodeUnknown = NodeFactory.createBlankNode();
+		node.setNodeType(nodeUnknown);
+		assertEquals(node.getNodeType(), "unknown");
+		
+		node.setNodeType("test");
+		assertEquals(node.getNodeType(), "test");	
 	}
 
 }

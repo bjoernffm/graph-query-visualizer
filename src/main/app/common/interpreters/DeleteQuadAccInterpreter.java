@@ -2,18 +2,12 @@ package main.app.common.interpreters;
 
 import java.util.List;
 
-import org.apache.jena.graph.Triple;
 import org.apache.jena.sparql.core.Quad;
-import org.apache.jena.sparql.core.Var;
-import org.apache.jena.sparql.core.VarExprList;
 import org.apache.jena.sparql.modify.request.QuadAcc;
 
-import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
-import main.app.dot.Node;
 import main.app.dot.Subgraph;
-import main.app.dot.objects.AggregateNode;
 import main.app.dot.objects.EntityNode;
 
 public class DeleteQuadAccInterpreter extends AbstractInterpreter implements Interpreter {
@@ -41,13 +35,15 @@ public class DeleteQuadAccInterpreter extends AbstractInterpreter implements Int
 			
 			// Interpret the subject
 			EntityNode fromNode = new EntityNode(this.resolveNodeName(subject));
+			fromNode.setNodeType(subject);
 			fromNode.setTooltip(subject.toString());
 			if (!subject.isVariable()) {
 				fromNode.setShape("box");
 			}
 
 			// Interpret the object
-			EntityNode toNode = new EntityNode(this.resolveNodeName(object));			
+			EntityNode toNode = new EntityNode(this.resolveNodeName(object));
+			toNode.setNodeType(object);			
 			toNode.setTooltip(object.toString());
 			if (!object.isVariable()) {
 				toNode.setShape("box");
@@ -57,6 +53,7 @@ public class DeleteQuadAccInterpreter extends AbstractInterpreter implements Int
 			Edge edge = new Edge();
 			edge.setFrom(fromNode);
 			edge.setTo(toNode);
+			edge.setNodeType(predicate);
 			edge.setLabel(this.resolveNodeName(predicate));
 			edge.setLabeltooltip(predicate.toString());
 			

@@ -3,11 +3,9 @@ package main.app.common.interpreters;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementNamedGraph;
 
-import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.Subgraph;
-import main.app.dot.objects.EntityNode;
 import main.app.dot.objects.GraphNode;
 
 public class ElementNamedGraphInterpreter extends AbstractInterpreter implements Interpreter {

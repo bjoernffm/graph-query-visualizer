@@ -8,7 +8,6 @@ import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.binding.BindingHashMap;
 import org.apache.jena.sparql.syntax.ElementData;
 
-import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
@@ -37,9 +36,11 @@ public class ElementDataInterpreter extends AbstractInterpreter implements Inter
 				Var var = iterator.next();
 
 				Node dataNode = new DataNode(this.resolveNodeName(ele.get(var)));
+				dataNode.setNodeType(ele.get(var));
 				dataNode.setTooltip(ele.get(var).toString());
 				
 				Node entityNode = new EntityNode(this.resolveNodeName(var));
+				entityNode.setNodeType(var);
 				entityNode.setTooltip(var.toString());
 				
 				Edge edge = new Edge();

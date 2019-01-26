@@ -89,6 +89,7 @@ public class Edge extends Object {
 	public String toDot() {
 		ArrayList<String> argumentList = new ArrayList<>();
 		argumentList.add("dottype=\"" + this.getClass().getSimpleName().toString() + "\"");
+		argumentList.add("nodetype=\""+this.getNodeType()+"\"");
 
 		if (this.label != null && !this.label.equals("")) {
 			argumentList.add("label=\"" + this.escape(this.label) + "\"");

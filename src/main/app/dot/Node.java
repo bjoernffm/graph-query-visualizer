@@ -114,6 +114,7 @@ public class Node extends Object {
 	{		
 		ArrayList<String> argumentList = new ArrayList<>();
 		argumentList.add("dottype=\""+this.getClass().getSimpleName().toString()+"\"");
+		argumentList.add("nodetype=\""+this.getNodeType()+"\"");
 		argumentList.add("label=\""+this.escape(this.getLabel())+"\"");
 
 		if (this.tooltip != null && !this.tooltip.equals("")) {

@@ -59,18 +59,21 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 				object.isLiteral()
 			) {
 				ConllNode node = new ConllNode(this.resolveNodeName(subject));
+				node.setNodeType(subject);
 				node.set(predicate.getLocalName(), object.toString());
 				graph.addNode(node);
 			} else {
 				// Interpret the subject
 				fromNode = new EntityNode(this.resolveNodeName(subject));
+				fromNode.setNodeType(subject);
 				fromNode.setTooltip(subject.toString());
 				if (!subject.isVariable()) {
 					fromNode.setShape("box");
 				}
 	
 				// Interpret the object
-				toNode = new EntityNode(this.resolveNodeName(object));			
+				toNode = new EntityNode(this.resolveNodeName(object));
+				toNode.setNodeType(object);			
 				toNode.setTooltip(object.toString());
 				if (!object.isVariable()) {
 					toNode.setShape("box");
@@ -82,14 +85,17 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 				// Interpret the path
 				if (el.isTriple() && predicate.isVariable()) {
 					Node fakeNode = new FakeEdgeNode(this.resolveNodeName(predicate));
+					fakeNode.setNodeType(predicate);			
 					graph.addNode(fakeNode);
 					
 					Edge edge1 = new Edge();
+					edge1.setNodeType(predicate);	
 					edge1.setArrowhead("none");
 					edge1.setFrom(fromNode);
 					edge1.setTo(fakeNode);
 					
 					Edge edge2 = new Edge();
+					edge2.setNodeType(predicate);	
 					edge2.setFrom(fakeNode);
 					edge2.setTo(toNode);
 					
@@ -101,6 +107,7 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 					edge.setTo(toNode);
 					if (el.isTriple()) {
 						edge.setLabel(this.resolveNodeName(predicate));
+						edge.setNodeType(predicate);	
 						edge.setLabeltooltip(predicate.toString());
 					} else {
 						edge.setLabel(this.resolvePath(el.getPath()));

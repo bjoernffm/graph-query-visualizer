@@ -6,8 +6,6 @@ import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.syntax.ElementBind;
 
-import main.app.common.misc.FunctionBeautifier;
-import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
@@ -31,11 +29,13 @@ public class ElementBindInterpreter extends AbstractInterpreter implements Inter
 		Var var = element.getVar();
 
 		Node entityNode = new EntityNode("?"+var.getVarName());
+		entityNode.setNodeType(var);
 		graph.addNode(entityNode);
 		
 		Set<Var> mentionedVars = expression.getVarsMentioned();
 		for(Var mentionedVar: mentionedVars) {
 			Node varNode = new EntityNode(mentionedVar.toString());
+			varNode.setNodeType(mentionedVar);
 			graph.addNode(varNode);
 			
 			Edge edge = new Edge();
