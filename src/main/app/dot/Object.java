@@ -11,7 +11,11 @@ abstract public class Object {
 	}
 	
 	public void setColor(String color) {
-		this.color = color;
+		if (color != null) {
+			this.color = color.trim();
+		} else {
+			this.color = null;
+		}
 	}
 	
 	public String getFillcolor() {
@@ -19,7 +23,6 @@ abstract public class Object {
 	}
 	
 	public void setFillcolor(String fillcolor) {
-		fillcolor = this.escape(fillcolor);
 		this.fillcolor = fillcolor.trim();
 	}
 	

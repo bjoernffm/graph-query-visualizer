@@ -13,7 +13,7 @@ import main.app.dot.Node;
 public class EdgeTest {
 
 	@Test
-	public void test() throws UnsupportedEncodingException {
+	public void test1() throws UnsupportedEncodingException {
 		Node node1 = new Node("1");
 		Node node2 = new Node("2");
 		
@@ -24,17 +24,69 @@ public class EdgeTest {
 		edge.setLabel("Label");
 		edge.setStyle("dotted");
 		edge.setLhead("cluster_1");
+		edge.setLabeltooltip("tooltip");
+		edge.setDirection("direction");
+		edge.setPenwidth(5);
+		edge.setNoConstraint();
 		
 		Graph graph = new Graph("main");
 		graph.addNode(node1);
 		graph.addNode(node2);
 		graph.addEdge(edge);
 
-		assertEquals(edge.getFrom(), node1);
-		assertEquals(edge.getTo(), node2);
-		assertTrue(edge.getLabel().equals("Label"));
-		assertTrue(edge.getLabel().equals("Label"));
-		assertEquals(edge.toDot(), "\"c4ca4238-a0b9-3382-8dcc-509a6f75849b_main\" -> \"c81e728d-9d4c-3f63-af06-7f89cc14862c_main\" [label=\"Label\", style=\"dotted\", arrowhead=\"dot\", lhead=\"cluster_1\"]");
+		assertEquals("da46feab-a251-33ae-93a4-f30bb13400b5", edge.getId());
+		assertEquals(node1, edge.getFrom());
+		assertEquals(node2, edge.getTo());
+		assertEquals("dot", edge.getArrowhead());
+		assertEquals("Label", edge.getLabel());
+		assertEquals("cluster_1", edge.getLhead());
+		assertEquals("tooltip", edge.getLabeltooltip());
+		assertEquals("direction", edge.getDirection());
+		assertEquals(5, edge.getPenwidth());
+		assertEquals(edge.toString(), edge.toDot());
+		assertEquals("\"c4ca4238_main\" -> \"c81e728d_main\" [dottype=\"Edge\", label=\"Label\", labeltooltip=\"tooltip\", style=\"dotted\", dir=\"direction\", arrowhead=\"dot\", color=\"black\", penwidth=5, lhead=\"cluster_1\", constraint=false]", edge.toDot());
+	}
+
+	@Test
+	public void test2() throws UnsupportedEncodingException {
+		Node node1 = new Node("1");
+		Node node2 = new Node("2");
+		
+		Edge edge = new Edge();
+		edge.setFrom(node1);
+		edge.setTo(node2);
+		edge.setColor(null);
+		
+		Graph graph = new Graph("main");
+		graph.addNode(node1);
+		graph.addNode(node2);
+		graph.addEdge(edge);
+		
+		assertEquals("\"c4ca4238_main\" -> \"c81e728d_main\" [dottype=\"Edge\"]", edge.toDot());
+	}
+
+	@Test
+	public void test3() throws UnsupportedEncodingException {
+		Node node1 = new Node("1");
+		Node node2 = new Node("2");
+		
+		Edge edge = new Edge();
+		edge.setFrom(node1);
+		edge.setTo(node2);
+		edge.setArrowhead("");
+		edge.setLabel("");
+		edge.setStyle("");
+		edge.setLhead("");
+		edge.setColor("");
+		edge.setLabeltooltip("");
+		edge.setDirection("");
+		
+		Graph graph = new Graph("main");
+		graph.addNode(node1);
+		graph.addNode(node2);
+		graph.addEdge(edge);
+		
+		assertEquals("\"c4ca4238_main\" -> \"c81e728d_main\" [dottype=\"Edge\"]", edge.toDot());
 	}
 
 }

@@ -48,6 +48,11 @@ public class Node extends Object {
 		return this.drawSeparate;
 	}
 	
+	public String getIdSuffix()
+	{
+		return this.idSuffix;
+	}
+	
 	public String getId()
 	{
 		return this.id;
@@ -93,14 +98,6 @@ public class Node extends Object {
 		this.shape = shape.trim();
 	}
 
-	public String getFillcolor() {
-		return this.fillcolor;
-	}
-
-	public void setFillcolor(String fillcolor) {
-		this.fillcolor = fillcolor.trim();
-	}
-
 	public Graph getParentGraph() {
 		return parentGraph;
 	}
@@ -113,10 +110,8 @@ public class Node extends Object {
 	{		
 		ArrayList<String> argumentList = new ArrayList<>();
 		argumentList.add("dottype=\""+this.getClass().getSimpleName().toString()+"\"");
+		argumentList.add("label=\""+this.escape(this.getLabel())+"\"");
 
-		if (this.getLabel() != null) {
-			argumentList.add("label=\""+this.escape(this.getLabel())+"\"");
-		}
 		if (this.tooltip != null && !this.tooltip.equals("")) {
 			argumentList.add("tooltip=\""+this.escape(this.tooltip)+"\"");
 		}
