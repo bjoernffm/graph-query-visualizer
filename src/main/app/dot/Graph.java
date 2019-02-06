@@ -8,9 +8,11 @@ import java.util.Map.Entry;
 
 import main.app.dot.objects.ClarifyEdge;
 import main.app.dot.objects.ConllNode;
+import main.app.dot.objects.DeleteSubgraph;
 import main.app.dot.objects.EntityNode;
-import main.app.dot.objects.FakeEdgeNode;
 import main.app.dot.objects.GraphNode;
+import main.app.dot.objects.HiddenNode;
+import main.app.dot.objects.InsertSubgraph;
 import main.app.dot.objects.SelectNode;
 import main.app.misc.RecursiveNodeContainer;
 
@@ -27,12 +29,19 @@ public class Graph extends Object {
 	protected String nodeProperties = "fontsize=8 fontname=\"Arial\"";
 	protected String edgeProperties = "fontsize=8 fontname=\"Arial\"";
 	
+	protected boolean enableClarificationEdges = true;
+	protected int maxSubgraphDepth = 100;
+	protected int depth = 0;
+	protected Node hiddenNode;
+	
 	protected Graph parent = null;
 	
 	public Graph(String id)
 	{
 		this.setId(id);
 		this.setStyle("solid");
+		this.hiddenNode = new HiddenNode(String.valueOf(this.hashCode()));
+		hiddenNode.setStyle("invis");
 	}
 	
 	public void addNode(Node node)
@@ -94,6 +103,9 @@ public class Graph extends Object {
 	public void addSubgraph(Subgraph subgraph)
 	{
 		subgraph.setParent(this);
+		subgraph.setDepth((this.getDepth()+1));
+		subgraph.setMaxSubgraphDepth(this.getMaxSubgraphDepth());
+		
 		this.subgraphMap.put(subgraph.getId(), subgraph);
 	}
 	
@@ -108,14 +120,61 @@ public class Graph extends Object {
 		this.edgeList.add(edge);
 	}
 	
+	public void enableClarificationEdges()
+	{
+		this.enableClarificationEdges = true;
+	}
+	
+	public void enableClarificationEdges(boolean enabled)
+	{
+		this.enableClarificationEdges = enabled;
+	}
+	
+	public void disableClarificationEdges()
+	{
+		this.enableClarificationEdges = false;
+	}
+	
+	public int getMaxSubgraphDepth()
+	{
+		return this.maxSubgraphDepth;
+	}
+	
+	public void setMaxSubgraphDepth(int depth)
+	{
+		this.maxSubgraphDepth = depth;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+	
+	public boolean isMaxSubgraphDepth()
+	{
+		if (this.getMaxSubgraphDepth() == this.getDepth() && !(this instanceof InsertSubgraph) && !(this instanceof DeleteSubgraph)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public ArrayList<Edge> getEdgesRecursive()
 	{
-		ArrayList<Edge> localEdgeList = this.edgeList;
-		
-		for (Entry<String, Subgraph> entry: this.subgraphMap.entrySet()) {
-			Subgraph subgraph = entry.getValue();
-			ArrayList<Edge> subgraphEdgeList = subgraph.getEdgesRecursive();
-			localEdgeList.addAll(subgraphEdgeList);
+		ArrayList<Edge> localEdgeList;
+		if (this.isMaxSubgraphDepth()) {
+			localEdgeList = new ArrayList<>();
+		} else {
+			localEdgeList = this.edgeList;
+			
+			for (Entry<String, Subgraph> entry: this.subgraphMap.entrySet()) {
+				Subgraph subgraph = entry.getValue();
+				ArrayList<Edge> subgraphEdgeList = subgraph.getEdgesRecursive();
+				localEdgeList.addAll(subgraphEdgeList);
+			}	
 		}
 		
 		return localEdgeList;
@@ -215,7 +274,7 @@ public class Graph extends Object {
 	}
 	
 	public String toDot()
-	{		
+	{
 		String ret = this.type+" "+this.id+" {\n\n";
 
 		if (!this.compoundProperty.isEmpty()) {
@@ -247,7 +306,7 @@ public class Graph extends Object {
 		ret += "\n";
 		
 		// not for subgraphs, only the top graph should draw the lines
-		if (this.getClass() == Graph.class) {
+		if (this.getClass() == Graph.class && this.enableClarificationEdges) {
 			Map<String, ArrayList<RecursiveNodeContainer>> nodeMap = this.getNodesRecursive();
 			for (Entry<String, ArrayList<RecursiveNodeContainer>> entry: nodeMap.entrySet()) {
 				ArrayList<RecursiveNodeContainer> nodeList = entry.getValue();
@@ -255,24 +314,38 @@ public class Graph extends Object {
 				if (nodeList.size() == 2) {
 					Edge edge = new ClarifyEdge();
 					edge.setFrom(nodeList.get(0).getNode());
-					edge.setTo(nodeList.get(1).getNode());
+					
+					if (nodeList.get(1).getNode().getParentGraph().isMaxSubgraphDepth()) {
+						edge.setTo(nodeList.get(1).getNode().getParentGraph().getHiddenNode());
+						edge.setLhead(nodeList.get(1).getNode().getParentGraph().getId());
+					} else {
+						edge.setTo(nodeList.get(1).getNode());
+						
+						if (nodeList.get(1).getNode() instanceof GraphNode) {
+							edge.setLhead(nodeList.get(1).getNode().getParentGraph().getId());
+						}
+					}
+					
 					edge.setNoConstraint();
 					this.addEdge(edge);
-					
-					if (nodeList.get(1).getNode() instanceof GraphNode) {
-						edge.setLhead(nodeList.get(1).getNode().getParentGraph().getId());
-					}
 				} else if (nodeList.size() > 2) {
 					if (nodeList.get(0).getLevel() == 1) {
 						for(int i = 1; i < nodeList.size(); i++) {
 							Edge edge = new ClarifyEdge();
 							edge.setFrom(nodeList.get(0).getNode());
-							edge.setTo(nodeList.get(i).getNode());
-							this.addEdge(edge);
 							
-							if (nodeList.get(i).getNode() instanceof GraphNode) {
+							if (nodeList.get(i).getNode().getParentGraph().isMaxSubgraphDepth()) {
+								edge.setTo(nodeList.get(i).getNode().getParentGraph().getHiddenNode());
 								edge.setLhead(nodeList.get(i).getNode().getParentGraph().getId());
+							} else {
+								edge.setTo(nodeList.get(i).getNode());
+								
+								if (nodeList.get(i).getNode() instanceof GraphNode) {
+									edge.setLhead(nodeList.get(i).getNode().getParentGraph().getId());
+								}
 							}
+							
+							this.addEdge(edge);
 						}
 					} else {
 						Node masterNode;
@@ -286,12 +359,19 @@ public class Graph extends Object {
 						for(int i = 0; i < nodeList.size(); i++) {
 							Edge edge = new ClarifyEdge();
 							edge.setFrom(masterNode);
-							edge.setTo(nodeList.get(i).getNode());
-							this.addEdge(edge);
 							
-							if (nodeList.get(i).getNode() instanceof GraphNode) {
+							if (nodeList.get(i).getNode().getParentGraph().isMaxSubgraphDepth()) {
+								edge.setTo(nodeList.get(i).getNode().getParentGraph().getHiddenNode());
 								edge.setLhead(nodeList.get(i).getNode().getParentGraph().getId());
+							} else {
+								edge.setTo(nodeList.get(i).getNode());
+								
+								if (nodeList.get(i).getNode() instanceof GraphNode) {
+									edge.setLhead(nodeList.get(i).getNode().getParentGraph().getId());
+								}
 							}
+							
+							this.addEdge(edge);
 						}
 					}
 				}
@@ -299,26 +379,34 @@ public class Graph extends Object {
 		}
 		
 		// Adding subgraphs
-		for (Entry<String, Subgraph> entry: this.subgraphMap.entrySet()) {
-			Subgraph subgraph = entry.getValue();
-			
-			// add edges from subgraphs
-			ArrayList<Edge> edges = subgraph.getEdgesRecursive();
-			for(int i = 0; i < edges.size(); i++) {
-				Edge edge = edges.get(i);
-				this.addEdge(edge);
+		if (!this.isMaxSubgraphDepth()) {
+			for (Entry<String, Subgraph> entry: this.subgraphMap.entrySet()) {
+				Subgraph subgraph = entry.getValue();
+				
+				// add edges from subgraphs
+				ArrayList<Edge> edges = subgraph.getEdgesRecursive();
+				for(int i = 0; i < edges.size(); i++) {
+					Edge edge = edges.get(i);
+					this.addEdge(edge);
+				}
+				subgraph.removeEdges();
+				
+				String subgraphStr = subgraph.toDot();
+				subgraphStr = subgraphStr.replaceAll("\t", "\t\t");
+				subgraphStr = subgraphStr.replaceAll("}", "\t}");
+				ret += "\t"+subgraphStr+"\n\n";
 			}
-			subgraph.removeEdges();
-			
-			String subgraphStr = subgraph.toDot();
-			subgraphStr = subgraphStr.replaceAll("\t", "\t\t");
-			subgraphStr = subgraphStr.replaceAll("}", "\t}");
-			ret += "\t"+subgraphStr+"\n\n";
 		}
-
+	
 		// Adding nodes
-		for (Entry<String, Node> entry: this.nodeMap.entrySet()) {
-			ret += "\t"+entry.getValue().toDot()+"\n";
+		if (!this.isMaxSubgraphDepth()) {
+			// if we're greater than max depth, draw all nodes
+			for (Entry<String, Node> entry: this.nodeMap.entrySet()) {
+				ret += "\t"+entry.getValue().toDot()+"\n";
+			}
+		} else {
+			// if we reached max depth, only draw a hidden anchor node
+			ret += "\t"+this.hiddenNode.toDot()+"\n"; 
 		}
 		
 		// Adding edges
@@ -337,5 +425,9 @@ public class Graph extends Object {
 	public String toString()
 	{
 		return this.toDot();
+	}
+
+	public Node getHiddenNode() {
+		return hiddenNode;
 	}
 }

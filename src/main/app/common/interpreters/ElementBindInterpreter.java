@@ -10,6 +10,8 @@ import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.objects.EntityNode;
+import main.app.dot.objects.FakeEdgeNode;
+import main.app.dot.objects.FilterNode;
 
 public class ElementBindInterpreter extends AbstractInterpreter implements Interpreter {
 
@@ -31,21 +33,41 @@ public class ElementBindInterpreter extends AbstractInterpreter implements Inter
 		Node entityNode = new EntityNode("?"+var.getVarName());
 		entityNode.setNodeType(var);
 		graph.addNode(entityNode);
+
+		Node fakeNode = new FakeEdgeNode("BIND"+this.getUUID());
+		fakeNode.setLabel("BIND");
+		graph.addNode(fakeNode);
+		
+		Node descriptionNode = new FilterNode("describe"+this.getUUID());
+		descriptionNode.setLabel(this.beautifyExpression(element.toString()));
+		graph.addNode(descriptionNode);
+		
+		Edge edge1 = new Edge();	
+		edge1.setFrom(fakeNode);
+		edge1.setTo(entityNode);
+		
+		Edge edge2 = new Edge();
+		edge2.setArrowhead("none");	
+		edge2.setStyle("dashed");
+		edge2.setFrom(descriptionNode);
+		edge2.setTo(fakeNode);
+		
+		graph.addEdge(edge1);
+		graph.addEdge(edge2);
 		
 		Set<Var> mentionedVars = expression.getVarsMentioned();
+
 		for(Var mentionedVar: mentionedVars) {
 			Node varNode = new EntityNode(mentionedVar.toString());
 			varNode.setNodeType(mentionedVar);
 			graph.addNode(varNode);
 			
-			Edge edge = new Edge();
-			//edge.setLabel("BIND");
-			edge.setLabel(this.beautifyExpression(element.toString()));
-			//this.resolveFunctionName(expression);
-			edge.setLabeltooltip(element.toString());
-			edge.setFrom(varNode);
-			edge.setTo(entityNode);
-			graph.addEdge(edge);
+			Edge edge3 = new Edge();
+			edge3.setArrowhead("none");
+			edge3.setFrom(varNode);
+			edge3.setTo(fakeNode);
+			
+			graph.addEdge(edge3);
 		}
 	}
 

@@ -1,7 +1,5 @@
 package main.app.dot.objects;
 
-import java.io.UnsupportedEncodingException;
-
 import main.app.dot.Node;
 
 public class EntityNode extends Node {

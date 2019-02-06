@@ -7,12 +7,9 @@ import java.util.Map.Entry;
 
 import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.core.Quad;
-import org.apache.jena.sparql.modify.request.UpdateDataInsert;
 import org.apache.jena.sparql.modify.request.UpdateModify;
 import org.apache.jena.sparql.syntax.ElementGroup;
-import org.apache.jena.sparql.syntax.ElementOptional;
 
-import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Subgraph;

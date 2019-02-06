@@ -49,7 +49,6 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 
 			org.apache.jena.graph.Node subject = el.getSubject();
 			org.apache.jena.graph.Node predicate = el.getPredicate();
-			Path path = el.getPath();
 			org.apache.jena.graph.Node object = el.getObject();
 			
 			if (
@@ -106,10 +105,14 @@ public class ElementPathBlockInterpreter extends AbstractInterpreter implements 
 					edge.setFrom(fromNode);
 					edge.setTo(toNode);
 					if (el.isTriple()) {
+						//System.out.print("Triple");
+						//System.out.println(predicate);
 						edge.setLabel(this.resolveNodeName(predicate));
 						edge.setNodeType(predicate);	
 						edge.setLabeltooltip(predicate.toString());
 					} else {
+						//System.out.print("Path");
+						//System.out.println(el.getPath());
 						edge.setLabel(this.resolvePath(el.getPath()));
 						edge.setLabeltooltip(el.getPath().toString());
 					}

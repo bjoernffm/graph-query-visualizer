@@ -1,15 +1,9 @@
 package main.app.common.interpreters;
 
-import java.util.List;
-
-import org.apache.jena.sparql.core.Quad;
-import org.apache.jena.sparql.modify.request.QuadAcc;
 import org.apache.jena.sparql.modify.request.UpdateDataDelete;
 import org.apache.jena.sparql.modify.request.UpdateDataInsert;
-import org.apache.jena.sparql.modify.request.UpdateDeleteInsert;
 import org.apache.jena.sparql.modify.request.UpdateDeleteWhere;
 import org.apache.jena.sparql.modify.request.UpdateModify;
-import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.update.Update;
 
 import main.app.common.misc.KnowledgeContainer;

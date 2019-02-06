@@ -1,24 +1,11 @@
 package main.app.common.interpreters;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.Map.Entry;
 
-import org.apache.jena.sparql.expr.Expr;
-import org.apache.jena.sparql.expr.ExprAggregator;
-import org.apache.jena.sparql.expr.ExprFunction;
-import org.apache.jena.sparql.expr.ExprList;
-import org.apache.jena.sparql.expr.NodeValue;
-import org.apache.jena.sparql.expr.aggregate.Aggregator;
-
 import main.app.common.misc.KnowledgeContainer;
-import main.app.dot.Edge;
-import main.app.dot.Graph;
-import main.app.dot.Subgraph;
-import main.app.misc.FunctionResolution;
 
 public abstract class AbstractInterpreter implements Interpreter {
 	protected KnowledgeContainer knowledgeContainer;
@@ -38,16 +25,21 @@ public abstract class AbstractInterpreter implements Interpreter {
 	public String resolveNodeName(org.apache.jena.graph.Node node)
 	{
 		if (node.isVariable()) {
-			return "?"+node.getName();
-		} else if (node.isURI()) {
-			Object prefix = this.getKnowledgeContainer().getPrefixMap().getNsURIPrefix(node.getNameSpace());
-			if (prefix == null) {
-				return node.getLocalName();
+			if (node.getName().startsWith("?")) {
+				return "_:"+node.getName().replace("?", "");
 			} else {
-				return prefix+":"+node.getLocalName();
+				return "?"+node.getName();
 			}
+		} else if (node.isURI()) {
+			for (Entry<String, String> entry: this.getKnowledgeContainer().getPrefixMap().getNsPrefixMap().entrySet()) {
+				if (node.toString().startsWith(entry.getValue())) {
+					return node.toString().replace(entry.getValue(), entry.getKey()+":");
+				}
+			}
+			
+			return node.getLocalName();
 		} else if (node.isLiteral()) {
-			return node.getLiteralLexicalForm();
+			return "\""+node.getLiteralLexicalForm()+"\"";
 		} else {
 			return node.toString();
 		}
@@ -60,6 +52,8 @@ public abstract class AbstractInterpreter implements Interpreter {
 		boolean inQuotes = false;
 		boolean inApostrophe = false;
 		boolean nested = true;
+		
+		input = input.replaceAll("\\s+", " ");
 		
 		for(int i = 0; i < input.length(); i++) {
 			if(input.charAt(i) == '(' && inQuotes == false && inApostrophe == false) {
@@ -121,7 +115,8 @@ public abstract class AbstractInterpreter implements Interpreter {
 			//System.out.println();
 			result = result.replace(entry.getValue(), entry.getKey()+":");
 		}
-				
+		
+		result = result.replaceAll("<([^:]+):([^>]+)>", "$1:$2");				
 		
 		//System.out.println(result);
 		return result+"\\l";

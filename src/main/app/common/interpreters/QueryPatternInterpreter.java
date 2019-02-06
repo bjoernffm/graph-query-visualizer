@@ -5,7 +5,6 @@ import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementSubQuery;
 
-import main.app.common.misc.KnowledgeContainer;
 import main.app.dot.Graph;
 
 public class QueryPatternInterpreter extends AbstractInterpreter implements Interpreter {

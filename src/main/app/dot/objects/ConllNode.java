@@ -22,10 +22,10 @@ public class ConllNode extends Node {
 	public String toDot()
 	{
 		ArrayList<String> labelList = new ArrayList<>();
-		labelList.add("CONLL WORD "+this.getLabel()+"\\n\\n");
+		labelList.add(this.getLabel()+"\\n\\n");
 
 		for (Entry<String, String> entry: this.conllList.entrySet()) {
-			labelList.add(entry.getKey()+": "+entry.getValue()+"\\l");
+			labelList.add("conll:"+entry.getKey()+" "+entry.getValue()+"\\l");
 		}
 		
 		this.setLabel(String.join("", labelList));

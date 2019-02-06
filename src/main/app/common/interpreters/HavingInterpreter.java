@@ -3,17 +3,10 @@ package main.app.common.interpreters;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.expr.Expr;
-import org.apache.jena.sparql.expr.ExprVar;
 
-import main.app.common.misc.KnowledgeContainer;
-import main.app.dot.Edge;
 import main.app.dot.Graph;
-import main.app.dot.Node;
 import main.app.dot.objects.AggregateNode;
-import main.app.dot.objects.EntityNode;
-import main.app.misc.FunctionResolution;
 
 public class HavingInterpreter extends AbstractInterpreter implements Interpreter {
 
