@@ -103,7 +103,7 @@ public class Node extends Object {
 	}
 
 	public Graph getParentGraph() {
-		return parentGraph;
+		return this.parentGraph;
 	}
 
 	public void setParentGraph(Graph parentGraph) {

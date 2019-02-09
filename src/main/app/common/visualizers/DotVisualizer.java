@@ -75,8 +75,12 @@ final public class DotVisualizer extends QueryVisualizer implements QueryVisuali
 		this.enableClarificationEdges = false;
 	}
 	
-	public void setSubgraphDepth(int depth)
+	public void setSubgraphDepth(int depth) throws Exception
 	{
-		this.subgraphDepth = depth;
+		if (depth > 1) {
+			this.subgraphDepth = depth;
+		} else {
+			throw new Exception("Depth greater than 1 is required");
+		}
 	}
 }

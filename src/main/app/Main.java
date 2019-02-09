@@ -25,7 +25,7 @@ public class Main {
     	
     	try {
     		//sqv.disableClarificationEdges();
-    		sqv.setSubgraphDepth(3);
+    		sqv.setSubgraphDepth(2);
 			List<String> ret = sqv.visualize();
 			System.out.println(ret.get(0));
 		} catch (Exception e) {

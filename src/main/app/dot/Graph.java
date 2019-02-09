@@ -10,6 +10,7 @@ import main.app.dot.objects.ClarifyEdge;
 import main.app.dot.objects.ConllNode;
 import main.app.dot.objects.DeleteSubgraph;
 import main.app.dot.objects.EntityNode;
+import main.app.dot.objects.FakeEdgeNode;
 import main.app.dot.objects.GraphNode;
 import main.app.dot.objects.HiddenNode;
 import main.app.dot.objects.InsertSubgraph;
@@ -142,7 +143,9 @@ public class Graph extends Object {
 	
 	public void setMaxSubgraphDepth(int depth)
 	{
-		this.maxSubgraphDepth = depth;
+		if (depth > 1) {
+			this.maxSubgraphDepth = depth;
+		}
 	}
 
 	public int getDepth() {
@@ -153,9 +156,9 @@ public class Graph extends Object {
 		this.depth = depth;
 	}
 	
-	public boolean isMaxSubgraphDepth()
+	public boolean exceedsMaxSubgraphDepth()
 	{
-		if (this.getMaxSubgraphDepth() == this.getDepth() && !(this instanceof InsertSubgraph) && !(this instanceof DeleteSubgraph)) {
+		if (this.getMaxSubgraphDepth() <= this.getDepth() && !(this instanceof InsertSubgraph) && !(this instanceof DeleteSubgraph)) {
 			return true;
 		}
 		
@@ -165,7 +168,7 @@ public class Graph extends Object {
 	public ArrayList<Edge> getEdgesRecursive()
 	{
 		ArrayList<Edge> localEdgeList;
-		if (this.isMaxSubgraphDepth()) {
+		if (this.exceedsMaxSubgraphDepth()) {
 			localEdgeList = new ArrayList<>();
 		} else {
 			localEdgeList = this.edgeList;
@@ -264,9 +267,25 @@ public class Graph extends Object {
 		label = this.escape(label);
 		this.label = label.trim();
 	}
+
+	public Node getHiddenNode() {
+		return hiddenNode;
+	}
 	
 	public Graph getParent() {
 		return this.parent;
+	}
+	
+	public Graph getFirstVisibleParent() {
+		return getFirstVisibleParent(this);
+	}
+	
+	public Graph getFirstVisibleParent(Graph currentGraph) {
+		if (currentGraph.getParent().exceedsMaxSubgraphDepth()) {
+			return getFirstVisibleParent(currentGraph.parent);
+		} else {
+			return currentGraph;
+		}
 	}
 	
 	public void setParent(Graph graph) {
@@ -311,13 +330,15 @@ public class Graph extends Object {
 			for (Entry<String, ArrayList<RecursiveNodeContainer>> entry: nodeMap.entrySet()) {
 				ArrayList<RecursiveNodeContainer> nodeList = entry.getValue();
 
+				// check if we just have two nodes to connect
 				if (nodeList.size() == 2) {
 					Edge edge = new ClarifyEdge();
 					edge.setFrom(nodeList.get(0).getNode());
 					
-					if (nodeList.get(1).getNode().getParentGraph().isMaxSubgraphDepth()) {
-						edge.setTo(nodeList.get(1).getNode().getParentGraph().getHiddenNode());
-						edge.setLhead(nodeList.get(1).getNode().getParentGraph().getId());
+					// check if the second/"to" node exceeds the maximum depth
+					if (nodeList.get(1).getNode().getParentGraph().exceedsMaxSubgraphDepth()) {
+						edge.setTo(nodeList.get(1).getNode().getParentGraph().getFirstVisibleParent().getHiddenNode());
+						edge.setLhead(nodeList.get(1).getNode().getParentGraph().getFirstVisibleParent().getId());
 					} else {
 						edge.setTo(nodeList.get(1).getNode());
 						
@@ -328,15 +349,18 @@ public class Graph extends Object {
 					
 					edge.setNoConstraint();
 					this.addEdge(edge);
+					
+				// if more than two nodes, we need to connect these nodes with a top hierarchy node
 				} else if (nodeList.size() > 2) {
+					// and we check if there is a top hierarchy node
 					if (nodeList.get(0).getLevel() == 1) {
 						for(int i = 1; i < nodeList.size(); i++) {
 							Edge edge = new ClarifyEdge();
 							edge.setFrom(nodeList.get(0).getNode());
 							
-							if (nodeList.get(i).getNode().getParentGraph().isMaxSubgraphDepth()) {
-								edge.setTo(nodeList.get(i).getNode().getParentGraph().getHiddenNode());
-								edge.setLhead(nodeList.get(i).getNode().getParentGraph().getId());
+							if (nodeList.get(i).getNode().getParentGraph().exceedsMaxSubgraphDepth()) {
+								edge.setTo(nodeList.get(i).getNode().getParentGraph().getFirstVisibleParent().getHiddenNode());
+								edge.setLhead(nodeList.get(i).getNode().getParentGraph().getFirstVisibleParent().getId());
 							} else {
 								edge.setTo(nodeList.get(i).getNode());
 								
@@ -347,22 +371,25 @@ public class Graph extends Object {
 							
 							this.addEdge(edge);
 						}
+						
+					// if there is no top hierarchy node, we need to create one	
 					} else {
 						Node masterNode;
-						if (nodeList.get(0).getNode().getShape().equals("plain")) {
+						if (nodeList.get(0).getNode() instanceof FakeEdgeNode) {
 							masterNode = new EntityNode(nodeList.get(0).getNode());
 						} else {
 							masterNode = new Node(nodeList.get(0).getNode());
 						}
+						
 						this.subgraphMap.get("cluster_1").addNode(masterNode);
 						
 						for(int i = 0; i < nodeList.size(); i++) {
 							Edge edge = new ClarifyEdge();
 							edge.setFrom(masterNode);
 							
-							if (nodeList.get(i).getNode().getParentGraph().isMaxSubgraphDepth()) {
-								edge.setTo(nodeList.get(i).getNode().getParentGraph().getHiddenNode());
-								edge.setLhead(nodeList.get(i).getNode().getParentGraph().getId());
+							if (nodeList.get(i).getNode().getParentGraph().exceedsMaxSubgraphDepth()) {
+								edge.setTo(nodeList.get(i).getNode().getParentGraph().getFirstVisibleParent().getHiddenNode());
+								edge.setLhead(nodeList.get(i).getNode().getParentGraph().getFirstVisibleParent().getId());
 							} else {
 								edge.setTo(nodeList.get(i).getNode());
 								
@@ -379,7 +406,7 @@ public class Graph extends Object {
 		}
 		
 		// Adding subgraphs
-		if (!this.isMaxSubgraphDepth()) {
+		if (!this.exceedsMaxSubgraphDepth()) {
 			for (Entry<String, Subgraph> entry: this.subgraphMap.entrySet()) {
 				Subgraph subgraph = entry.getValue();
 				
@@ -399,7 +426,7 @@ public class Graph extends Object {
 		}
 	
 		// Adding nodes
-		if (!this.isMaxSubgraphDepth()) {
+		if (!this.exceedsMaxSubgraphDepth()) {
 			// if we're greater than max depth, draw all nodes
 			for (Entry<String, Node> entry: this.nodeMap.entrySet()) {
 				ret += "\t"+entry.getValue().toDot()+"\n";
@@ -425,9 +452,5 @@ public class Graph extends Object {
 	public String toString()
 	{
 		return this.toDot();
-	}
-
-	public Node getHiddenNode() {
-		return hiddenNode;
 	}
 }
