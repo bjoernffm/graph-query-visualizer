@@ -8,7 +8,7 @@ import main.app.http.Server;
 public class Main {
     public static void main(String[] args) {
         Server svr = new Server();
-        //svr.start();
+        svr.start();
     	
     	DotVisualizer sqv = new DotVisualizer(
     		//"PREFIX  :     <http://people.example/> SELECT  ?y ?name WHERE { :alice :knows ?y { SELECT  ?y (MIN(?n) AS ?name) WHERE { ?y :name ?n } GROUP BY ?y } }"
@@ -27,7 +27,7 @@ public class Main {
     		//sqv.disableClarificationEdges();
     		sqv.setSubgraphDepth(2);
 			List<String> ret = sqv.visualize();
-			System.out.println(ret.get(0));
+			//System.out.println(ret.get(0));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -118,7 +118,9 @@ public class Node extends Object {
 		argumentList.add("label=\""+this.escape(this.getLabel())+"\"");
 
 		if (this.tooltip != null && !this.tooltip.equals("")) {
-			argumentList.add("tooltip=\""+this.escape(this.tooltip)+"\"");
+			argumentList.add("tooltip=\""+this.escape(this.getTooltip())+"\"");
+		} else {
+			argumentList.add("tooltip=\""+this.escape(this.getLabel())+"\"");
 		}
 		if (this.shape != null && !this.shape.equals("")) {
 			argumentList.add("shape=\""+this.shape+"\"");

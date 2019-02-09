@@ -1,6 +1,7 @@
 $(function() {
 
-    var editor = ace.edit("editor");
+    let viz = new Viz();
+    let editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/sql");
 
@@ -24,9 +25,20 @@ WHERE   { :book1  dc:title  $title}`);
 
         $.post("/api/queries", editor.getValue(), function( data ) {
             dotResultEditor.setValue(data[0]);
-            result = Viz(data[0]);
-            $('#queryViewer').html(result);
-            $('#queryViewer').show();
+
+            viz.renderSVGElement(data[0])
+                .then(function(element) {
+                    $('#queryViewer').html("");
+                    $('#queryViewer').append(element);
+                    $('#queryViewer').show();
+                })
+                .catch(error => {
+                // Create a new Viz instance (@see Caveats page for more info)
+                viz = new Viz();
+
+                // Possibly display the error
+                console.error(error);
+                });
         }).fail(function(e) {
             message = e.responseJSON.message;
             message = message

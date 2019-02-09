@@ -304,8 +304,10 @@ public class Graph extends Object {
 		}
 		if (!this.getLabel().isEmpty()) {
 			ret += "\tlabel=\""+this.getLabel()+"\";\n";
+			ret += "\ttooltip=\""+this.getLabel()+"\";\n";
 		} else {
 			ret += "\tlabel=\"\";\n";
+			ret += "\ttooltip=\"\";\n";
 		}
 		if (!this.getStyle().isEmpty()) {
 			ret += "\tstyle=\""+this.getStyle()+"\";\n";
