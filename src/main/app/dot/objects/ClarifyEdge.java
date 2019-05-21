@@ -7,7 +7,7 @@ public class ClarifyEdge extends Edge {
 		super();
 
 		this.setColor("#0000FF22");
-		this.setPenwidth(5);
+		this.setPenWidth(5);
 		this.setDirection("none");
 	}
 }

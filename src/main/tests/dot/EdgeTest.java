@@ -26,7 +26,7 @@ public class EdgeTest {
 		edge.setLhead("cluster_1");
 		edge.setLabeltooltip("tooltip");
 		edge.setDirection("direction");
-		edge.setPenwidth(5);
+		edge.setPenWidth(5);
 		edge.setNoConstraint();
 		
 		Graph graph = new Graph("main");
@@ -42,7 +42,7 @@ public class EdgeTest {
 		assertEquals("cluster_1", edge.getLhead());
 		assertEquals("tooltip", edge.getLabeltooltip());
 		assertEquals("direction", edge.getDirection());
-		assertEquals(5, edge.getPenwidth());
+		assertEquals(5, edge.getPenWidth());
 		assertEquals(edge.toString(), edge.toDot());
 		assertEquals("\"c4ca4238_main\" -> \"c81e728d_main\" [dottype=\"Edge\", nodetype=\"unknown\", label=\"Label\", labeltooltip=\"tooltip\", style=\"dotted\", dir=\"direction\", arrowhead=\"dot\", color=\"black\", penwidth=5, lhead=\"cluster_1\", constraint=false]", edge.toDot());
 	}

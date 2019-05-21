@@ -11,7 +11,6 @@ import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.query.QueryParseException;
 import org.apache.jena.query.Syntax;
-import org.apache.jena.sparql.syntax.ElementGroup;
 
 public abstract class QueryVisualizer {	
 
@@ -58,40 +57,8 @@ public abstract class QueryVisualizer {
 		}
 	}
 	
-	/**
-	 * Returns an id based on the given object string
-	 * 
-	 * @param object
-	 * @return The id
-	 */
-	protected Integer getObjectId(String object)
-	{
-		if (this.objectMap.containsKey(object)) {
-			return this.objectMap.get(object);
-		} else {
-			this.objectMap.put(object, this.currentObjectId);
-			this.currentObjectId++;
-			
-			return this.objectMap.get(object); 
-		}
-	}
-	
 	protected String escape(String string)
 	{
 		return string.replaceAll("\"", "");
-	}
-	
-	public ElementGroup getElementGroupByQuery(String string)
-	{
-		try {
-			//Query query = QueryFactory.create("SELECT ?s { ?s <http://example.com/val> ?val . FILTER ( ?val < 20 ) }");
-			Query query = QueryFactory.create(string);
-
-			ElementGroup elGroup = (ElementGroup) query.getQueryPattern();
-			
-			return elGroup;
-		} catch(QueryParseException e) {
-			throw e;
-		}
 	}
 }

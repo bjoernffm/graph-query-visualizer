@@ -47,6 +47,7 @@ public class GraphTest {
 		graph.addEdge(edge2);
 		
 		String ret = graph.toDot();
+		System.out.println(ret);
 		assertEquals(ret.hashCode(), 368889422);
 	}
 	

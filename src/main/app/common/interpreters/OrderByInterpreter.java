@@ -26,6 +26,7 @@ public class OrderByInterpreter extends AbstractInterpreter implements Interpret
 			throw new Exception(ArrayList.class+" needed as Object. Given: "+obj.getClass());
 		}
 		
+		@SuppressWarnings("unchecked")
 		List<SortCondition> sortConditions = (ArrayList<SortCondition>) obj;
 		
 		Node orderByNode = new AggregateNode("orderby_"+this.hashCode());

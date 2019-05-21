@@ -26,6 +26,7 @@ public class HavingInterpreter extends AbstractInterpreter implements Interprete
 		
 		String havingString = "HAVING\\n---------\\n";
 
+		@SuppressWarnings("unchecked")
 		List<Expr> list = (List<Expr>) obj;
 		for(int i = 0; i < list.size(); i++) {
 			Expr expression = list.get(i);

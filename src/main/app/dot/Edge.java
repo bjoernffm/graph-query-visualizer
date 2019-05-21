@@ -66,11 +66,11 @@ public class Edge extends Object {
 		this.arrowhead = arrowhead;
 	}
 
-	public int getPenwidth() {
+	public int getPenWidth() {
 		return this.penwidth;
 	}
 
-	public void setPenwidth(int penwidth) {
+	public void setPenWidth(int penwidth) {
 		this.penwidth = penwidth;
 	}
 

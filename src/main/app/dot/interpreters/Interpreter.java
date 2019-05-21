@@ -8,13 +8,11 @@ import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
-import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.syntax.ElementGroup;
 import org.apache.jena.sparql.syntax.ElementTriplesBlock;
 
 import main.app.dot.Edge;
 import main.app.dot.Node;
-import main.app.dot.Subgraph;
 import main.app.dot.objects.SelectNode;
 
 public class Interpreter extends AbstractInterpreter {
