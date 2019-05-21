@@ -1,5 +1,6 @@
 package main.app.common.interpreters;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,20 +26,28 @@ public class ProjectVarInterpreter extends AbstractInterpreter implements Interp
 		super(interpreter);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void interpret(Object obj, Graph graph) throws Exception
 	{
-		if (obj.getClass() != VarExprList.class) {
+		List<Var> projectVars;
+		Map<Var, Expr> projectExpressions;
+		
+		if (obj.getClass() == VarExprList.class) {
+			// get general list of vars and expressions
+			VarExprList project = (VarExprList) obj;
+			// get only the selected vars without expressions
+			projectVars = project.getVars();
+			// list of all aggregation expressions
+			projectExpressions = project.getExprs();
+		} else if (obj instanceof List) {
+			// get only the selected vars without expressions
+			projectVars = (List<Var>) obj;
+			// list of all aggregation expressions
+			projectExpressions = new HashMap<Var, Expr>();
+		} else {
 			throw new Exception(VarExprList.class+" needed as Object. Given: "+obj.getClass());
 		}
-		
-		// get general list of vars and expressions
-		VarExprList project = (VarExprList) obj;
-		
-		// get only the selected vars without expressions
-		List<Var> projectVars = project.getVars();
-		// list of all aggregation expressions
-		Map<Var, Expr> projectExpressions = project.getExprs();
 		
 		// now iterate through all project vars and check for possible aggregations
 		for(int i = 0; i < projectVars.size(); i++) {

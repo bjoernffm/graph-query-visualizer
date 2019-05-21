@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.jena.query.Query;
 import org.apache.jena.query.SortCondition;
+import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.core.VarExprList;
 import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.syntax.Element;
@@ -77,11 +78,16 @@ public class QueryInterpreter extends AbstractInterpreter implements Interpreter
 		}
 		
 		/**
-		 * aggregate project- and mentioned-vars
+		 * aggregate project-vars and expressions
 		 */
-		VarExprList project = query.getProject();
+		VarExprList project = query.getProject();		
 		if (project != null && !project.isEmpty()) {
 			(new ProjectVarInterpreter(this)).interpret(project, graph);
+		}
+		
+		List<Var> projectVars = query.getProjectVars();
+		if (projectVars != null && !projectVars.isEmpty()) {
+			(new ProjectVarInterpreter(this)).interpret(projectVars, graph);
 		}
 	}
 
