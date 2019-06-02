@@ -8,10 +8,10 @@ import main.app.http.Server;
 public class Main {
     public static void main(String[] args) {
         Server svr = new Server();
-        svr.start();
+        //svr.start();
     	
     	DotVisualizer sqv = new DotVisualizer(
-    		"PREFIX foaf:  <http://xmlns.com/foaf/0.1/> SELECT * WHERE { ?person foaf:name ?name . ?person foaf:mbox ?email .}"
+    		"PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT ?age WHERE { ?person foaf:name \"Max Mustermann\" . ?person foaf:age ?age }"
     		//"PREFIX foaf: <http://xmlns.com/foaf/0.1/> PREFIX rss:  <http://purl.org/rss/1.0/> PREFIX dc:   <http://purl.org/dc/elements/1.1/> SELECT ?title ?known_name ?link FROM <http://planetrdf.com/index.rdf> FROM NAMED <phil-foaf.rdf> WHERE { GRAPH <phil-foaf.rdf> { ?me foaf:name \"Phil McCarthy\" . ?me foaf:knows ?known_person . ?known_person foaf:name ?known_name . } . ?item dc:creator ?known_name . ?item rss:title ?title . ?item rss:link ?link . ?item dc:date ?date. } ORDER BY DESC(?date) LIMIT 10"
     		//"PREFIX  :     <http://people.example/> SELECT  ?y ?name WHERE { :alice :knows ?y { SELECT  ?y (MIN(?n) AS ?name) WHERE { ?y :name ?n } GROUP BY ?y } }"
     		//"PREFIX syn: <http://www.acsu.buffalo.edu/~rrgpage/rrg.html#syn_> prefix conll: <http://ufal.mff.cuni.cz/conll2009-st/task-description.html#> prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> prefix nif:   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> prefix terms: <http://purl.org/acoli/open-ie/> prefix powla: <http://purl.org/powla/powla.owl#> INSERT { ?t syn:has ?x. } WHERE { ?t a syn:TEXT; syn:has ?s. ?x syn:head+ ?h2. MINUS { [] syn:head|syn:has ?x } };"

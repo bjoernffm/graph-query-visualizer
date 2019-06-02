@@ -1,4 +1,4 @@
-package main.app.dot.interpreters;
+package main.app.dot.utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import main.app.dot.Edge;
 import main.app.dot.Node;
 import main.app.dot.objects.SelectNode;
 
-public class Interpreter extends AbstractInterpreter {
+public class Interpreter extends Parser {
 
 	public Interpreter(String dot)
 	{
@@ -36,7 +36,9 @@ public class Interpreter extends AbstractInterpreter {
 			} else if (node.getNodeType().equals("variable")) {
 				sparqlNode = NodeFactory.createVariable(node.getLabel().substring(1));
 			} else if (node.getNodeType().equals("literal")) {
-				sparqlNode = NodeFactory.createLiteral(node.getLabel());
+				String label = node.getLabel();
+				label = label.replace("\\\"", "");
+				sparqlNode = NodeFactory.createLiteral(label);
 			} else {
 				sparqlNode = NodeFactory.createBlankNode();
 			}

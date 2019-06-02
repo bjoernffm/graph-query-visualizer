@@ -1,4 +1,4 @@
-package main.app.dot.interpreters;
+package main.app.dot.utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,22 +6,18 @@ import java.util.Scanner;
 
 import main.app.dot.Edge;
 import main.app.dot.Node;
-import main.app.dot.utils.ObjectFactory;
 
 
-public abstract class AbstractInterpreter
+public abstract class Parser
 {
 	protected Map<String, Node> nodeMap = new HashMap<>();
 	protected Map<String, Edge> edgeMap = new HashMap<>();
 
-	public AbstractInterpreter(String dot)
+	public Parser(String dot)
 	{		
 		Scanner scanner = new Scanner(dot); 
         while (scanner.hasNext()) {
-        	if (scanner.hasNext("subgraph")) {
-        		scanner.next();
-        		//System.out.println("Subgraph: "+scanner.next());
-        	} else if (scanner.hasNext("\\\"[a-zA-z_0-9]+\\\"")) {
+        	if (scanner.hasNext("\\\"[a-zA-z_0-9]+\\\"")) {
         		String arg1 = "unknown";
         		String arg2 = scanner.next();
         		String arg3 = scanner.next();
@@ -71,6 +67,6 @@ public abstract class AbstractInterpreter
         	}
         }
         
-        scanner.close(); 
+        scanner.close();
 	}
 }

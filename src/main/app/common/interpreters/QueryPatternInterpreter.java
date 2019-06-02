@@ -18,7 +18,7 @@ public class QueryPatternInterpreter extends AbstractInterpreter implements Inte
 	public void interpret(Object obj, Graph graph) throws Exception
 	{
 		Element queryPattern = (Element) obj;
-		
+
 		if (queryPattern instanceof org.apache.jena.sparql.syntax.ElementGroup) {
 			(new ElementGroupInterpreter(this)).interpret((ElementGroup) queryPattern, graph);
 		} else if (queryPattern instanceof org.apache.jena.sparql.syntax.ElementSubQuery) {
