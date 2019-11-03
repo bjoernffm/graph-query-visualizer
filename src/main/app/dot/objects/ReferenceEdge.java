@@ -2,8 +2,8 @@ package main.app.dot.objects;
 
 import main.app.dot.Edge;
 
-public class ClarifyEdge extends Edge {
-	public ClarifyEdge() {
+public class ReferenceEdge extends Edge {
+	public ReferenceEdge() {
 		super();
 
 		this.setColor("#0000FF22");

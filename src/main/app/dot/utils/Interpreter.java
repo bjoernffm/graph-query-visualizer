@@ -39,6 +39,7 @@ public class Interpreter extends Parser {
 				String label = node.getLabel();
 				label = label.replace("\\\"", "");
 				sparqlNode = NodeFactory.createLiteral(label);
+				System.out.println(sparqlNode.getClass());
 			} else {
 				sparqlNode = NodeFactory.createBlankNode();
 			}

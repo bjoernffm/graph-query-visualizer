@@ -12,6 +12,8 @@ import main.app.dot.Edge;
 import main.app.dot.Graph;
 import main.app.dot.Node;
 import main.app.dot.Subgraph;
+import main.app.dot.objects.ConllNode;
+import main.app.dot.objects.SelectNode;
 import main.app.misc.RecursiveNodeContainer;
 
 public class GraphTest {
@@ -46,9 +48,23 @@ public class GraphTest {
 		graph.addNode(node3);
 		graph.addEdge(edge2);
 		
+		graph.setLabel("Test");
+		assertEquals("Test", graph.getLabel());
+
+		assertEquals("invis", graph.getHiddenNode().getStyle());
+
+		assertEquals(subgraph.hashCode(), subgraph.getFirstVisibleParent().hashCode());
+		
 		String ret = graph.toDot();
-		System.out.println(ret);
-		assertEquals(ret.hashCode(), 368889422);
+		assertEquals(-574427996, ret.hashCode());
+		
+		assertEquals(true, graph.clarificationEdgesEnabled());
+		graph.disableClarificationEdges();
+		assertEquals(false, graph.clarificationEdgesEnabled());
+		graph.enableClarificationEdges();
+		assertEquals(true, graph.clarificationEdgesEnabled());
+		graph.enableClarificationEdges(false);
+		assertEquals(false, graph.clarificationEdgesEnabled());
 	}
 	
 	@Test
@@ -75,7 +91,7 @@ public class GraphTest {
 		graph.addEdge(edge2);
 		
 		String ret = graph.toDot();
-		assertEquals(ret.hashCode(), 1171864895);
+		assertEquals(-740375897, ret.hashCode());
 	}
 	
 	/*@Test
@@ -141,7 +157,7 @@ public class GraphTest {
 		graph.addSubgraph(subgraph1);
 		
 		String ret = graph.toDot();
-		assertEquals(ret.hashCode(), -98663907);
+		assertEquals(105790826, ret.hashCode());
 	}
 	
 	@Test
@@ -165,11 +181,16 @@ public class GraphTest {
 		graph.addSubgraph(subgraph2);
 		graph.addNode(node4);
 		
+		assertEquals(1, graph.getNodes().size());
+		assertEquals(true, graph.getNodes().containsKey("0d61f837"));
+		
 		Map<String, ArrayList<RecursiveNodeContainer>> ret = graph.getNodesRecursive();
 
-		assertEquals(ret.get("0d61f837-0cad-3d41-af80-b84d143e1257").size(), 1);
-		assertEquals(ret.get("9d5ed678-fe57-3cca-a101-40957afab571").size(), 2);
-		assertEquals(ret.get("7fc56270-e7a7-3fa8-9a59-35b72eacbe29").size(), 1);
+		assertEquals(ret.get("0d61f837").size(), 1);
+		assertEquals(ret.get("9d5ed678").size(), 2);
+		assertEquals(ret.get("7fc56270").size(), 1);
+		
+		graph.removeNode(node4);
 	}
 	
 	@Test
@@ -195,8 +216,64 @@ public class GraphTest {
 		
 		Map<String, ArrayList<RecursiveNodeContainer>> ret = graph.getNodesRecursive();
 
-		assertEquals(ret.get("0d61f837-0cad-3d41-af80-b84d143e1257").size(), 1);
-		assertEquals(ret.get("9d5ed678-fe57-3cca-a101-40957afab571").size(), 2);
-		assertEquals(ret.get("7fc56270-e7a7-3fa8-9a59-35b72eacbe29").size(), 1);
+		assertEquals(ret.get("0d61f837").size(), 1);
+		assertEquals(ret.get("9d5ed678").size(), 2);
+		assertEquals(ret.get("7fc56270").size(), 1);
+	}
+	
+	@Test
+	public void testMergeConllNodes() {
+		Node node1 = new ConllNode("A");
+		Node node2 = new ConllNode("A");
+		
+		Graph graph = new Graph("main");
+		
+		graph.addNode(node1);
+		assertEquals(1, graph.getNodes().size());
+		
+		graph.addNode(node2);
+		assertEquals(1, graph.getNodes().size());
+	}
+	
+	@Test
+	public void testSelectConllNodes() {
+		Node node1 = new ConllNode("A");
+		Node node2 = new SelectNode("A");
+		
+		Graph graph = new Graph("main");
+		
+		graph.addNode(node1);
+		assertEquals(1, graph.getNodes().size());
+		
+		graph.addNode(node2);
+		assertEquals(1, graph.getNodes().size());
+		assertEquals("doubleoctagon", graph.getNodes().get("7fc56270").getShape());
+	}
+	
+	@Test
+	public void testIgnoreAfterConllNodes() {
+		Node node1 = new ConllNode("A");
+		Node node2 = new Node("A");
+		
+		Graph graph = new Graph("main");
+		
+		graph.addNode(node1);
+		assertEquals(1, graph.getNodes().size());
+
+		graph.addNode(node2);
+		assertEquals(1, graph.getNodes().size());
+		assertEquals("octagon", graph.getNodes().get("7fc56270").getShape());
+	}
+	
+	@Test
+	public void testSeperate() {
+		Node node1 = new Node("A");
+		node1.drawSeparate();
+		
+		Graph graph = new Graph("main");
+		
+		graph.addNode(node1);
+		assertEquals(1, graph.getNodes().size());
+		assertEquals(graph.toDot(), graph.toString());
 	}
 }

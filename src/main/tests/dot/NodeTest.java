@@ -58,7 +58,7 @@ public class NodeTest {
 		Node node = new Node("\"data\"");
 		node.setColor(null);
 		
-		assertEquals("\"755af0e7\" [dottype=\"Node\", nodetype=\"unknown\", label=\"\\\"data\\\"\"]", node.toDot());
+		assertEquals("\"755af0e7\" [dottype=\"Node\", nodetype=\"unknown\", label=\"\\\"data\\\"\", tooltip=\"\\\"data\\\"\"]", node.toDot());
 		assertEquals(null, node.getColor());
 	}
 	
@@ -80,18 +80,18 @@ public class NodeTest {
 		node.setTooltip("");
 		node.setLabeljust("");
 		
-		assertEquals("\"d3d94468\" [dottype=\"Node\", nodetype=\"unknown\", label=\"10\"]", node.toDot());	
+		assertEquals("\"d3d94468\" [dottype=\"Node\", nodetype=\"unknown\", label=\"10\", tooltip=\"10\"]", node.toDot());	
 	}
 
 	@Test
 	public void testNodeType() throws UnsupportedEncodingException {
 		Node node = new Node("test");
-		assertEquals("\"098f6bcd\" [dottype=\"Node\", nodetype=\"unknown\", label=\"test\"]", node.toDot());
+		assertEquals("\"098f6bcd\" [dottype=\"Node\", nodetype=\"unknown\", label=\"test\", tooltip=\"test\"]", node.toDot());
 		
 		org.apache.jena.graph.Node nodeUri = NodeFactory.createURI("http://www.bjoern.de/index.html#lala");
 		node.setNodeType(nodeUri);
 		assertEquals(node.getNodeType(), "uri");
-		assertEquals("\"098f6bcd\" [dottype=\"Node\", nodetype=\"uri\", label=\"test\"]", node.toDot());
+		assertEquals("\"098f6bcd\" [dottype=\"Node\", nodetype=\"uri\", label=\"test\", tooltip=\"test\"]", node.toDot());
 		
 		org.apache.jena.graph.Node nodeLiteral = NodeFactory.createLiteral("Literal");
 		node.setNodeType(nodeLiteral);

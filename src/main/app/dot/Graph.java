@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import main.app.dot.objects.ClarifyEdge;
+import main.app.dot.objects.ReferenceEdge;
 import main.app.dot.objects.ConllNode;
 import main.app.dot.objects.DeleteSubgraph;
 import main.app.dot.objects.EntityNode;
@@ -53,7 +53,7 @@ public class Graph extends Object {
 			this.nodeMap.containsKey(node.getId()) &&
 			this.nodeMap.get(node.getId()) instanceof ConllNode) {
 			/**
-			 * if we add a ConllNode, but there is already a ConllNode, merge theme
+			 * if we add a ConllNode, but there is already a ConllNode, merge them
 			 */
 			ConllNode originalNode = (ConllNode) this.nodeMap.get(node.getId());
 			ConllNode newNode = (ConllNode) node;
@@ -134,6 +134,11 @@ public class Graph extends Object {
 	public void disableClarificationEdges()
 	{
 		this.enableClarificationEdges = false;
+	}
+	
+	public boolean clarificationEdgesEnabled()
+	{
+		return this.enableClarificationEdges;
 	}
 	
 	public int getMaxSubgraphDepth()
@@ -269,7 +274,7 @@ public class Graph extends Object {
 	}
 
 	public Node getHiddenNode() {
-		return hiddenNode;
+		return this.hiddenNode;
 	}
 	
 	public Graph getParent() {
@@ -334,7 +339,7 @@ public class Graph extends Object {
 
 				// check if we just have two nodes to connect
 				if (nodeList.size() == 2) {
-					Edge edge = new ClarifyEdge();
+					Edge edge = new ReferenceEdge();
 					edge.setFrom(nodeList.get(0).getNode());
 					
 					// check if the second/"to" node exceeds the maximum depth
@@ -357,7 +362,7 @@ public class Graph extends Object {
 					// and we check if there is a top hierarchy node
 					if (nodeList.get(0).getLevel() == 1) {
 						for(int i = 1; i < nodeList.size(); i++) {
-							Edge edge = new ClarifyEdge();
+							Edge edge = new ReferenceEdge();
 							edge.setFrom(nodeList.get(0).getNode());
 							
 							if (nodeList.get(i).getNode().getParentGraph().exceedsMaxSubgraphDepth()) {
@@ -386,7 +391,7 @@ public class Graph extends Object {
 						this.subgraphMap.get("cluster_1").addNode(masterNode);
 						
 						for(int i = 0; i < nodeList.size(); i++) {
-							Edge edge = new ClarifyEdge();
+							Edge edge = new ReferenceEdge();
 							edge.setFrom(masterNode);
 							
 							if (nodeList.get(i).getNode().getParentGraph().exceedsMaxSubgraphDepth()) {

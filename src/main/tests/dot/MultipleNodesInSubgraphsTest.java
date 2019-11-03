@@ -51,7 +51,7 @@ public class MultipleNodesInSubgraphsTest {
 		
 		String ret = graph.toDot();
 		//System.out.println(ret.hashCode());
-		assertEquals(ret.hashCode(), -2135576236);
+		assertEquals(210686621, ret.hashCode());
 	}
 
 	@Test
@@ -89,7 +89,7 @@ public class MultipleNodesInSubgraphsTest {
 		
 		String ret = graph.toDot();
 		//System.out.println(ret.hashCode());
-		assertEquals(ret.hashCode(), 382770387);
+		assertEquals(-1967900315, ret.hashCode());
 	}
 
 	@Test
@@ -134,7 +134,7 @@ public class MultipleNodesInSubgraphsTest {
 		
 		String ret = graph.toDot();
 		//System.out.println(ret.hashCode());
-		assertEquals(ret.hashCode(), -673619425);
+		assertEquals(-219604524, ret.hashCode());
 	}
 
 	@Test
@@ -190,7 +190,6 @@ public class MultipleNodesInSubgraphsTest {
 		graph.addSubgraph(subgraph3);
 		
 		String ret = graph.toDot();
-		//System.out.println(ret.hashCode());
-		assertEquals(ret.hashCode(), 217879702);
+		assertEquals(687830408, ret.hashCode());
 	}
 }
