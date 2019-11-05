@@ -2,8 +2,8 @@ package main.app;
 
 import java.util.List;
 
-import main.app.common.visualizers.DotVisualizer;
-import main.app.http.Server;
+import sparql.app.common.visualizers.DotVisualizer;
+import sparql.app.http.Server;
 
 public class Main {
     public static void main(String[] args) {
