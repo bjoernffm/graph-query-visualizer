@@ -29,9 +29,7 @@ public class ElementOptionalInterpreter extends AbstractInterpreter implements I
 			graph.addSubgraph(subgraph);
 			(new ElementGroupInterpreter(this)).interpret((ElementGroup) optionalElement, subgraph);	
 		} else {
-			System.out.println(optionalElement.getClass());
-			System.out.println(optionalElement+"\n");
-			throw new Exception("Stopping here");
+			throw new Exception("Unexpected Element "+optionalElement);
 		}
 	}
 
