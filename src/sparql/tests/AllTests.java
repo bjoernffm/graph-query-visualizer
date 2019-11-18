@@ -13,6 +13,9 @@ import sparql.tests.common.interpreters.LimitInterpreterTest;
 import sparql.tests.common.interpreters.OffsetInterpreterTest;
 import sparql.tests.common.interpreters.OrderByInterpreterTest;
 import sparql.tests.common.interpreters.ProjectVarInterpreterTest;
+import sparql.tests.common.interpreters.UpdateDataDeleteInterpreterTest;
+import sparql.tests.common.interpreters.UpdateDataInsertInterpreterTest;
+import sparql.tests.common.interpreters.UpdateDeleteWhereInterpreterTest;
 import sparql.tests.common.interpreters.UpdateModifyInterpreterTest;
 import sparql.tests.dot.EdgeTest;
 import sparql.tests.dot.GraphTest;
@@ -41,7 +44,10 @@ import sparql.tests.dot.interpreters.InterpreterTest;
 	ElementBindInterpreterTest.class,
 	ElementOptionalInterpreterTest.class,
 	OrderByInterpreterTest.class,
-	UpdateModifyInterpreterTest.class
+	UpdateModifyInterpreterTest.class,
+	UpdateDeleteWhereInterpreterTest.class,
+	UpdateDataInsertInterpreterTest.class,
+	UpdateDataDeleteInterpreterTest.class
 })
 public class AllTests {
 
