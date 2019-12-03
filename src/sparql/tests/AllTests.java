@@ -7,9 +7,11 @@ import org.junit.runners.Suite.SuiteClasses;
 import sparql.tests.common.interpreters.ElementBindInterpreterTest;
 import sparql.tests.common.interpreters.ElementDataInterpreterTest;
 import sparql.tests.common.interpreters.ElementFilterInterpreterTest;
+import sparql.tests.common.interpreters.ElementGroupInterpreterTest;
 import sparql.tests.common.interpreters.ElementMinusInterpreterTest;
 import sparql.tests.common.interpreters.ElementNamedGraphInterpreterTest;
 import sparql.tests.common.interpreters.ElementOptionalInterpreterTest;
+import sparql.tests.common.interpreters.ElementPathBlockInterpreterTest;
 import sparql.tests.common.interpreters.LimitInterpreterTest;
 import sparql.tests.common.interpreters.OffsetInterpreterTest;
 import sparql.tests.common.interpreters.OrderByInterpreterTest;
@@ -26,6 +28,7 @@ import sparql.tests.dot.NodeTest;
 import sparql.tests.dot.ObjectTests;
 import sparql.tests.dot.SubgraphTest;
 import sparql.tests.dot.interpreters.InterpreterTest;
+import sparql.tests.misc.RecursiveNodeContainerTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -51,7 +54,10 @@ import sparql.tests.dot.interpreters.InterpreterTest;
 	UpdateDataInsertInterpreterTest.class,
 	UpdateDataDeleteInterpreterTest.class,
 	ElementMinusInterpreterTest.class,
-	UpdateInterpreterTest.class
+	UpdateInterpreterTest.class,
+	ElementPathBlockInterpreterTest.class,
+	ElementGroupInterpreterTest.class,
+	RecursiveNodeContainerTest.class
 })
 public class AllTests {
 

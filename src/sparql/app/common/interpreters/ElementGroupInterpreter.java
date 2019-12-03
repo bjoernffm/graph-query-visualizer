@@ -58,9 +58,7 @@ public class ElementGroupInterpreter extends AbstractInterpreter implements Inte
 			} else if (el instanceof ElementNamedGraph) {
 				(new ElementNamedGraphInterpreter(this)).interpret((ElementNamedGraph) el, graph);
 			} else {
-				System.out.println(el.getClass());
-				System.out.println(el+"\n");
-				throw new Exception("Stopping here");
+				throw new Exception("Stopping here: "+el.getClass().toString());
 			}
 		}
 	}
