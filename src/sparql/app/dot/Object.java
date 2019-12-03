@@ -73,6 +73,8 @@ abstract public class Object {
 	
 	protected String escape(String string)
 	{
-		return string.replace("\"", "\\\"");
+		string = string.replace("\\\"", "\\\\\"");
+		string = string.replace("\"", "\\\"");
+		return string;
 	}
 }

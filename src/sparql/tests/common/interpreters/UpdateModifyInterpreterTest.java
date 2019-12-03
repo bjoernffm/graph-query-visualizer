@@ -57,6 +57,38 @@ public class UpdateModifyInterpreterTest {
 	}
 
 	@Test
+	public void test6() throws Exception {
+		DotVisualizer sqv = new DotVisualizer("PREFIX foaf:  <http://xmlns.com/foaf/0.1/> DELETE { ?person ?property ?value } USING <http://example/addresses> WHERE { ?person ?property ?value ; foaf:givenName 'Fred' } ");
+		List<String> ret = sqv.visualize();
+		assertTrue(ret.get(0).contains("label=\"USING\\naddresses\";"));
+		assertTrue(ret.get(0).contains("tooltip=\"USING\\naddresses\";"));
+	}
+
+	@Test
+	public void test7() throws Exception {
+		DotVisualizer sqv = new DotVisualizer("PREFIX foaf:  <http://xmlns.com/foaf/0.1/> DELETE { ?person ?property ?value } USING NAMED <http://example/addresses> WHERE { ?person ?property ?value ; foaf:givenName 'Fred' } ");
+		List<String> ret = sqv.visualize();
+		assertTrue(ret.get(0).contains("label=\"USING NAMED\\naddresses\";"));
+		assertTrue(ret.get(0).contains("tooltip=\"USING NAMED\\naddresses\";"));
+	}
+
+	@Test
+	public void test8() throws Exception {
+		DotVisualizer sqv = new DotVisualizer("PREFIX dc:  <http://purl.org/dc/elements/1.1/> PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> DELETE { GRAPH <http://example/addresses> { ?book ?p ?v } } WHERE { ?book dc:date ?date . FILTER ( ?date > \"1970-01-01T00:00:00-02:00\"^^xsd:dateTime ) ?book ?p ?v }");
+		List<String> ret = sqv.visualize();
+		assertTrue(ret.get(0).contains("label=\"DELETE FROM\\nGRAPH addresses\";"));
+		assertTrue(ret.get(0).contains("tooltip=\"DELETE FROM\\nGRAPH addresses\";"));
+	}
+
+	@Test
+	public void test9() throws Exception {
+		DotVisualizer sqv = new DotVisualizer("PREFIX dc:  <http://purl.org/dc/elements/1.1/> PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> INSERT { GRAPH <http://example/addresses> { ?book ?p ?v } } WHERE { ?book dc:date ?date . FILTER ( ?date > \"1970-01-01T00:00:00-02:00\"^^xsd:dateTime ) ?book ?p ?v }");
+		List<String> ret = sqv.visualize();
+		assertTrue(ret.get(0).contains("label=\"INSERT INTO\\nGRAPH addresses\";"));
+		assertTrue(ret.get(0).contains("tooltip=\"INSERT INTO\\nGRAPH addresses\";"));
+	}
+
+	@Test
 	public void fail() throws Exception {
 		UpdateModifyInterpreter interpreter = new UpdateModifyInterpreter(null);
 		Graph graph = new Graph("main");

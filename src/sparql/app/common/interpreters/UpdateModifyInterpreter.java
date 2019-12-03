@@ -204,13 +204,13 @@ public class UpdateModifyInterpreter extends AbstractInterpreter implements Inte
 		List<Node> usingList = update.getUsing();
 		for(int i = 0; i < usingList.size(); i++) {
 			Node node = usingList.get(i);
-			finalUsingList.add("USING "+this.resolveNodeName(node));
+			finalUsingList.add("USING\\n"+this.resolveNodeName(node));
 		}
 		
 		List<Node> usingNamedList = update.getUsingNamed();
 		for(int i = 0; i < usingNamedList.size(); i++) {
 			Node node = usingNamedList.get(i);
-			finalUsingList.add("USING NAMED "+this.resolveNodeName(node));
+			finalUsingList.add("USING NAMED\\n"+this.resolveNodeName(node));
 		}
 
 		if (finalUsingList.isEmpty()) {

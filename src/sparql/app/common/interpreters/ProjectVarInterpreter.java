@@ -33,7 +33,7 @@ public class ProjectVarInterpreter extends AbstractInterpreter implements Interp
 	{
 		List<Var> projectVars;
 		Map<Var, Expr> projectExpressions;
-		
+
 		if (obj.getClass() == VarExprList.class) {
 			// get general list of vars and expressions
 			VarExprList project = (VarExprList) obj;

@@ -10,11 +10,6 @@ import sparql.app.common.misc.KnowledgeContainer;
 import sparql.app.dot.Graph;
 
 public class UpdateInterpreter extends AbstractInterpreter implements Interpreter {
-
-	public UpdateInterpreter(AbstractInterpreter interpreter)
-	{
-		super(interpreter);
-	}
 	
 	public UpdateInterpreter(KnowledgeContainer knowledgeContainer)
 	{
@@ -38,20 +33,8 @@ public class UpdateInterpreter extends AbstractInterpreter implements Interprete
 		} else if (obj instanceof UpdateModify) {
 			(new UpdateModifyInterpreter(this)).interpret((UpdateModify) obj, graph);
 		} else {
-			System.out.println(obj.getClass());
 			throw new Exception("Unknown type!");
 		}
-		
-		
-
-		/*QuadAcc insertAcc = query.getInsertAcc();
-		(new InsertQuadAccInterpreter()).interpret(insertAcc, graph);
-
-		QuadAcc deleteAcc = query;
-		(new DeleteQuadAccInterpreter()).interpret(deleteAcc, graph);
-		
-		Element wherePattern = query.getWherePattern();
-		(new QueryPatternInterpreter()).interpret(wherePattern, graph);*/
 	}
 
 }

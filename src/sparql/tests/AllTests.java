@@ -7,6 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import sparql.tests.common.interpreters.ElementBindInterpreterTest;
 import sparql.tests.common.interpreters.ElementDataInterpreterTest;
 import sparql.tests.common.interpreters.ElementFilterInterpreterTest;
+import sparql.tests.common.interpreters.ElementMinusInterpreterTest;
 import sparql.tests.common.interpreters.ElementNamedGraphInterpreterTest;
 import sparql.tests.common.interpreters.ElementOptionalInterpreterTest;
 import sparql.tests.common.interpreters.LimitInterpreterTest;
@@ -16,6 +17,7 @@ import sparql.tests.common.interpreters.ProjectVarInterpreterTest;
 import sparql.tests.common.interpreters.UpdateDataDeleteInterpreterTest;
 import sparql.tests.common.interpreters.UpdateDataInsertInterpreterTest;
 import sparql.tests.common.interpreters.UpdateDeleteWhereInterpreterTest;
+import sparql.tests.common.interpreters.UpdateInterpreterTest;
 import sparql.tests.common.interpreters.UpdateModifyInterpreterTest;
 import sparql.tests.dot.EdgeTest;
 import sparql.tests.dot.GraphTest;
@@ -47,7 +49,9 @@ import sparql.tests.dot.interpreters.InterpreterTest;
 	UpdateModifyInterpreterTest.class,
 	UpdateDeleteWhereInterpreterTest.class,
 	UpdateDataInsertInterpreterTest.class,
-	UpdateDataDeleteInterpreterTest.class
+	UpdateDataDeleteInterpreterTest.class,
+	ElementMinusInterpreterTest.class,
+	UpdateInterpreterTest.class
 })
 public class AllTests {
 
