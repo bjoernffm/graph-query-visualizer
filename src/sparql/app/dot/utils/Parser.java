@@ -43,7 +43,6 @@ public abstract class Parser
 						Node node = ObjectFactory.getNode(arg2, arg3);
 						this.nodeMap.put(arg2, node);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
         		} else if (arg1.equals("edge")) {
@@ -56,7 +55,6 @@ public abstract class Parser
 						edge.setTo(node2);
 	        			this.edgeMap.put(arg2, edge);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
         		}

@@ -7,7 +7,6 @@ import sparql.app.dot.Node;
 public class CreateGraph {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 		// Erstellen der Knoten
 		Node node1 = new Node("John");

@@ -106,7 +106,7 @@ public class ProjectVarInterpreter extends AbstractInterpreter implements Interp
 					graph.addNode(varNode);
 					
 					Edge edge = new Edge();
-					// TODO check for better expression to show in the graph -> (str ?link) looks stupid
+
 					edge.setLabel("AS");
 					edge.setLabeltooltip(value.asQuotedString()+" AS ?"+var.getName());
 					edge.setFrom(varNode);

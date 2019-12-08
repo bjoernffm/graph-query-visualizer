@@ -28,7 +28,7 @@ public class GroupByInterpreter extends AbstractInterpreter implements Interpret
 		List<Var> groupByVars = groupByVarExpressions.getVars();
 
 		Node groupByNode = new AggregateNode("groupby_"+this.hashCode());
-		graph.addNode(groupByNode);
+		graph.getParent().addNode(groupByNode);
 		
 		String groupByString = "GROUP BY\\n---------\\n";
 		

@@ -35,7 +35,7 @@ public class LimitInterpreter extends AbstractInterpreter implements Interpreter
 		edge.setTo(targetNode);
 		edge.setLhead("cluster_1");
 		
-		graph.addNode(limitNode);
+		graph.getParent().addNode(limitNode);
 		graph.addEdge(edge);
 	}
 

@@ -25,16 +25,6 @@ public class ProjectVarInterpreterTest {
 		assertTrue(ret.get(0).contains("[dottype=\"EntityNode\", nodetype=\"unknown\", label=\"\\\"HELLO\\\"\", tooltip=\"\\\"HELLO\\\"\", shape=\"circle\", fillcolor=\"aliceblue\", style=\"filled\"]"));
 	}
 
-	/*@Test
-	public void test3() throws Exception {
-		DotVisualizer sqv = new DotVisualizer("PREFIX : <http://example.com/data/#> SELECT ?x (MIN(?y) * 2 AS ?min) WHERE { ?x :p ?y . ?x :q ?z . } GROUP BY ?x (STR(?z))");
-		List<String> ret = sqv.visualize();	
-		System.out.println(ret.get(0));
-		//assertTrue(ret.get(0).contains("[dottype=\"Edge\", nodetype=\"unknown\", label=\"AS\", labeltooltip=\"\\\"HELLO\\\" AS ?la\", color=\"black\"]"));
-		//assertTrue(ret.get(0).contains("[dottype=\"EntityNode\", nodetype=\"unknown\", label=\"\\\"HELLO\\\"\", tooltip=\"\\\"HELLO\\\"\", shape=\"circle\", fillcolor=\"aliceblue\", style=\"filled\"]"));
-	}*/
-	// TODO Write function
-
 	@Test
 	public void testFail() throws Exception {
 		// TODO test projectExpressions.get(var) instanceof E_Str

@@ -27,11 +27,9 @@ public class Server {
     	path("/api", () -> {
     		post("/queries", (request, response) -> {
     			response.type("application/json");
-    			
-    			DotVisualizer sqv = new DotVisualizer(request.body());
 
     			try {
-    				//Response res = new Response(sqv.visualize());
+        			DotVisualizer sqv = new DotVisualizer(request.body());
     				
         			Gson gson = new Gson();
         			String json = gson.toJson(sqv.visualize()); 

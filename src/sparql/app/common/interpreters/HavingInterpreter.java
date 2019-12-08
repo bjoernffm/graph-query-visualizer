@@ -1,14 +1,17 @@
 package sparql.app.common.interpreters;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.expr.Expr;
 
+import sparql.app.dot.Edge;
 import sparql.app.dot.Graph;
 import sparql.app.dot.Node;
 import sparql.app.dot.objects.AggregateNode;
-import sparql.app.dot.objects.FilterNode;
+import sparql.app.dot.objects.EntityNode;
 
 public class HavingInterpreter extends AbstractInterpreter implements Interpreter {
 
@@ -24,25 +27,23 @@ public class HavingInterpreter extends AbstractInterpreter implements Interprete
 		}
 
 		AggregateNode havingNode = new AggregateNode("having_"+this.hashCode());
-		graph.addNode(havingNode);
+		graph.getParent().addNode(havingNode);
 		
 		String havingString = "HAVING\\n---------\\n";
 
 		@SuppressWarnings("unchecked")
 		List<Expr> list = (List<Expr>) obj;
 		for(int i = 0; i < list.size(); i++) {
-			Expr expression = list.get(i);
+			Expr expression = list.get(i);			
 			
-			System.out.println(expression.getFunction().toString());
+			Iterator<Var> mentionedVarList = expression.getVarsMentioned().iterator();
 			
+			havingString += expression.toString()+"\\l";
 			
-			/*FunctionResolution fr = this.resolveFunctionName(expression);
-			ArrayList<ExprVar> mentionedVarList = fr.getMentionedVars();
-			
-			havingString += "* "+fr.getName()+"\\l";
-			
-			for(int j = 0; j < mentionedVarList.size(); j++) {
-				Node varNode = new EntityNode(mentionedVarList.get(j).toString());
+			Var mentionedVar;
+			while(mentionedVarList.hasNext()) {
+				mentionedVar = mentionedVarList.next();
+				Node varNode = new EntityNode(mentionedVar.toString());
 				graph.addNode(varNode);
 				
 				Edge edge = new Edge();
@@ -51,9 +52,8 @@ public class HavingInterpreter extends AbstractInterpreter implements Interprete
 				edge.setTo(varNode);
 				edge.setStyle("dotted");
 				graph.addEdge(edge);
-			}*/
+			}
+			havingNode.setLabel(havingString);
 		}
-		
-		havingNode.setLabel(havingString);
 	}
 }
